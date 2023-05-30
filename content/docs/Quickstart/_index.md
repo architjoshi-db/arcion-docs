@@ -5,5 +5,3 @@ description: "In this section are quickstart guides for both versions of Arcion:
 weight: 2
 bookCollapseSection: true
 ---
-
-# Coming soon!
