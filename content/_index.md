@@ -16,7 +16,7 @@ You can use Arcion in a number of ways:
 - A workflow-guided UI
 - An API
 
-Arcion empowers you to set up production-ready pipelines in a way that suits your needs, whether you choose self-managed on-premises deployments or fully-managed Arcion Cloud services.
+Arcion empowers you to set up production-ready pipelines in a way that suits your needs, whether you choose [self-managed on-premises deployments](https://www.arcion.io/self-hosted) or [fully-managed Arcion Cloud services](https://www.arcion.io/cloud).
 
 Find out what Arcion can do for you:
 
