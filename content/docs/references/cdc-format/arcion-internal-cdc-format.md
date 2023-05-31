@@ -41,7 +41,7 @@ You can interpret the first _3X_ columns of a row as _X_ triplets, where each tr
 {{< hint "info" >}}
 **Note**:
 * EXISTS_VAL is required to differentiate when a column value is null. If the corresponding EXISTS_VAL is non-zero, that means the user has provided null value in the DML. If it’s zero, that means that the user hasn’t mentioned the column in the DML.
-* The last three columns of a row contain metadata required for consistent replication recovery. The names of the columns are printed at the top of every file if [the `include-header` parameter is `true` in the Applier configuration]({{< ref "../../targets/target-setup/s3#ii-set-up-applier-configuration" >}}).
+* The last three columns of a row contain metadata required for consistent replication recovery. The names of the columns are printed at the top of every file if [the `include-header` parameter is `true` in the Applier configuration]({{< ref "docs/targets/target-setup/s3/amazon-s3#ii-set-up-applier-configuration" >}}).
 {{< /hint >}}
 
 In the following sections, we go through some examples for insert, update, and delete operations.
