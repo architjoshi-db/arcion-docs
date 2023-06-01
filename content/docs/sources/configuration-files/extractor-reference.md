@@ -380,6 +380,21 @@ Specifies the timestamp for source Db2 Kafka. The following values are possible 
 For more information, see [the Db2 Kafka tab in Parameters related to realtime mode]({{< ref "../source-setup/db2/db2_mq_kafka#parameters-related-to-realtime-mode" >}})
 {{< /tab >}}
 
+{{< tab "Informix" >}}
+#### `sequence-number`
+`long` type value. 
+
+Specifies the start position from which replication should start.
+
+#### `timestamp-ms` 
+`long` type value. Causes Replicant to discard all transactions that were committed before this timestamp.
+
+#### `create-checkpoint` 
+`boolean` value.
+
+Creates a replication checkpoint.
+{{< /tab >}}
+
 {{< tab "MySQL" >}}
 #### `log`:
 Log file from where replication should start.
@@ -405,20 +420,10 @@ Specifies the increment for the given timestamp. It corresponds to [the incremen
 #### `start-scn`
 The SCN from which replication should start.
 {{< /tab >}}
-      
-{{< tab "Informix" >}}
-#### `sequence-number`
-`long` type value. 
 
-Specifies the start position from which replication should start.
-
-#### `timestamp-ms` 
-`long` type value. Causes Replicant to discard all transactions that were committed before this timestamp.
-
-#### `create-checkpoint` 
-`boolean` value.
-
-Creates a replication checkpoint.
+{{< tab "PostgreSQL" >}}
+#### `start-lsn`
+An Log Sequence Number-based (LSN) starting position for PostgreSQL—for example, `0/3261270`. Replicant starts replicating from `start-lsn`, rather than the current log position when you trigger Replicant in real-time mode.
 {{< /tab >}}
 
 {{< tab "Others" >}}

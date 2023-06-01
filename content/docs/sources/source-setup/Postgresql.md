@@ -5,7 +5,7 @@ description: "Learn how to replicate data from Source PostgreSQL with Arcion Pos
 url: docs/source-setup/postgresql
 bookHidden: false
 ---
-# Source: PostgreSQL
+# Source PostgreSQL
 
 The extracted `replicant-cli` will be referred to as the `$REPLICANT_HOME` directory.
 
@@ -283,6 +283,9 @@ For realtime replication, you must create a heartbeat table in the source Postgr
         schema: "public"
         table-name: replicate_io_cdc_heartbeat
         column-name: timestamp
+
+        start-position:
+          start-lsn: 0/3261270
     ```
 
 For more information about the configuration parameters for `realtime` mode, see [Realtime Mode]({{< ref "../configuration-files/extractor-reference#realtime-mode" >}}).
