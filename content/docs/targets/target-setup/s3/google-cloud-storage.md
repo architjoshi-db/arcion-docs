@@ -6,7 +6,7 @@ bookHidden: false
 url: docs/target-setup/s3/google-cloud-storage
 ---
 
-# Destination MinIO
+# Destination Google Cloud Storage (GCS)
 From version 23.04.30.4, Arcion supports replicating data into [Google Cloud Storage using the S3 compatibility API](https://cloud.google.com/storage/docs/interoperability). Follow the instructions in this page to set up Cloud Storage as data target in Arcion Replicant.
 
 The following steps refer [the extracted Arcion self-hosted CLI download]({{< ref "docs/quickstart/arcion-self-hosted#download-replicant-and-create-replicant_home" >}}) as the `$REPLICANT_HOME` directory.
@@ -40,7 +40,7 @@ max-connections: 50
 ```
 
 Replace the following:
-- *`SERVICE_ENDPOINT`*: The [service endpoint](https://cloud.google.com/storage-transfer/docs/reference/rest#service-endpoint) with or without the protocol—for example, `https://storagetransfer.googleapis.com` or `storagetransfer.googleapis.com`.
+- *`SERVICE_ENDPOINT`*: The service endpoint with or without the protocol—for example, `https://storage.googleapis.com` or `storage.googleapis.com`.
 - *`SIGNING_REGION`*: The region to use for [AWS Signature Version 4](https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html) requests—for example, `us-west-1`.
 - *`YOUR_HMAC_ACCESS_ID`*:  The [HMAC access ID](https://cloud.google.com/storage/docs/authentication/hmackeys) associated with the service account or the user account.
 - *`YOUR_HMAC_SECRET`*: The [HMAC secret](https://cloud.google.com/storage/docs/authentication/hmackeys) linked to the HMAC access ID you specify in `YOUR_HMAC_ACCESS_ID`.
