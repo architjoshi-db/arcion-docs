@@ -1,7 +1,7 @@
 ---
 pageTitle: Amazon S3, MinIO, other S3-compliant targets
 title: S3
-description: "Eficiently move data into Amazon S3, MinIO, and other S3-compatible services using Arcion."
+description: "Eficiently replicate data into Amazon S3, MinIO, Google Cloud Storage, and other S3-compatible services using Arcion."
 url: docs/target-setup/s3
 bookHidden: false
 bookCollapseSection: true

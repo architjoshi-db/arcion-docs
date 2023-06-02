@@ -1,7 +1,7 @@
 ---
 pageTitle: Set up Amazon S3 as target
 title: Amazon S3
-description: "Eficiently move data into Amazon S3 using Arcion. Learn about S3 file format, secure connection, and applier configuration for real-time operations."
+description: "Get real-time data replication into Amazon S3 with Arcion. Arcion efficiently loads data into S3 using a custom CDC format."
 url: docs/target-setup/s3/amazon-s3
 bookHidden: false
 ---

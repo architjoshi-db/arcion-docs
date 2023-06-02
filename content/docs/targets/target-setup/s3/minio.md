@@ -1,7 +1,7 @@
 ---
 pageTitle: Replicate data into MinIO and S3-compatible services
 title: MinIO
-description: "Learn how Arcion supports replicating data into MinIO, the S3-compliant object storage."
+description: "Replicate data in real-time into MinIO, the high performance S3-compatible object store. A custom CDC format for ensures efficient replication into S3."
 url: docs/target-setup/s3/minio
 bookHidden: false
 url: docs/target-setup/s3/minio

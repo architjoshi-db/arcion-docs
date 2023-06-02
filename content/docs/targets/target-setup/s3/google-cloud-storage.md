@@ -1,7 +1,7 @@
 ---
 pageTitle: Replicate data into S3-compatible Google Cloud Storage
 title: Google Cloud Storage
-description: "Learn how to achieve fast data replication into Google Cloud Storage using the S3 compatiblity API."
+description: "Achieve fast data replication into Google Cloud Storage using the S3 compatiblity API. Arcion uses a custom CDC format for efficient data loading."
 bookHidden: false
 url: docs/target-setup/s3/google-cloud-storage
 ---
