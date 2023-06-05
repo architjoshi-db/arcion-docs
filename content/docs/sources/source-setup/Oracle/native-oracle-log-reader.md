@@ -34,19 +34,43 @@ Replace *`PATH_TO_TRANSACTION_STORAGE`* with the path to a temporary location on
 
 ## Grant Necessary Permissions
 
-Replicant user should have the following permissions granted for them in order to use the native Oracle log reader.
+Replicant user must possess the following permissions in order to use the native Oracle log reader.
 
-  ```SQL
-  GRANT SELECT ON gv_$instance TO <USERNAME>;
-  GRANT SELECT ON v_$log TO <USERNAME>;
-  GRANT SELECT ON v_$logfile TO <USERNAME>;
-  GRANT SELECT ON v_$archived_log to <USERNAME>;
-  GRANT SELECT ON dba_objects TO <USERNAME>;
-  GRANT SELECT ON v_$transportable_platform TO <USERNAME>;
-  ```
+{{< details title="Click to see the list of permissions" open=false >}}
+```SQL
+GRANT CREATE SESSION TO <USERNAME>;
+GRANT EXECUTE_CATALOG_ROLE TO <USERNAME>;
+GRANT SELECT ANY TABLE <USERNAME>;
+GRANT SELECT ON all_constraints TO <USERNAME>;
+GRANT SELECT ON all_cons_columns TO <USERNAME>;
+GRANT SELECT ON all_indexes TO <USERNAME>;
+GRANT SELECT ON all_ind_expressions TO <USERNAME>;
+GRANT SELECT ON all_part_tables TO <USERNAME>;
+GRANT SELECT ON all_part_key_columns TO <USERNAME>;
+GRANT SELECT ON all_tables TO <USERNAME>;
+GRANT SELECT ON all_tab_columns TO <USERNAME>;
+GRANT SELECT ON all_views TO <USERNAME>;
+GRANT SELECT ON dba_constraints TO <USERNAME>;
+GRANT SELECT ON dba_cons_columns TO <USERNAME>;
+GRANT SELECT ON dba_indexes TO <USERNAME>;
+GRANT SELECT ON dba_ind_columns TO <USERNAME>;
+GRANT SELECT ON dba_lobs TO <USERNAME>;
+GRANT SELECT ON dba_objects TO <USERNAME>;
+GRANT SELECT ON dba_tab_cols TO <USERNAME>;
+GRANT SELECT ON gv_$database TO <USERNAME>;
+GRANT SELECT ON gv_$instance TO <USERNAME>;
+GRANT SELECT ON gv_$transaction TO <USERNAME>;
+GRANT SELECT ON v_$archived_log to <USERNAME>;
+GRANT SELECT ON v_$database TO <USERNAME>;
+GRANT SELECT ON v_$log TO <USERNAME>;
+GRANT SELECT ON v_$logfile TO <USERNAME>;
+GRANT SELECT ON v_$transportable_platform TO <USERNAME>;
+```
 
-  Replace *`<USERNAME>`* with your Oracle username.
+Replace *`<USERNAME>`* with your Oracle username.
+{{< /details >}}
 
+For [Oracle pluggable database]({{< relref "setup-guide/oracle-pluggable-database" >}}), you must add [`CONTAINER` clause](https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/GRANT.html#GUID-20B4E2C0-A7F8-4BC8-A5E8-BE61BDC41AC3__GUID-784B9819-D7E8-4613-9674-A07CAE756DAF) to the preceding `GRANT` statements. 
 
 ## Choose How to Access Logs
 You can either use Oracle ASM to access the logs, or use the file system directly.
@@ -55,15 +79,50 @@ You can either use Oracle ASM to access the logs, or use the file system directl
 
 Replicant supports using Oracle Automatic Storage Management (ASM) for logs. To use ASM, follow the steps below:
 
-1. Make sure that the following permission is granted:
+1. Grant the following permissions to Replicant:
 
-    ```SQL
-    GRANT SELECT ON gv_$asm_client TO USERNAME
-    ```
-  
-    Replace *`<USERNAME>`* with your ASM username.
+    {{< details title="Click to see the list of permissions" open=false >}}
 
-2. In [your Oracle connection configuration file]({{< relref "setup-guide#vi-set-up-connection-configuration" >}}), create a new section `asm-connection`.  This section will have the necessary ASM connection configuration. Below is a sample connection configuration file with ASM connection details specified as well:
+  ```SQL
+  GRANT SELECT ON gv_$instance TO REPLICANT;
+  GRANT SELECT ON v_$log TO REPLICANT;
+  GRANT SELECT ON v_$logfile TO REPLICANT;
+  GRANT SELECT ON v_$archived_log to REPLICANT;
+  GRANT SELECT ON dba_objects TO REPLICANT;
+  GRANT SELECT ON v_$transportable_platform TO REPLICANT;
+  GRANT SELECT ON gv_$asm_client TO REPLICANT;
+  GRANT CREATE SESSION TO REPLICANT;
+  GRANT SELECT ANY TABLE TO REPLICANT;
+  GRANT EXECUTE_CATALOG_ROLE TO REPLICANT;
+  GRANT LOGMINING TO REPLICANT;
+  GRANT SELECT ON v_$logmnr_contents TO REPLICANT;
+  GRANT SELECT ON gv_$instance TO REPLICANT;
+  GRANT SELECT ON gv_$PDBS TO REPLICANT;
+  GRANT SELECT ON gv_$log TO REPLICANT;
+  GRANT SELECT ON gv_$database_incarnation to REPLICANT;
+  GRANT SELECT ON DBA_SEGMENTS TO REPLICANT;
+  GRANT SELECT ON gv_$database TO REPLICANT;
+  GRANT SELECT ON gv_$transaction TO REPLICANT;
+  GRANT FLASHBACK ANY TABLE TO REPLICANT;
+  GRANT SELECT ON ALL_TABLES TO REPLICANT;
+  GRANT SELECT ON ALL_VIEWS TO REPLICANT;
+  GRANT SELECT ON ALL_CONSTRAINTS TO REPLICANT;
+  GRANT SELECT ON ALL_CONS_COLUMNS TO REPLICANT;
+  GRANT SELECT ON ALL_PART_TABLES TO REPLICANT;
+  GRANT SELECT ON ALL_PART_KEY_COLUMNS TO REPLICANT;
+  GRANT SELECT ON ALL_TAB_COLUMNS TO REPLICANT;
+  GRANT SELECT ON SYS.ALL_INDEXES TO REPLICANT;
+  GRANT SELECT ON SYS.ALL_IND_COLUMNS TO REPLICANT;
+  GRANT SELECT ON SYS.ALL_IND_EXPRESSIONS TO REPLICANT;
+  GRANT SELECT ON GV_$ARCHIVED_LOG to REPLICANT;
+  GRANT SELECT ON GV_$LOGFILE TO REPLICANT;
+  GRANT SELECT ON gv_$archived_log TO REPLICANT;
+  GRANT SELECT ON gv_$logfile TO REPLICANT;
+  GRANT SELECT ON v_$logfile TO REPLICANT;
+  ```  
+    {{< /details >}}
+
+1. In [your Oracle connection configuration file]({{< relref "setup-guide/#vi-set-up-connection-configuration" >}}), create a new section `asm-connection`.  This section will have the necessary ASM connection configuration. Below is a sample connection configuration file with ASM connection details specified as well:
 
     ```YAML
     type: ORACLE

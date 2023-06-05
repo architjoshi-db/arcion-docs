@@ -155,10 +155,10 @@ You have to enable either primary key or all column logging at either the databa
     ```
   * The following additional permissions are required:
     ```SQL
-    GRANT SELECT ON gv_$instance TO $USERNAME;
-    GRANT SELECT ON gv_$PDBS TO $USERNAME;
-    GRANT SELECT ON gv_$log TO $USERNAME;
-    GRANT SELECT ON gv_$database_incarnation to $USERNAME;
+    GRANT SELECT ON gv_$instance TO <USERNAME>;
+    GRANT SELECT ON gv_$PDBS TO <USERNAME>;
+    GRANT SELECT ON gv_$log TO <USERNAME>;
+    GRANT SELECT ON gv_$database_incarnation to <USERNAME>;
     ```
 {{< hint "info" >}}Only enable either `PRIMARY KEY` logging or `ALL` column logging, not both.{{< /hint >}}
 
