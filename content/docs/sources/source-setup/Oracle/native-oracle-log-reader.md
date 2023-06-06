@@ -14,7 +14,7 @@ It's possible to configure Replicant so that it can read and make use of Oracle 
 
 ## Modify Oracle Connection Configuration File
 
-You need to set the following two parameters in [the Oracle connection configuration file]({{< relref "setup-guide#vi-set-up-connection-configuration" >}}):
+You need to set the following two parameters in [the Oracle connection configuration file]({{< relref "setup-guide/oracle-traditional-database#v-set-up-connection-configuration" >}}):
 
 ```YAML
 log-reader: {REDOLOG|REDOLOG_ARCHIVE_ONLY}
@@ -40,7 +40,7 @@ Replicant user must possess the following permissions in order to use the native
 ```SQL
 GRANT CREATE SESSION TO <USERNAME>;
 GRANT EXECUTE_CATALOG_ROLE TO <USERNAME>;
-GRANT SELECT ANY TABLE <USERNAME>;
+GRANT SELECT ANY TABLE TO <USERNAME>;
 GRANT SELECT ON all_constraints TO <USERNAME>;
 GRANT SELECT ON all_cons_columns TO <USERNAME>;
 GRANT SELECT ON all_indexes TO <USERNAME>;
@@ -81,48 +81,11 @@ Replicant supports using Oracle Automatic Storage Management (ASM) for logs. To 
 
 1. Grant the following permissions to Replicant:
 
-    {{< details title="Click to see the list of permissions" open=false >}}
+    ```SQL
+    GRANT SELECT ON gv_$asm_client TO USERNAME
+    ```
 
-  ```SQL
-  GRANT SELECT ON gv_$instance TO REPLICANT;
-  GRANT SELECT ON v_$log TO REPLICANT;
-  GRANT SELECT ON v_$logfile TO REPLICANT;
-  GRANT SELECT ON v_$archived_log to REPLICANT;
-  GRANT SELECT ON dba_objects TO REPLICANT;
-  GRANT SELECT ON v_$transportable_platform TO REPLICANT;
-  GRANT SELECT ON gv_$asm_client TO REPLICANT;
-  GRANT CREATE SESSION TO REPLICANT;
-  GRANT SELECT ANY TABLE TO REPLICANT;
-  GRANT EXECUTE_CATALOG_ROLE TO REPLICANT;
-  GRANT LOGMINING TO REPLICANT;
-  GRANT SELECT ON v_$logmnr_contents TO REPLICANT;
-  GRANT SELECT ON gv_$instance TO REPLICANT;
-  GRANT SELECT ON gv_$PDBS TO REPLICANT;
-  GRANT SELECT ON gv_$log TO REPLICANT;
-  GRANT SELECT ON gv_$database_incarnation to REPLICANT;
-  GRANT SELECT ON DBA_SEGMENTS TO REPLICANT;
-  GRANT SELECT ON gv_$database TO REPLICANT;
-  GRANT SELECT ON gv_$transaction TO REPLICANT;
-  GRANT FLASHBACK ANY TABLE TO REPLICANT;
-  GRANT SELECT ON ALL_TABLES TO REPLICANT;
-  GRANT SELECT ON ALL_VIEWS TO REPLICANT;
-  GRANT SELECT ON ALL_CONSTRAINTS TO REPLICANT;
-  GRANT SELECT ON ALL_CONS_COLUMNS TO REPLICANT;
-  GRANT SELECT ON ALL_PART_TABLES TO REPLICANT;
-  GRANT SELECT ON ALL_PART_KEY_COLUMNS TO REPLICANT;
-  GRANT SELECT ON ALL_TAB_COLUMNS TO REPLICANT;
-  GRANT SELECT ON SYS.ALL_INDEXES TO REPLICANT;
-  GRANT SELECT ON SYS.ALL_IND_COLUMNS TO REPLICANT;
-  GRANT SELECT ON SYS.ALL_IND_EXPRESSIONS TO REPLICANT;
-  GRANT SELECT ON GV_$ARCHIVED_LOG to REPLICANT;
-  GRANT SELECT ON GV_$LOGFILE TO REPLICANT;
-  GRANT SELECT ON gv_$archived_log TO REPLICANT;
-  GRANT SELECT ON gv_$logfile TO REPLICANT;
-  GRANT SELECT ON v_$logfile TO REPLICANT;
-  ```  
-    {{< /details >}}
-
-1. In [your Oracle connection configuration file]({{< relref "setup-guide/#vi-set-up-connection-configuration" >}}), create a new section `asm-connection`.  This section will have the necessary ASM connection configuration. Below is a sample connection configuration file with ASM connection details specified as well:
+2. In [your Oracle connection configuration file]({{< relref "docs/sources/source-setup/oracle/setup-guide/oracle-traditional-database#v-set-up-connection-configuration" >}}), create a new section `asm-connection`.  This section will have the necessary ASM connection configuration. Below is a sample connection configuration file with ASM connection details specified as well:
 
     ```YAML
     type: ORACLE
