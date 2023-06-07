@@ -244,6 +244,7 @@ cdc-log-config:
             port: 19092
         schema-registry-url: "http://localhost:8081"
         consumer-group-id: blitzz
+
 {{< /tab >}}
 {{< /tabs >}}
 
@@ -344,7 +345,7 @@ cdc-log-config:
 
   In preceding sample, notice the following details:
   
-  - The `start-position` parameter specifi[es the starting log position for realtime replication. For more information, see [Db2 with MQ in Extractor Reference]({{< ref "../../configuration-files/extractor-reference#db2-with-mq" >}}).
+  - The `start-position` parameter specifies the starting log position for realtime replication. For more information, see [Db2 with MQ in Extractor Reference]({{< ref "../../configuration-files/extractor-reference#db2-with-mq" >}}).
   - If you've set `message-format` to `DELIMITED`, set `replicate-empty-string-as-null` to `true`.
     {{< /tab >}}
     {{< tab "Db2 Kafka" >}}
@@ -371,8 +372,9 @@ cdc-log-config:
   ```
 
   In the sample above, notice the following details:
-  - The `start-position` parameter specifi[es the starting log position for realtime replication. For more information, see [Db2 with Kafka in Extractor Reference]({{< ref "../../configuration-files/extractor-reference#db2-with-kafka" >}}).
+  - The `start-position` parameter specifies the starting log position for realtime replication. For more information, see [Db2 with Kafka in Extractor Reference]({{< ref "../../configuration-files/extractor-reference#db2-with-kafka" >}}).
   - If you've set `message-format` to `DELIMITED`, set `replicate-empty-string-as-null` to `true`.
+  {{< /tab >}}
   {{< /tabs >}}
 
 For a detailed explanation of configuration parameters in the Extractor file, read [Extractor Reference]({{< ref "../../configuration-files/extractor-reference" >}} "Extractor Reference").
