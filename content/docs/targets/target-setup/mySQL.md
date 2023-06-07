@@ -88,7 +88,7 @@ To connect to MySQL using SSL, follow these steps:
       Convert the client key and certificate files to a PKCS #12 archive:
 
       ```sh
-      openssl pkcs12 -export -in /path/to/client-key.pem -inkey /path/to/client-cert.pem \
+      openssl pkcs12 -export -in /path/to/client-cert.pem -inkey /path/to/client-key.pem \
       -name "NAME" -passout pass:PASSWORD \
       -out client-keystore_src.p12
       ```
@@ -96,7 +96,7 @@ To connect to MySQL using SSL, follow these steps:
       Replace the following: 
       
       - *`PASSWORD`*: the password source for output files
-      - *`FRIENDLY_NAME`*: a name for the certificate and key
+      - *`NAME`*: a name for the certificate and key
 
       For more information, see [the `openssl-pkcs12` manpage](https://www.openssl.org/docs/manmaster/man1/openssl-pkcs12.html).
 
@@ -119,11 +119,12 @@ To connect to MySQL using SSL, follow these steps:
       - *`NAME_OF_THE_DST_KEYSTORE_FILE`*: Name of the destination KeyStore file. Corresponds to the `ssl.key-store.path` parameter [in the SSL configuration](#specify-ssl-configuration-in-the-connection-configuration-file).
       - *`DST_KEYSTORE_PASSWORD`*: Destination KeyStore password. Corresponds to the `ssl.key-store.password` parameter [in the SSL configuration](#specify-ssl-configuration-in-the-connection-configuration-file).
 
+      Make sure to use the same password for both `srcstorepass` and `dststorepass`. For more information, see [`keytool-importkeystore` documentation](https://docs.oracle.com/javase/8/docs/technotes/tools/unix/keytool.html#keytool_option_importkeystore).
       </li>
       </ol>
 The following message appears after you execute the preceding commands successfully:
 
-> Entry for alias mysql_client successfully imported.<p>Import command completed:  1 entries successfully imported, 0 entries failed or cancelled</p>
+> Entry for alias MySQLCACert successfully imported.<p>Import command completed:  1 entries successfully imported, 0 entries failed or cancelled</p>
 
 #### Specify SSL configuration in the connection configuration file
 {{< tabs "ssl-config-in-connection-config-file" >}}
@@ -156,7 +157,7 @@ Replace the following:
 - *`PATH_TO_TRUSTSTORE`*: path to the TrustStore.
 - *`TRUSTSTORE_PASSWORD`*: the TrustStore password.
 - *`PATH_TO_KEYSTORE`*: path to the Java KeyStore.
-- *`KEYSTORE_PASSWORD`*: the TrustStore password.
+- *`KEYSTORE_PASSWORD`*: the KeyStore password.
 
 `hostname-verification` enables hostname verification against the server identity according to the specification in the server's certificate. It defaults to `true`.
 
@@ -186,7 +187,7 @@ Replace the following:
 - *`PATH_TO_TRUSTSTORE`*: path to the TrustStore.
 - *`TRUSTSTORE_PASSWORD`*: the TrustStore password.
 - *`PATH_TO_KEYSTORE`*: path to the Java KeyStore.
-- *`TRUSTSTORE_PASSWORD`*: the TrustStore password.
+- *`KEYSTORE_PASSWORD`*: the KeyStore password.
 
 `hostname-verification` enables hostname verification against the server identity according to the specification in the server's certificate. It defaults to `true`.
 {{< /tab >}}
