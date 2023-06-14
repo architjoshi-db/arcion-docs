@@ -7,7 +7,7 @@ weight: 2
 
 # Arcion self-hosted quickstart
 
-## Host machine requirements
+## I. Host machine requirements
 
 In order to run Replicant, we recommend that the machine Replicant runs on meet a set of minimum requirements. Failing to meet these requirements might impact performance or might stop Replicant from being able to run at all.
 
@@ -25,7 +25,7 @@ Please ensure your host machine or server where Replicant runs on meets the foll
 **Note:** The storage requirements may increase depending on your source-target pair and method of replication. For more information, check out the documentation for each specific source and target you need to use or reach out to [our support team](https://support.arcion.io/hc/en-us).
 {{< /hint >}}
 
-## Download Replicant and create `REPLICANT_HOME`
+## II. Download Replicant and create `REPLICANT_HOME`
 
 Replicant is available through a ZIP file that you must download to the machine or server where you want to host Replicant. If you do not already have the ZIP file and/or an Arcion license, [contact our team](http://www.arcion.io/contact) to get access.
 
@@ -37,7 +37,7 @@ unzip replicant-cli-<version>.zip
 
 Unzipping the archive creates a directory ```replicant-cli```. We refer this directory as ```$REPLICANT_HOME``` throughout the documentation and Arcion website. 
 
-## Adding a license
+## III. Adding a license
 
 Before running Replicant, you need to add a license file to the ```REPLICANT_HOME``` directory. You must name the license file `replicant.lic` so that Replicant can detect the license when Replicant starts.  
 
@@ -49,7 +49,7 @@ To add the license file, follow these steps:
 2. Rename the license file to `replicant.lic`.
 3. Move or copy the `replicant.lic` file into the ```REPLICANT_HOME``` directory. You must copy the `replicant.lic` file into the root directory, not in the `licenses` folder of Replicant.
 
-## Set up a source database
+## IV. Set up a source database
 
 After getting Replicant downloaded and adding the license, you can create your source connector. The source connector will be the database where data will be migrated or replicated from.
 
