@@ -145,3 +145,80 @@ kbd {
    margin: 0;
    padding: 0;
 }
+
+/* Styles for CTA buttons */
+@mixin cta-links {
+  display: inline-block;
+  border-radius: 8px;
+  box-sizing: border-box;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 3rem;
+  margin-bottom: 1.5rem;
+  padding: 0 1.6rem;
+  text-align: center;
+  text-shadow: rgba(30, 0, 68, 0.133) 0 3px 8px;
+  transition: all .5s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.cta-right-toc.self-hosted {
+  @include cta-links;
+  background-image: linear-gradient(92.88deg, #455EB5 9.16%, #5643CC 43.89%, #673FD7 64.72%);
+  border-style: none;
+  color: #FFFFFF;
+}
+
+.cta-right-toc.cloud {
+  @include cta-links;
+
+  background-image: #FFFF;
+  border: 2px rebeccapurple;
+  border-style: double;
+  color: #040022;
+}
+
+div.cta { 
+  position: sticky;
+  position: --webkit-sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.cta-right-toc:hover {
+  box-shadow: rgba(80, 63, 205, 0.5) 0 1px 10px;
+  transition-duration: .1s;
+}
+
+@media (min-width: 768px) {
+  .cta-right-toc {
+    padding: 0 0.6rem;
+  }
+}
+
+@media  screen and (max-width: 56rem) {
+  .cta-right-toc {
+    line-height: 2.0rem;
+    margin: 1.5rem 0 0.5rem 0;
+    position: relative;
+  }
+
+  div.cta {
+    position: static;
+  }
+
+  .cta-right-toc.cloud {
+    margin-top: 0;
+  }
+}
+
+nav#TableOfContents {
+  max-height: calc(100% - 50px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}

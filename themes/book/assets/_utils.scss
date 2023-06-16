@@ -90,3 +90,15 @@ input.toggle {
   outline-color: currentColor;
   outline-color: -webkit-focus-ring-color;
 }
+
+/* Custom mixin to prevent right TOC from scrolling.
+* This enables us to instead make the TOC's list 
+* elements scrollable and have the CTA button behave 
+* appropriately.
+*/
+@mixin no-overflow {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  overflow: hidden;
+}
