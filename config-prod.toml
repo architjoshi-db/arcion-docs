@@ -23,6 +23,10 @@ theme = "book"
 [params]
   BookTheme = 'light'
   BookLogo = '/arcion-horizontal.png'
+  # Set source repository location.
+  # Used for 'Last Modified' and 'Edit this page' links.
+  BookRepo = 'https://github.com/arcionlabs/arcion-docs'
+  BookEditPath = 'issues/new/choose'
 
 [deployment]
   [[deployment.targets]]
