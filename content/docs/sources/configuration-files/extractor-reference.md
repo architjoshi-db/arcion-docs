@@ -423,7 +423,7 @@ The SCN from which replication should start.
 
 {{< tab "PostgreSQL" >}}
 #### `start-lsn`
-An Log Sequence Number-based (LSN) starting position for PostgreSQL—for example, `0/3261270`. Replicant starts replicating from `start-lsn`, rather than the current log position when you trigger Replicant in real-time mode.
+An Log Sequence Number-based (LSN) starting position for PostgreSQL—for example, `0/3261270`. Replicant starts replicating from `start-lsn`, rather than the current log position when you trigger Replicant in real-time mode, provided that the replication slot still has the LSN visible.
 {{< /tab >}}
 
 {{< tab "Others" >}}
