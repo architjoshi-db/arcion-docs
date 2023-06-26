@@ -11,6 +11,10 @@ url: docs/target-setup/confluent/confluent-cloud
 
 In the following steps, we refer [the extracted `replicant-cli`]({{< ref "docs/quickstart#ii-get-arcion-self-hosted" >}}) as the `$REPLICANT_HOME` directory.
 
+{{< hint "info" >}}
+Don't have a Confluent Cloud account? Get one [here](https://www.confluent.io/confluent-cloud/?utm_campaign=tm.fm-ams_cd.cwc-arcion-newuser&utm_medium=partnerref).
+{{< /hint >}}
+
 ## I. Set up connection configuration
 {{< tabs "confluent-cloud-connection-config-in-cli-cloud" >}}
 {{< tab "Arcion self-hosted CLI" >}}
