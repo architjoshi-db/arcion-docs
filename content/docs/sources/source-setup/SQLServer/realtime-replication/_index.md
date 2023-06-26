@@ -29,3 +29,5 @@ For `realtime` and `full` mode replicaiton from SQL Server, you can choose from 
 
 Follow the instructions in these two pages to operate Replicant in `realtime` and `full` mode.
 
+## Support for DDL replication
+Replicant [supports DDL replication for real-time SQL Server source]({{< ref "docs/sources/ddl-replication" >}}). For more information, [contact us](https://arcion.io/contact).

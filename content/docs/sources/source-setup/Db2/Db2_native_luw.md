@@ -270,4 +270,7 @@ If you want CDC-based replication from the source Db2 server, follow these steps
         interval-ms: 10000
     ```
 
-For a detailed explanation of configuration parameters in the Extractor file, read [Extractor Reference]({{< ref "docs/sources/configuration-files/extractor-reference" >}} "Extractor Reference").
+    #### Support for DDL replication
+    Replicant [supports DDL replication for real-time Db2 LUW source]({{< ref "docs/sources/ddl-replication" >}}). For more information, [contact us](https://arcion.io/contact).
+    
+For a detailed explanation of configuration parameters in the Extractor file, see [Extractor Reference]({{< ref "docs/sources/configuration-files/extractor-reference" >}} "Extractor Reference").

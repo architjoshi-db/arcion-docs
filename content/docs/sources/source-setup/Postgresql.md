@@ -287,35 +287,8 @@ For realtime replication, you must create a heartbeat table in the source Postgr
 
 For more information about the configuration parameters for `realtime` mode, see [Realtime Mode]({{< ref "../configuration-files/extractor-reference#realtime-mode" >}}).
 
-#### `ddl-replication` *[v23.01]*
-This parameter is for enabling and configuring the auto-reinit functionality for PostgreSQL source. If `ddl-replication` is enabled, Replicant detects any DDL change on source table and reinitializes the table to sync the schema.
-
-The following options are available:
-
-| Option | Description | Allowed values |
-|-----------|-------------|----------------|
-|`enable` | Whether to enable auto-reinit. If enabled, Replicant detects DDLs on source. | <ul><li>`true`</li><li>`false`</li></ul> |
-|`ddl-replication-mode`| Mode of DDL replication. |<ul><li>`REINIT`</li><li>`INLINE`</li></ul><p>*Default: `REINIT`* |
-|`detect-ddl-interval`| The interval of DDL detection in seconds. For example, if set to `600`, Replicant detects DDLs after every 600 seconds.|
-
-The following is a sample realtime configuration that uses the auto-reinit feature:
-
-```YAML
-realtime:
-  threads: 4 
-  fetch-size-rows: 10000
-  fetch-duration-per-extractor-slot-s: 3
-  _traceDBTasks: true
-  ddl-replication:
-    enable: true
-    detect-ddl-interval: 600
-
-  heartbeat:
-    enable: true
-    catalog: tpch
-    schema: public
-    interval-ms: 10000
-```
+#### Support for DDL replication
+Replicant [supports DDL replication for real-time PostgreSQL source]({{< ref "docs/sources/ddl-replication" >}}). For more information, [contact us](https://arcion.io/contact).
 
 ## Replication without replication-slots
 

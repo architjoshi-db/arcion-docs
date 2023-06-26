@@ -406,4 +406,7 @@ For real-time replication, you must create a heartbeat table in the source Oracl
         start-scn: 2362927
     ```
     
+    #### Support for DDL replication
+    Replicant [supports DDL replication for real-time Oracle source]({{< ref "docs/sources/ddl-replication" >}}). For more information, [contact us](https://arcion.io/contact).
+
 For a detailed explanation of configuration parameters in the Extractor file, see [Extractor Reference]({{< ref "../../../configuration-files/extractor-reference" >}} "Extractor Reference").

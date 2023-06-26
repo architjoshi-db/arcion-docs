@@ -406,6 +406,7 @@ To operate in [`realtime` mode]({{< ref "running-replicant#replicant-realtime-mo
     `timestamp` represents the heartbeat table's column name.</li>
     </ol>
 
+For more information about the configuration parameters for `realtime` mode, see [Realtime Mode]({{< ref "docs/sources/configuration-files/extractor-reference#realtime-mode" >}}).
 #### Additional `realtime` parameters
 <dl class="dl-indent">
 <dt><code>bin-log-idle-timeout-s</code></dt>
@@ -417,10 +418,11 @@ _Default: `600`._
 </dd>
 </dl>
 
-For more information about the configuration parameters for `realtime` mode, see [Realtime Mode]({{< ref "docs/sources/configuration-files/extractor-reference#realtime-mode" >}}).
+#### Support for DDL replication
+Replicant [supports DDL replication for real-time MySQL source]({{< ref "docs/sources/ddl-replication" >}}). For more information, [contact us](https://arcion.io/contact).
 
 {{< hint "info" >}}
-If you want to use the Source Column Transformation feature of Replicant for a **MySQL-to-Databricks** pipeline, see [Source Column Transformation]({{< ref "docs/sources/configuration-files/source-column-transformation" >}}).
+**Note:** If you want to use the Source Column Transformation feature of Replicant for a _MySQL-to-Databricks_ pipeline, see [Source Column Transformation]({{< ref "docs/sources/configuration-files/source-column-transformation" >}}).
 {{< /hint >}}
 
 ## Replication of generated columns
