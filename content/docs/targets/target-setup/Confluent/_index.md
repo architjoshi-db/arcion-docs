@@ -16,6 +16,10 @@ Arcion supports the following Confluent products:
   
 In this section, we present comprehensive instructions on how to get started with Arcion and Confluent.
 
+{{< hint "info" >}}
+Don't have a Confluent account? Get one [here](https://www.confluent.io/confluent-cloud/?utm_campaign=tm.fm-ams_cd.cwc-arcion-newuser&utm_medium=partnerref).
+{{< /hint >}}
+
 ## In this section
 
 - [Confluent Cloud]({{< relref "confluent-cloud" >}})
