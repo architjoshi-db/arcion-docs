@@ -7,18 +7,21 @@ bookHidden: false
 ---
 # Source MySQL
 
-The extracted `replicant-cli` will be referred to as the `$REPLICANT_HOME` directory.
+The following steps refer [the extracted Arcion self-hosted CLI download]({{< ref "docs/quickstart/arcion-self-hosted#download-replicant-and-create-replicant_home" >}}) as the `$REPLICANT_HOME` directory.
 
-## I. Install `mysqlbinlog` utility on Replicant host
+## Prerequisites
+
+### I. Install `mysqlbinlog` utility on Replicant host
 
 Install an appropriate version of the  `mysqlbinlog` utility on the machine where Replicant runs. The utility must be compatible with the source MySQL server.
 
-To ensure that you possess the appropriate version of `mysqlbinlog` utility, install the same MySQL server version as your source MySQL system. After installation, you can stop the MySQL server running on Replicant's host using the following command:
+To ensure that you possess the appropriate version of `mysqlbinlog` utility, install the same MySQL server version as your source MySQL system. After installation, stop the MySQL server running on Replicant's host:
+
   ```BASH
   sudo systemctl stop mysql
   ```
 
-## II. Enable binary logging in MySQL server
+### II. Enable binary logging in MySQL server
 
 1. Open the MySQL option file `var/lib/my.cnf` (create the file if it doesn't already exist). Add the following lines in the file:
 
@@ -44,16 +47,16 @@ To ensure that you possess the appropriate version of `mysqlbinlog` utility, ins
     The third line [specifies how the server writes row images to the binary log](https://dev.mysql.com/doc/refman/5.7/en/replication-options-binary-log.html#sysvar_binlog_row_image). In `full` mode, the server logs all columns in both the before image and the after image.</li>
     </ol>
 
-2. Export `$MYSQL_HOME` path with the following command:
+2. Export `$MYSQL_HOME` path:
     ```SQL
     export MYSQL_HOME=/var/lib/mysql
     ```
-3. Restart MySQL with the following command:
+3. Restart MySQL service:
   
     ```BASH
     sudo systemctl restart mysql
     ```
-4. Verify that you successfully enabled binary logging with the following command:
+4. Verify that you have successfully enabled binary logging:
     ```BASH
     mysql -u root -p
     ```
@@ -73,21 +76,21 @@ To ensure that you possess the appropriate version of `mysqlbinlog` utility, ins
     7 rows in set (0.011 sec)
     ```
 
-## III. Set up MySQL user for Replicant
-1.	Create MySQL user
+### III. Set up MySQL user for Replicant
+1.	Create MySQL user:
     ```SQL
     CREATE USER 'username'@'replicate_host' IDENTIFIED BY 'password';
     ```
-2.	Grant the following privileges on all tables involved in replication
+2.	Grant the following privileges on all tables relevant to the replication:
     ```SQL
     GRANT SELECT ON "<user_database>"."<table_name>" TO 'username'@'replicate_host';
     ```
-3.	Grant the following Replication privileges
+3.	Grant the following Replication privileges:
     ```SQL
     GRANT REPLICATION CLIENT ON *.* TO 'username'@'replicate_host';
     GRANT REPLICATION SLAVE ON *.* TO 'username'@'replicate_host';
     ```
-4.	Verify if created user can access bin logs
+4.	Verify if this new user can access binary logs:
     ```SQL
     mysql> show binary logs;
     +------------------+-----------+
@@ -101,7 +104,7 @@ To ensure that you possess the appropriate version of `mysqlbinlog` utility, ins
     4 rows in set (0.001 sec)
     ```
 
-## IV. Set up connection configuration
+## I. Set up connection configuration
 Specify your MySQL connection details to Replicant with a connection configuration file. You can find a sample connection configuration file `mysql.yaml` in the `$REPLICANT_HOME/conf/conn` directory.
 
 To connect to MySQL, you can choose between two methods for an authenticated connection:
@@ -109,7 +112,7 @@ To connect to MySQL, you can choose between two methods for an authenticated con
   - [Using SSL](#connect-using-ssl)
 
 ### Connect with username and password
-For connecting to MySQL with basic username and password authentication, you have these two options: 
+To connect to MySQL with basic username and password authentication, you have these two options: 
 {{< tabs "username-pwd-connection-method" >}}
 {{< tab "Specify credentials in plain text" >}}
 You can specify your credentials in plain form in the connection configuration file like the folowing sample:
@@ -278,63 +281,60 @@ Replace the following:
 {{< /tab >}}
 {{< /tabs >}}
 
-## V. Set up filter configuration
+## II. Set up filter configuration (optional)
+If you want to define filter rules for source MySQL, specify the them in the filter configuration file. You can find a sample filter configuration file in the `filter/` directory of your [Arcion self-hosted CLI download]({{< ref "docs/quickstart/arcion-self-hosted#download-replicant-and-create-replicant_home" >}}). 
 
-1. From ```$REPLICANT_HOME```, navigate to the filter configuration file:
-    ```BASH
-    vi filter/mysql_filter.yaml
-    ```
-
-2. According to your requirements, specify the data you want to replicate. Use the following format:  
-
-    ```yaml
-    allow:
-      catalog: "tpch"
-      types: [TABLE]
-
-      allow:
-        NATION:
-           allow: ["US, AUS"]
-
-        ORDERS:  
-           allow: ["product", "service"]
-           conditions: "o_orderkey < 5000"
-
-        PART:
-    ```
-
-      The preceding sample consists of the following elements:
-
-      - Data of object type `TABLE` in the schema `tpch` goes through replication.
-      - From catalog `tpch`, only the `NATION`, `ORDERS`, and `PART` tables go through replication.
-      - From `NATION` table, only the `US` and `AUS` columns go through replication.
-      - From the `ORDERS` table, only the `product` and `service` columns go through replication as long as those columns meet the condition in `conditions`.
-    
-    {{< hint "info" >}}**Note:** Unless you specify, Replicant replicates all tables in the catalog.{{< /hint >}}
-
-    The following illustrates the format you must follow:
-
-    ```YAML
-    allow:
-      catalog: <your_catalog_name>
-      types: <your_object_type>
+For example:
 
 
-      allow:
-        <your_table_name>:
-          allow: ["your_column_name"]
-          condtions: "your_condition"
+```yaml
+allow:
+  catalog: "tpch"
+  types: [TABLE]
 
-        <your_table_name>:  
-          allow: ["your_column_name"]
-          conditions: "your_condition"
+  allow:
+    NATION:
+        allow: ["US, AUS"]
 
-        <your_table_name>:
-    ```
+    ORDERS:  
+        allow: ["product", "service"]
+        conditions: "o_orderkey < 5000"
 
-For a thorough explanation of the configuration parameters in the filter file, see [Filter Reference]({{< ref "docs/sources/configuration-files/filter-reference" >}} "Filter Reference").
+    PART:
+```
 
-## VI. Set up Extractor configuration
+  The preceding sample consists of the following elements:
+
+  - Data of object type `TABLE` in the schema `tpch` goes through replication.
+  - From catalog `tpch`, only the `NATION`, `ORDERS`, and `PART` tables go through replication.
+  - From `NATION` table, only the `US` and `AUS` columns go through replication.
+  - From the `ORDERS` table, only the `product` and `service` columns go through replication as long as those columns meet the condition in `conditions`.
+
+{{< hint "info" >}}**Note:** Unless you specify, Replicant replicates all tables in the catalog.{{< /hint >}}
+
+The following illustrates the format you must follow:
+
+```YAML
+allow:
+  catalog: <your_catalog_name>
+  types: <your_object_type>
+
+
+  allow:
+    <your_table_name>:
+      allow: ["your_column_name"]
+      condtions: "your_condition"
+
+    <your_table_name>:  
+      allow: ["your_column_name"]
+      conditions: "your_condition"
+
+    <your_table_name>:
+```
+
+For a thorough explanation of filters, see [Filter Reference]({{< ref "docs/sources/configuration-files/filter-reference" >}}).
+
+## III. Set up Extractor configuration
 To configure replication according to your requirements, specify your configuration in the Extractor configuration file. You can find a sample Extractor configuration file `mysql.yaml` in the `$REPLICANT_HOME/conf/src` directory. For a thorough explanation of the configuration parameters in the Extractor file, see [Extractor Reference]({{< ref "docs/sources/configuration-files/extractor-reference" >}} "Extractor Reference").
 
 You can configure the following [replication modes]({{< ref "running-replicant" >}}) by specifying the parameters under their respective sections in the configuration file:
