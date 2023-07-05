@@ -344,30 +344,30 @@ Specifies whether LOB columns are inlined or received in separate MQ messages:
 The following shows a sample CDC log configuration using MQ as `cdc-log-storage`:
 
 ```YAML
-  cdc-log-config:
-    cdc-log-storage: MQ
-    mqueue-connections:
-      queue-conn1:
-        host: localhost
-        port: 1450
-        queue-manager: CDC_QM
-        queue-channel: CDC_Q_CHANNEL
-        username: queue_manager
-        password: queue_manager
-        queues:
-        - name: CDC_LOG_Q
-        message-format: XML
-        message-type: ROW
-        lob-send-option: INLINE
-          backup-mqueue-connection:
-            host: localhost
-            port: 1460
-            queue-manager: CDC_QM_BACKUP
-            queue-channel: CDC_Q_BACKUP_CHANNEL
-            username: backup_queue_manager
-            password: backup_queue_manager
-            queues:
-            - name: CDC_LOG_BACKUP_Q
+cdc-log-config:
+  cdc-log-storage: MQ
+  mqueue-connections:
+    queue-conn1:
+      host: localhost
+      port: 1450
+      queue-manager: CDC_QM
+      queue-channel: CDC_Q_CHANNEL
+      username: queue_manager
+      password: queue_manager
+      queues:
+      - name: CDC_LOG_Q
+      message-format: XML
+      message-type: ROW
+      lob-send-option: INLINE
+        backup-mqueue-connection:
+          host: localhost
+          port: 1460
+          queue-manager: CDC_QM_BACKUP
+          queue-channel: CDC_Q_BACKUP_CHANNEL
+          username: backup_queue_manager
+          password: backup_queue_manager
+          queues:
+          - name: CDC_LOG_BACKUP_Q
 ```
 {{< /tab >}}
 {{< tab "Kafka as CDC log storage" >}}
