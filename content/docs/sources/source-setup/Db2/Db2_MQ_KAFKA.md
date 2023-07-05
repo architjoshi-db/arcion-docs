@@ -9,7 +9,7 @@ bookHidden: false
 # Source IBM Db2 with Kafka/MQ
 This page describes how to set up Source Db2 with Kafka and MQ.
 
-The following steps refer [the extracted Arcion self-hosted CLI download]({{< ref "docs/quickstart/#ii-download-replicant-and-create-a-home-repository" >}}) as the `$REPLICANT_HOME` directory.
+The following steps refer [the extracted Arcion self-hosted CLI download]({{< ref "docs/quickstart/arcion-self-hosted#ii-download-replicant-and-create-replicant_home" >}}) as the `$REPLICANT_HOME` directory.
 
 ## I. Check permissions
 You need to verify that the user possesses necessary permissions on source Db2 in order to perform replication. To know about the permissions, see [IBM Db2 permissions]({{< ref "docs/sources/source-prerequisites/db2#permissions" >}}).
