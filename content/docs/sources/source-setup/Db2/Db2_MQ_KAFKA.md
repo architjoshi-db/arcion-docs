@@ -60,14 +60,26 @@ If you store your connection credentials in AWS Secrets Manager, you can tell Re
 {{< /tabs>}}
 
 ### Configure CDC logs and monitoring
-For CDC-based replication from source Db2 server, you can choose between IBM MQ and Kafka as the storage for Db2 logs. To specify the storage type, use the `cdc-log-storage` parameter. All CDC log and monitoring configurations start with the parent field `cdc-log-config`.
+For CDC-based replication from source Db2 server, you can choose between IBM MQ and Kafka as the storage for Db2 logs. To specify the storage type, set the `cdc-log-storage` parameter to one of the following:
+
+- `MQ`
+- `KAFKA_TRANSACTIONAL`
+- `KAFKA_EVENTUAL`
+ 
+All CDC log and monitoring configurations start with the parent field `cdc-log-config`.
 
 {{< tabs "db2-logs-mq-kafka" >}}
 {{< tab "IBM MQ as CDC log storage" >}}
 
-For IBM MQ as `cdc-log-storage`, you can configure the following parameters:
+To use IBM MQ for CDC logs, set `cdc-log-storage` to `MQ`.
 
-#### `mqueue-connections`
+## Connection details
+<dl class="dl-indent">
+<dt>
+
+`mqueue-connections`
+</dt>
+<dd>
 If you enable real-time replication and use IBM MQ for CDC logs, then you need to specify MQ connection information in this field. To connect to MQ, you can either specify credentials in plain text form, or use SSL.
 <dl class="dl-indent">
 <dt>
@@ -199,6 +211,7 @@ Specifies whether LOB columns are inlined or received in separate MQ messages:
 - `SEPARATE`
 </dd>
 </dl>
+</dd>
 </dd>
 <dt>
 
@@ -340,8 +353,9 @@ Specifies whether LOB columns are inlined or received in separate MQ messages:
 </dd>
 </dl>
 </dl>
+</dl>
 
-The following shows a sample CDC log configuration using MQ as `cdc-log-storage`:
+### Sample configuration 
 
 ```YAML
 cdc-log-config:
@@ -371,11 +385,30 @@ cdc-log-config:
 ```
 {{< /tab >}}
 {{< tab "Kafka as CDC log storage" >}}
-If you choose Kafka for CDC logs, set `cdc-log-storage` to one of the following types:
+To use Kafka for CDC logs, set `cdc-log-storage` to one of the following types:
 
 - `KAFKA_TRANSACTIONAL`
 - `KAFKA_EVENTUAL`
 
+## Kafka log storage overview
+- For `KAFKA_TRANSACTIONAL` as `cdc-log-storage`, based on the value of `message-format`, the following assumptions take place:
+   - If you set `message-format` to `XML` or `DELIMITED`, then the key of record is the MQ `MessageId` and value is the `MQMessage` in `XML` or `DELIMITED` format.
+   - If you set `message-format` to `KCOP_MULTIROW_AUDIT`, then `cdc-log-topic` corresponds to the topic name of the `COMMIT-STREAM` topic associated with the subscription. Replicant replicates the topic in a transactionally consistent manner.
+
+- For `KAFKA_EVENTUAL` as `cdc-log-storage`, the topic name follows the format `cdc-log-topic-prefix.<table_name>`. This format follows the IBM IIDR naming scheme for Kafka topics. See the sample configurations in the next sections for better understanding. 
+
+By default, IIDR creates a Kafka topic using the following naming convention:
+
+```
+<datastore_name>.<subscription_name>.<database>.<schema>.<table>
+```
+In this case, set `cdc-log-topic-prefix` to the following:
+
+```
+<datastore_name>.<subscription_name>.<database>.<schema>
+```
+
+## Connection details
 The connection details for Kafka start with the parent `kafka-connection` field. It contains the following parameters:
 
 <dl class="dl-indent">
@@ -449,32 +482,36 @@ Specifies whether LOB columns are inlined or received in separate MQ messages:
 </dt>
 <dd>
 
-Connection configuration to connect to Kafka. For more information, see the sample configurations in the next sections.
+Connection configuration to connect to Kafka. 
+<dl class="dl-indent">
+<dt>
+
+`max-poll-records`
+</dt>
+<dd>
+
+The maximum number of records returned in a single call to `poll()`. For more information, see the [`max.poll.records` consumer configuration](https://docs.confluent.io/platform/current/installation/configuration/consumer-configs.html#max-poll-records).
+
+_Default: `1000`._
+</dd>
+<dt>
+
+`max-poll-interval-ms`
+</dt>
+<dd>
+
+The maximum delay in milliseconds between invocations of `poll()` when using consumer group management. For more information, see the [`max.poll.interval.ms` consumer configuration](https://docs.confluent.io/platform/current/installation/configuration/consumer-configs.html#max-poll-records).
+
+_Default: `900000`._
+</dd>
+</dl>
+For better understanding, see the sample configurations in the following sections.
 </dd>
 </dl>
 </dd>
 </dl>
-  
-When using Kafka as CDC log storage, keep the following in mind:
 
-- For `KAFKA_TRANSACTIONAL` as `cdc-log-storage`, based on the value of `message-format`, the following assumptions takes place:
-   - If you set `message-format` to `XML` or `DELIMITED`, then the key of record is the MQ `MessageId` and value is the `MQMessage` in `XML` or `DELIMITED` format.
-   - If you set `message-format` to `KCOP_MULTIROW_AUDIT`, then `cdc-log-topic` corresponds to the topic name of the `COMMIT-STREAM` topic associated with the subscription. Replicant replicates the topic in a transactionally consistent manner.
-
-- For `KAFKA_EVENTUAL` as `cdc-log-storage`, the topic name follows the format `cdc-log-topic-prefix.<table_name>`. This format follows the IBM IIDR naming scheme for Kafka topics. See the sample configurations in the next sections for better understanding. 
-
-By default, IIDR creates a Kafka topic using the following naming convention:
-
-```
-<datastore_name>.<subscription_name>.<database>.<schema>.<table>
-```
-In this case, set `cdc-log-topic-prefix` to the following:
-
-```
-<datastore_name>.<subscription_name>.<database>.<schema>
-```
-
-#### Sample configuration for `KAFKA_TRANSACTIONAL`
+### Sample configuration for `KAFKA_TRANSACTIONAL`
 
 ```YAML
 cdc-log-config:
@@ -491,7 +528,7 @@ cdc-log-config:
           port: 19092
 ```
 
-#### Sample configuration for `KAFKA_EVENTUAL`
+### Sample configuration for `KAFKA_EVENTUAL`
 
 ```YAML
 cdc-log-config:
