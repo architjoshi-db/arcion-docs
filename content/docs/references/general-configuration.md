@@ -1,6 +1,6 @@
 ---
 pageTitle: General configuration of Arcion Replicant
-title: General System Configuration of Replicant
+title: Replicant System Configuration
 description: "Learn about the general system configuration parameters that that allows you to optionally tune Replicant's behavior and functions."
 ---
 
@@ -105,7 +105,7 @@ If free memory drops below this threshold, Replicant stops and resumes operation
 Specifies the time interval between two successive liveness checks in milliseconds.
 </dd>
 
-### `schema-validation`_[v20.09.14.8]_
+### `schema-validation`*[v20.09.14.8]*
 Enables and configures schema validation errors. Replicant displays these errors in the information dashboard.
 
 <dl class="dl-indent">
@@ -172,7 +172,7 @@ Enables permission validation.
 _Default: `false`._
 </dd>
 
-### `fencing` _[v20.10.07.3]_
+### `fencing` *[v20.10.07.3]*
 This parameter allows you to prevent multiple instances of Replicant from executing simultaneously.
 
 <dl class="dl-indent" >
@@ -212,7 +212,7 @@ _Default: `DDL` for JDBC databases._
 </dd>
 <dt>
 
-`enable-dst-query-fence` _[v20.02.01.13]_
+`enable-dst-query-fence` *[v20.02.01.13]*
 </dt>
 <dd>
 
@@ -239,13 +239,17 @@ _Default: `30_000`_
 </dd>
 </dl>
 
-### `data-dir` _[v20.12.04.4]_
-Specify the directory for storing replication data.
+### `data-dir` *[v20.12.04.4]*
+Specifies the directory to store temporary files related to bulk loading. 
+
+If you don't specify [`trace-dir`](#trace-dir-v2012044), `data-dir` also stores [the `trace.log` file]({{< relref "troubleshooting#the-log-files" >}}).
 
 _Default: `data/`._
 
-### `trace-dir` _[v20.12.04.4]_
-Specifies the directory location for [the `trace.log` file]({{< relref "troubleshooting#the-log-files" >}}). If you set [`data-dir`](#data-dir-v2012044), Replicant creates `trace-dir` inside the [`data-dir`](#data-dir-v2012044) directory.
+### `trace-dir` *[v20.12.04.4]*
+Specifies the directory location for [the `trace.log` file]({{< relref "troubleshooting#the-log-files" >}}). 
+
+If you set [`data-dir`](#data-dir-v2012044), Replicant creates `trace-dir` inside the [`data-dir`](#data-dir-v2012044) directory.
 
 _Default: `data-dir/default`._
 
@@ -254,14 +258,14 @@ Specifies the directory location for [the `error-trace.log` file]({{< relref "tr
 
 _Default: `data-dir/default`._
 
-### `trace-time-zone` _[v20.12.04.8]_
+### `trace-time-zone` *[v20.12.04.8]*
 The `trace.log` file contains timestamps in a specific timezone. This parameter allows you to specify the timezone to use.
 
 For example, with `trace-time-zone: Asia/Kolkata`, `trace.log` contains timestamps as `2021-01-07 19:08:24.530 IST`.
 
 _Default: `UTC`. For example, `2021-01-07 13:40:23.462`._
 
-### `trace-level` _[v20.12.04.12]_
+### `trace-level` *[v20.12.04.12]*
 Specifies the level of logback tracing. You can choose among the following trace levels: 
 
 - `DEBUG`
@@ -271,26 +275,26 @@ Specifies the level of logback tracing. You can choose among the following trace
 
 _Default: `DEBUG`._
 
-### `archive-trace` _[v20.12.04.12]_
+### `archive-trace` *[v20.12.04.12]*
 `{true|false}`.
 
 Archives trace logs on a daily basis into time stamped files.
 
 _Default: `true`._
 
-### `purge-trace-before-days` _[v20.12.04.12]_
+### `purge-trace-before-days` *[v20.12.04.12]*
 Specify the number of days to keep `trace.log` archives. Older trace logs are automatically deleted.
 
 _Default: `0`._
 
-### `sensitive-info-trace-dir` _[v20.12.04.16]_
+### `sensitive-info-trace-dir` *[v20.12.04.16]*
 `{true|false}`.
 
 If `true`, Replicant logs sensitive trace messages into a separate file in the `sensitive_trace_directory` directory.
 
 _Default: `true`._
 
-### `dashboard-dump-file` _[v21.04.06.1]_
+### `dashboard-dump-file` *[v21.04.06.1]*
 Replicant can dump the contents of the information dashboard in a file. This parameter allows you to configure its behavior.   
 
 <dl class="dl-indent" >
@@ -347,10 +351,10 @@ _Default: `1000`._
 </dd>
 </dl>
 
-### `license-path` _[v21.05.04.3]_
+### `license-path` *[v21.05.04.3]*
 Specifies the location of the license file.
 
-### `db-connection-tracing` _[v21.05.04.6]_
+### `db-connection-tracing` *[v21.05.04.6]*
 `{true|false}`.
 
 Replicant can collect diagnostics on database connection usage. This parameter allows you to enable 
