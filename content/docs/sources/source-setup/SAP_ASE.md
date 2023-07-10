@@ -159,7 +159,6 @@ Replace the following:
     - You can run only one Extractor thread for each SAP ASE database. You can run multiple snapshot tasks in parallel.
     - DDL Replication isn't supported.
     - Running Merge operations during CDC will result in a non-recoverable error. To bring the Target back in sync, you'll need to run reinit or full snapshot again.
-    - Rollback isn't supported. So transactions that are rollback on Source will not be rollback on Target. In that case, you can perform reinit on that table. 
     - View Replication is not supported for realtime but possible for snapshot.
     - In order to avoid clogging source database, we need to set `fetch-interval-s` to a value greater than or equal to `10` seconds. This will pause the Extractor thread for `fetch-interval-s` seconds before extracting the next batch of logs.
     - It's not possible to manually reset truncation point.
