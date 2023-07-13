@@ -106,7 +106,7 @@ Specifies the time interval between two successive liveness checks in millisecon
 </dd>
 
 ### `schema-validation`*[v20.09.14.8]*
-Enables and configures schema validation errors. Replicant displays these errors in the information dashboard.
+Enables and configures schema validation. Replicant displays schema validation errors in the information dashboard.
 
 <dl class="dl-indent">
 <dt>
@@ -115,9 +115,9 @@ Enables and configures schema validation errors. Replicant displays these errors
 </dt>
 <dd> 
 
-`{true|false}` 
+`{true|false}`.
 
-Enables schema validation. </dd>
+Enables schema validation. Replicant validates the target schema against the source schema. </dd>
 <dt>
 
 `error-types`
@@ -141,12 +141,23 @@ _Default: `[ALL]`._
 <dd>
 
 
-`{true|false}` 
+`{true|false}`.
 
 Whether to consider warnings as errors.
 
 _Default: `false`._
 </dd>
+<dt>
+
+`dump-schema-mapping`
+</dt>
+<dd>
+
+`{true|false}`.
+
+Controls whether or not Replicant dumps the mapping between source and target schemas.
+</dd>
+</dl>
 
 ### `permission-validation`
 Validates whether user possesses appropriate permissions to read table data in a particular database. This parameter works in [`snapshot`]({{< ref "docs/running-replicant#replicant-snapshot-mode" >}}) and [`full`]({{< ref "docs/running-replicant#replicant-full-mode" >}}) mode replication.
@@ -165,15 +176,23 @@ Validates whether user possesses appropriate permissions to read table data in a
 </dt>
 <dd>
 
-`{true|false}` 
+`{true|false}`.
 
 Enables permission validation.
 
-_Default: `false`._
+_Default: `true` for Databricks and Snowflake targets, `false` otherwise._
 </dd>
 
 ### `fencing` *[v20.10.07.3]*
-This parameter allows you to prevent multiple instances of Replicant from executing simultaneously.
+This parameter allows you to prevent multiple instances of Replicant from executing simultaneously. Consider the situation when the same replication gets [resumed]({{< ref "docs/running-replicant#various-replication-options-explanation" >}}) twice, leading to two replication processes trying to perform the same job. Fencing ensures that the older replication process terminates as soon as a new replication process starts.
+
+Replicant achieves this functionality by using validation tokens. A validation token consists of a monotonically increasing counter. Each replication obtains this counter at the start. Before each action on the respective storage, the replication job performs validation against this counter. Thus a validation token acts as a _fence_ around the metadata and destination storage.
+
+Fencing works in the following manner depending on the configuration:
+
+- In `DDL` fencing, Replicant embeds the validation token into the table name.
+- In `DML` fencing, Replicant embeds validation token into a row value and keeps it in the respective fencing table
+- Secifying `NONE` disables fencing for the respective storage.
 
 <dl class="dl-indent" >
 <dt>
@@ -379,6 +398,25 @@ Whether to reuse metadata tables instead of creating new ones.
 _Default: `false`._
 </dd>
 </dl>
+
+### `report-dir` 
+Controls where Replicant stores reports, such as the permission validation report.
+
+### `log-pattern`
+Allows you to change the log format—for example, `"%d{HH:mm:ss.SSS} [%t] [replicant] %-5level %logger{35} - %msg %n"`. For more information, see [the logback documentation](https://logback.qos.ch/manual/layouts.html).
+
+### `enable-console-logger`
+Enables logging in the console. Normally, these logs go to the `trace.log` file.
+
+### `cleanup-dst`
+`{true|false}`.
+
+Whether to clean up target metadata tables.
+
+### `ntp-server` 
+Allows you to specify the time server for license validation. 
+
+_Default: `time.google.com`._
 
 ## Sample configuration
 You can find a sample Replicant system configuration file inside the `conf/general` directory of your [Arcion self-hosted download]({{< ref "docs/quickstart/arcion-self-hosted#download-replicant-and-create-replicant_home" >}}).
