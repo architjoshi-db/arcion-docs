@@ -450,6 +450,17 @@ _Default: `true`._
 **Important:** In `realtime` mode, `fetchIdentityInfo` only applies with [DDL replication]({{< relref "../ddl-replication" >}}). For example, when `ALTER TABLE ADD COLUMN...`  occurs and the new column is an identity column.
 {{< /hint >}}
 
+#### Example
+The followigng example ignores identity information only during CDC replication with DDLs:
+
+```YAML
+snapshot:
+  threads: 16
+  ...
+
+realtime:
+  fetchIdentityInfo: false 
+```
 
 ### `per-table-config`
 You can use this section to override certain configurations in specific tables if necessary. It follows [the same structure as described in the `per-table-config` of snapshot mode](#per-table-config).
