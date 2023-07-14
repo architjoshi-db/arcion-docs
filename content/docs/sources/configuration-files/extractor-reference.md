@@ -147,6 +147,28 @@ Controls whether or not multiple tables can overlap during extraction. If you se
 
 _Default: `true`._
 
+### `fetchIdentityInfo` *[v23.05.31.9]*
+`true` or `false`.
+
+Controls whether or not to replicate identity information of columns (auto-increment columns). If `true`, replication captures and replicates identity information of columns. Disabling `fetchIdentityInfo` causes the replication to omit `AUTO_INCREMENT` (and all equivalent attributes depending on the storage) information while creating tables on the target database. You can also specify this parameter in a [per-table configuration](#per-table-config).
+
+_Default: `true`._
+
+#### Example
+The following example captures identity column information for all tables except `example_table`:
+
+```YAML
+snapshot:
+  threads: 16
+  fetchIdentityInfo: true
+
+  per-table-config:
+  - catalog: testdb
+    tables:
+      example_table:
+        fetchIdentityInfo: false
+```
+
 ### `per-table-config`
 You can use this section to override certain configurations in specific tables if necessary.
 
@@ -182,6 +204,7 @@ Specify your table name here. Under the table name, specify your table-specific 
 - **`extraction-priority`** *[v20.09.14.1]*. Priority for scheduling extraction of this table. Higher value is higher priority. Both positive and negative values are allowed.
   _Default: `0`._
 * **`normalize`** *[v20.09.14.10]*. Use it to override the global [`normallize`](#normalize-v20091410) parameter for this table.
+- **`fetchIdentityInfo`**. Use it to override the global [`fetchIdentityInfo`](#fetchidentityinfo-v2305319) parameter for this table.
 
 </dd>
 </dl>
@@ -415,6 +438,18 @@ This parameter is only supported for MongoDB as a source. It configures the norm
 |`enable` | Whether to enable normalization.| <ul><li>`true`</li><li>`false`</li></ul> <p>*Default: `false`* |
 |`de-duplicate`| Whether to de-duplicate data during normalization.|<ul><li>`REINIT`</li><li>`INLINE`</li></ul><p>*Default: `false`* |
 |`extract-upto-depth`| The depth upto which the MongoDB document should be extracted.| *Default: `INT_MAX`*  |
+
+### `fetchIdentityInfo` *[v23.05.31.9]*
+`true` or `false`.
+
+Controls whether or not to replicate identity information of columns (auto-increment columns). If `true`, replication captures and replicates identity information of columns. If `false`, it causes the replication to omit `AUTO_INCREMENT` (and all equivalent attributes depending on the storage) information while creating tables on the target database.
+
+_Default: `true`._
+
+{{< hint "warning" >}}
+**Important:** In `realtime` mode, `fetchIdentityInfo` only applies with [DDL replication]({{< relref "../ddl-replication" >}}). For example, when `ALTER TABLE ADD COLUMN...`  occurs and the new column is an identity column.
+{{< /hint >}}
+
 
 ### `per-table-config`
 You can use this section to override certain configurations in specific tables if necessary. It follows [the same structure as described in the `per-table-config` of snapshot mode](#per-table-config).
