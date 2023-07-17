@@ -150,7 +150,7 @@ _Default: `true`._
 ### `fetchIdentityInfo` *[v23.05.31.9]*
 `true` or `false`.
 
-Controls whether or not to replicate identity information of columns (auto-increment columns). If `true`, replication captures and replicates identity information of columns. Disabling `fetchIdentityInfo` causes the replication to omit `AUTO_INCREMENT` (and all equivalent attributes depending on the storage) information while creating tables on the target database. You can also specify this parameter in a [per-table configuration](#per-table-config).
+Controls whether or not to replicate identity information of columns (auto-increment columns). If `true`, replication captures and replicates identity information of columns. If `false`, replication omits `AUTO_INCREMENT` (and all equivalent attributes depending on the storage) information while creating tables on the target database. You can also specify this parameter in a [per-table configuration](#per-table-config).
 
 _Default: `true`._
 
@@ -442,7 +442,7 @@ This parameter is only supported for MongoDB as a source. It configures the norm
 ### `fetchIdentityInfo` *[v23.05.31.9]*
 `true` or `false`.
 
-Controls whether or not to replicate identity information of columns (auto-increment columns). If `true`, replication captures and replicates identity information of columns. If `false`, it causes the replication to omit `AUTO_INCREMENT` (and all equivalent attributes depending on the storage) information while creating tables on the target database.
+Controls whether or not to replicate identity information of columns (auto-increment columns). If `true`, replication captures and replicates identity information of columns. If `false`, replication omits `AUTO_INCREMENT` (and all equivalent attributes depending on the storage) information while creating tables on the target database.
 
 _Default: `true`._
 
