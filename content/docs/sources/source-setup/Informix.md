@@ -12,7 +12,7 @@ The extracted `replicant-cli` will be referred to as the `$REPLICANT_HOME` direc
 
 ## I. Set up CDC Replication
 
-For enabling CDC-based replication from the source Informix server, please follow the instructions in [Enabling CDC Replication for Informix](/../../references/source-prerequisites/informix/#enabling-cdc-replication).
+For enabling CDC-based replication from the source Informix server, please follow the instructions in [Enabling CDC Replication for Informix]({{< ref "docs/sources/source-prerequisites/informix#enabling-cdc-replication" >}}).
 
 ## II. Set up Logical Log Configuration
 
