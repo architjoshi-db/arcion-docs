@@ -22,13 +22,18 @@ Make sure that you possess the following object privileges for CDC-based replica
 - Streams may become stale over time. For more information, see [Data Retention Period and Staleness
 ](https://docs.snowflake.com/en/user-guide/streams-intro#data-retention-period-and-staleness). 
 - Snowflake can extract data on a per-table basis. Therefore, you don't need to create heartbeat table manually.
+- Snowflake native export should only be used when the applier supports file-based bulk load.
+- We recommend that you use S3 as the stage only when the Applier utilizes S3 as the stage for bulk loading. Otherwise, replication performs similarly to the `NATIVE` stage type.
+- When using the CSV file format, make sure that the same `native-extract-options` exist in both the Extractor and Applier configurations.
+- Parquet files might produce an error with `TIMESTAMP_TZ` or `TIMESTAMP_LTZ` data.
+- For all general limitations and notes, see [Usage notes for `COPY INTO` command](https://docs.snowflake.com/en/sql-reference/sql/copy-into-location#usage-notes).
 
 {{< hint "danger" >}}
 **Warning:** If a stream goes stale, Replicant drops and recreates the stream. This might cause data loss. So we highly recommend that you take necessary measures so that streams don't become stale.
 {{< /hint >}}
 
 
-## I. Set up Connection Configuration
+## I. Set up connection configuration
 
 1. From `$REPLICANT_HOME`, navigate to the sample connection configuration file:
 
@@ -92,15 +97,102 @@ Make sure that you possess the following object privileges for CDC-based replica
         - `password`: This field is optional. If you don't specify the keystore password here, then you must use the UUID from your license file as the keystore password. Remember to keep your license file somewhere safe in order to keep the password secure.
 
     ### Parameters related to stage configuration
-    - `stage`: By default, Replicant uses Snowflake’s native stage for bulk loading. But it's also possible to use an external stage like Azure. This section allows you to specify the details Replicant needs to connect to and use a specific stage.
+    For `COPY` extraction method, you need to specify a stage connection configuration. To specify the stage configuration, use the `stage` field in the connection configuration file. The following configuration options are available:
 
-    - `type`*[v21.06.14.1]*: The stage type. Allowed stages are `NATIVE`, `S3`, and `AZURE`.
-    - `root-dir`: Specify a directory on stage which can be used to stage bulk-load files.
-    -`conn-url`*[v21.06.14.1]*: URL for the stage. For example, if stage is `S3`, specify bucket name; for `AZURE`, specify container name.
-    - `key-id` : This config is valid for `S3` stage type only. Access Key ID for AWS account hosting s3.
-    - `account-name`*[v21.06.14.1]* : This config is valid for `AZURE` type only. Name of the ADLS storage account.
-    -`secret-key`*[v21.06.14.1]*: This config is valid for both `S3` and `AZURE` types. For example, Secret Access Key for AWS account hosting s3 or ADLS account.
-    - `token`*[v21.06.14.1]*:  This config is valid for `AZURE` type only. Indicates the SAS token for Azure storage.
+    <dl class="dl-indent">
+    <dt>
+
+    `type`*[v21.06.14.1]*
+    </dt>
+    <dd>
+
+    The stage type. The following stages are supported:
+    <dl class="dl-indent">
+    <dt>
+
+    `NATIVE`
+    </dt>
+    <dd>
+
+    Snowflake's native stage. This stage is created based on table name and job ID. You can specify `CSV` or `PARQUET` as the `file-format`. 
+    </dd>
+    <dt>
+    
+    `S3`
+    </dt>
+    <dd>
+
+    This specifies S3 as the external stage type, allowing Snowflake to export CSV or Parquet files directly to an S3 bucket. 
+    
+    To be able to connect to the S3 bucket, you need to provide the connection configuration using the `root-dir`, `conn-url`, `key-id`, and `secret-key` paramters. Keep in mind that you need to provide the same stage connection configuration in the target connection configuration file. This allows the Applier to pick up these files directly from S3. 
+    
+    We recommended S3 stage when both the Extractor and the Applier support S3.
+    </dd>
+    </dl>
+    </dd>
+    
+    <dt>
+
+    `file-format`
+    </dt>
+    <dd>
+
+    The file format to use for the exported data. The following file foramts are supported:
+
+    - `CSV`
+    - `PARQUET`
+    </dd>
+    <dt>
+    
+    `root-dir`
+    </dt>
+    <dd>
+
+    Specifies a directory on stage that can be used to stage bulk-load files.
+    </dd>
+    <dt>
+
+    `conn-url` *[v21.06.14.1]*
+    </dt>
+    <dd>
+
+    Specifies the URL for the stage. For example, for `S3` stage, specify the S3 bucket name.
+    </dd>
+    <dt>
+
+    `key-id`
+    </dt>
+    <dd>
+
+    Specifies the access key ID for AWS account hosting S3.  
+    </dd>
+    <dt>
+
+    `secret-key` *[v21.06.14.1]*
+    </dt>
+    <dd>
+
+    Specifies the secret access Key for AWS account hosting S3. Applies to `S3` stage type only.
+    </dd>
+    </dl>
+
+    #### Example configuration for `NATIVE` stage
+    ```YAML
+    stage:
+      type: NATIVE
+      file-format: PARQUET
+    ```
+
+    #### Example configuration for `S3` stage
+    ```YAML
+    stage:
+      type: S3
+      root-dir: "test_snowflake"      
+      conn-url: "replicate-stage"     
+      key-id: "AKIAIOSFODNN7EXAMPLE"         
+      secret-key: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"      
+      file-format: PARQUET            
+    ```
 
     ### Use RSA key pair for authentication
     You can also choose to use [Snowflake's key pair authentication support](https://docs.snowflake.com/en/user-guide/key-pair-auth.html) for enhanced authentication security instead of using basic authentication via username and password. 
@@ -206,11 +298,29 @@ Make sure that you possess the following object privileges for CDC-based replica
 
     {{< hint "info" >}} If you specify the `private-key-path` and `private-key-passphrase` parameters, you don't need to specify the `password` parameter in the connection configuration file. {{< /hint >}}
 
-## II. Set up Extractor Configuration
+## II. Set up Extractor configuration
 To configure replication mode according to your requirements, specify your configuration in the Extractor configuration file. You can find a sample Extractor configuration file `snowflake.yaml` in the `$REPLICANT_HOME/conf/src` directory. For example:
+
+### Native export
+Arcion Replicant supports exporting Snowflake data into CSV or Parquet files. You can store these files locally or in a remote directory like an S3 bucket. This feature is currently supported in `snapshot` mode.
+
+To enable native export, follow these steps:
+
+#### 1. Set the extraction method and options in the Extractor configuration file
+- Set the `extraction-method` parameter to `COPY` in the Extractor configuration file. This enables Snowflake native export by using the `COPY` command to export data. 
+
+  Extraction method defaults to `QUERY` and native export is disabled.
+
+- Set the `native-extract-options` options in the Extractor configuration file. 
+  
+  This configuration only applies when you use CSV as the file format for Snowflake native export. This allows you to tune parameters such as the compression type, control characters, delimiter, escape character, and line ending. Make sure to specify similar configurations in the [Applier `bulk-load`]({{< ref "docs/targets/configuration-files/applier-reference#bulk-load" >}}) parameter to avoid compatibility issues.
+
+#### 2. Specify stage configuration in the connection configuration file
+Snowflake dumps extracted files into a stage in CSV or Parquet format. To specify the stage configuration, see [Parameters related to stage configuration](#parameters-related-to-stage-configuration).
 
 ### Sample `snapshot` mode configuration
 
+{{< details title="With native export disabled" open=false >}}
 ```YAML
 snapshot:
   threads: 32
@@ -234,7 +344,26 @@ snapshot:
         split-hints:
           row-count-estimate: 15000
 ```
+{{< /details >}}
+{{< details title="With native export enabled" open=false >}}
+```YAML
+snapshot:
+  threads: 32
+  fetch-size-rows: 100000
+  min-job-size-rows: 1000000
+  max-jobs-per-chunk: 32
+  _traceDBTasks : true
 
+  extraction-method: COPY    
+
+  native-extract-options:
+    compression-type: "GZIP"
+    control-chars:
+      delimiter: ','
+      escape: "\\"
+      line-end: "\n"
+```
+{{< /details >}}
 For more information about the configuration parameters for `snapshot` mode, see [Snapshot mode]({{< ref "docs/sources/configuration-files/extractor-reference#snapshot-mode" >}}).
 
 ### Sample `realtime` mode configuration
