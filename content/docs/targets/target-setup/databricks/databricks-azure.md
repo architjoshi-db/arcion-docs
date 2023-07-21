@@ -285,7 +285,23 @@ If you want to define data mapping from your source to Azure Databricks, specify
 
     _Default: `false`._
     </dd>
+    <dt><code>parallel-transaction</code></dt>
+    <dd>
 
+    This configuration enables parallel batch processing. Parallel batch processing processes large transactions by splitting them into multiple batches and processing the batches concurrently. This speeds up real-time replication for large transactions and improves overall performance. This feature is available for both Legacy Databricks and Unity Catalog.
+
+    The following configuration options are available:
+
+    | Option | Value | Details |
+    |--------|-------|---------|
+    |`enable`| Boolean. {`true`\|`false`}. | Enables parallel batch processing. <p>_Default: `true` when [`txn-size-rows`]({{< relref "../../configuration-files/applier-reference#txn-size-rows-1" >}}) is greater than or equal to `2_000_000`._</p>|
+    |`txn-rows-threshold`|Integer|Sets the threshold limit for a transaction to qualify for splitting. If transaction size hits this threshold limit, the Applier thread splits the transaction into multiple batches for parallel processing. <p>_Default: `1_000_000`._</p>|
+    |`max-chunks-per-table`|Integer|Sets the number of batches to split a transaction into for parallel processing.<p>_Default: `5`._</p>|
+    |`threads`|Integer|Sets the number of threads responsible for parallel batch processing. For example, if the maximum number of chunks for each table is `5` and `threads` is set to `10`, the Applier processes only two transactions concurrently at a time. If new transactions come simultaneously, the main Applier threads process them serially in one batch.<p>_Default: The number of available processors to JVM._</p>|
+
+    </dd>
+    </dl>
+    
     ### Enable Type-2 CDC
     From version 22.07.19.3 onwards, Arcion supports Type-2 CDC for Databricks as the target. For more information, see [Type-2 CDC]({{< ref "docs/references/type-2-cdc" >}}) and [`cdc-metadata-type`]({{< ref "docs/targets/configuration-files/applier-reference#cdc-metadata-type" >}}).
 
