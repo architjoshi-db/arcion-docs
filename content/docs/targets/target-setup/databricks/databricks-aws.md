@@ -243,7 +243,7 @@ If you want to define data mapping from your source to Databricks AWS, specify t
 
     The Applier creates temporary table using target table schema to ingest CDC operations to target table. Creating and dropping temporary tables on each CDC replay may slow down CDC ingestion. Enabling this parameter allows you to make CDC ingestion faster by telling the Applier to reuse the temporary tables.
 
-    _Default: `false`._
+    _Default: `true`._
     </dd>
     <dt><code>parallel-transaction</code></dt>
     <dd>
