@@ -19,18 +19,23 @@ Make sure that you possess the following object privileges for CDC-based replica
 | `TABLE`    | `SELECT`, `CREATE STREAM`,  `CREATE TABLE`     |
 
 ## Limitations
+### Real-time replication
 - Streams may become stale over time. For more information, see [Data Retention Period and Staleness
 ](https://docs.snowflake.com/en/user-guide/streams-intro#data-retention-period-and-staleness). 
 - Snowflake can extract data on a per-table basis. Therefore, you don't need to create heartbeat table manually.
-- Snowflake native export should only be used when the applier supports file-based bulk load.
-- We recommend that you use S3 as the stage only when the Applier utilizes S3 as the stage for bulk loading. Otherwise, replication performs similarly to the `NATIVE` stage type.
-- When using the CSV file format, make sure that the same `native-extract-options` exist in both the Extractor and Applier configurations.
-- Parquet files might produce an error with `TIMESTAMP_TZ` or `TIMESTAMP_LTZ` data.
-- For all general limitations and notes, see [Usage notes for `COPY INTO` command](https://docs.snowflake.com/en/sql-reference/sql/copy-into-location#usage-notes).
 
 {{< hint "danger" >}}
 **Warning:** If a stream goes stale, Replicant drops and recreates the stream. This might cause data loss. So we highly recommend that you take necessary measures so that streams don't become stale.
 {{< /hint >}}
+
+### Native export
+- Snowflake native export should only be used when the Applier supports file-based bulk loading.
+- We recommend that you use S3 as the stage only when the Applier utilizes S3 as the stage for bulk loading. Otherwise, replication performs similarly to the `NATIVE` stage type.
+- When using the CSV file format, make sure that the same `native-extract-options` exist in both the Extractor and Applier configurations.
+- Parquet files might produce an error with `TIMESTAMP_TZ` or `TIMESTAMP_LTZ` data.
+- For all general limitations and notes, see [Usage notes for the `COPY INTO` command](https://docs.snowflake.com/en/sql-reference/sql/copy-into-location#usage-notes).
+
+
 
 
 ## I. Set up connection configuration
@@ -315,6 +320,7 @@ To enable native export, follow these steps:
   
   This configuration only applies when you use CSV as the file format for Snowflake native export. This allows you to tune parameters such as the compression type, control characters, delimiter, escape character, and line ending. Make sure to specify similar configurations in the [Applier `bulk-load`]({{< ref "docs/targets/configuration-files/applier-reference#bulk-load" >}}) parameter to avoid compatibility issues.
 
+You can specify these options both globally and for [specific tables]({{< ref "docs/sources/configuration-files/extractor-reference#per-table-config" >}}).
 #### 2. Specify stage configuration in the connection configuration file
 Snowflake dumps extracted files into a stage in CSV or Parquet format. To specify the stage configuration, see [Parameters related to stage configuration](#parameters-related-to-stage-configuration).
 
