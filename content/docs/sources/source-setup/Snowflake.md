@@ -306,12 +306,16 @@ Make sure that you possess the following object privileges for CDC-based replica
 ## II. Set up Extractor configuration
 To configure replication mode according to your requirements, specify your configuration in the Extractor configuration file. You can find a sample Extractor configuration file `snowflake.yaml` in the `$REPLICANT_HOME/conf/src` directory. For example:
 
-### Native export
+### Configure `snapshot` replication
+#### Native export
 Arcion Replicant supports exporting Snowflake data into CSV or Parquet files. You can store these files locally or in a remote directory like an S3 bucket. This feature is currently supported in `snapshot` mode.
 
 To enable native export, follow these steps:
 
-#### 1. Set the extraction method and options in the Extractor configuration file
+<dl class="dl-indent">
+<dt>1. Set the extraction method and options in the Extractor configuration file</dt>
+<dd>
+
 - Set the `extraction-method` parameter to `COPY` in the Extractor configuration file. This enables Snowflake native export by using the `COPY` command to export data. 
 
   Extraction method defaults to `QUERY` and native export is disabled.
@@ -321,10 +325,16 @@ To enable native export, follow these steps:
   This configuration only applies when you use CSV as the file format for Snowflake native export. This allows you to tune parameters such as the compression type, control characters, delimiter, escape character, and line ending. Make sure to specify similar configurations in the [Applier `bulk-load`]({{< ref "docs/targets/configuration-files/applier-reference#bulk-load" >}}) parameter to avoid compatibility issues.
 
 You can specify these options both globally and for [specific tables]({{< ref "docs/sources/configuration-files/extractor-reference#per-table-config" >}}).
-#### 2. Specify stage configuration in the connection configuration file
-Snowflake dumps extracted files into a stage in CSV or Parquet format. To specify the stage configuration, see [Parameters related to stage configuration](#parameters-related-to-stage-configuration).
+</dd>
 
-### Sample `snapshot` mode configuration
+<dt>2. Specify stage configuration in the connection configuration file</dt>
+<dd>
+
+Snowflake dumps extracted files into a stage in CSV or Parquet format. To specify the stage configuration, see [Parameters related to stage configuration](#parameters-related-to-stage-configuration).
+</dd>
+</dl>
+
+#### Sample `snapshot` mode configuration
 
 {{< details title="With native export disabled" open=false >}}
 ```YAML
@@ -372,7 +382,8 @@ snapshot:
 {{< /details >}}
 For more information about the configuration parameters for `snapshot` mode, see [Snapshot mode]({{< ref "docs/sources/configuration-files/extractor-reference#snapshot-mode" >}}).
 
-### Sample `realtime` mode configuration
+### Configure `realtime` replication
+#### Sample `realtime` mode configuration
 
 ```YAML
 realtime:
