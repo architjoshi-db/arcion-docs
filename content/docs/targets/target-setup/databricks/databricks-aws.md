@@ -245,7 +245,10 @@ If you want to define data mapping from your source to Databricks AWS, specify t
 
     _Default: `true`._
     </dd>
-    <dt><code>parallel-transaction</code></dt>
+    <dt>
+    
+    `parallel-transaction` _[v23.06.30.2]_
+    </dt>
     <dd>
 
     This configuration enables parallel batch processing. Parallel batch processing processes large transactions by splitting them into multiple batches and processing the batches concurrently. This speeds up real-time replication for large transactions and improves overall performance. This feature is available for both Legacy Databricks and Unity Catalog.

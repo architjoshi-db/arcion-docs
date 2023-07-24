@@ -329,8 +329,8 @@ Snowflake supports two types of extraction method:
 - **`QUERY`**: The default JDBC-based extraction method.
 - **`COPY`**: The file-based extraction method that uses Snowflake's native export capability. For more information, see the following section.
 
-#### Native export
-Arcion Replicant supports exporting Snowflake data into CSV or Parquet files. You can store these files locally or in a remote directory like an S3 bucket. This feature is currently supported in `snapshot` mode.
+#### Native export _[v23.06.30.2]_
+From version 23.06.30.2, Arcion Replicant supports exporting Snowflake data into CSV or Parquet files. You can store these files locally or in a remote directory like an S3 bucket. This feature is currently supported in `snapshot` mode.
 
 To enable native export, follow these steps:
 
