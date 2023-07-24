@@ -428,6 +428,11 @@ Make sure that you possess the following object privileges for CDC-based replica
 To configure replication mode according to your requirements, specify your configuration in the Extractor configuration file. You can find a sample Extractor configuration file `snowflake.yaml` in the `$REPLICANT_HOME/conf/src` directory. For example:
 
 ### Configure `snapshot` replication
+Snowflake supports two types of extraction method:
+
+- **`QUERY`**: The default JDBC-based extraction method.
+- **`COPY`**: The file-based extraction method that uses Snowflake's native export capability. For more information, see the following section.
+
 #### Native export
 Arcion Replicant supports exporting Snowflake data into CSV or Parquet files. You can store these files locally or in a remote directory like an S3 bucket. This feature is currently supported in `snapshot` mode.
 
