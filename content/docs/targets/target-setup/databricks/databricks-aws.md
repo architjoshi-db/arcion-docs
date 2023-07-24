@@ -31,7 +31,7 @@ Replicant requires the Databricks JDBC Driver as a dependency. To obtain the app
 {{< /tabs >}}
 
 
-## II. Set up Connection Configuration
+## II. Set up connection configuration
 
 1. From `$REPLICANT_HOME`, navigate to the sample connection configuration file:
     ```BASH
@@ -43,7 +43,7 @@ Replicant requires the Databricks JDBC Driver as a dependency. To obtain the app
     - Parameters related to target Databricks server connection.
     - Parameters related to stage configuration.
 
-    ### Parameters related to Target Databricks server connection
+    ### Parameters related to target Databricks server connection
     {{< hint "info" >}}
   **Note:** All communications with Databricks happen through port 443, the standard port for HTTPS. So all data is encrypted and secure with SSL by default.
     {{< /hint >}}
@@ -72,7 +72,7 @@ Replicant requires the Databricks JDBC Driver as a dependency. To obtain the app
       - *`USERNAME`*: the username that connects to your Databricks server
       - *`PASSWORD`*: the password associated with *`USERNAME`*
     
-      {{< hint "info" >}}For [Databricks Unity Catalog](https://www.databricks.com/product/unity-catalog), set the connection `type` to `DATABRICKS_LAKEHOUSE`. For more information, see [Databricks Unity Catalog Support](#databricks-unity-catalog-support-beta).{{< /hint >}}
+      {{< hint "info" >}}For [Databricks Unity Catalog](https://www.databricks.com/product/unity-catalog), set the connection `type` to `DATABRICKS_LAKEHOUSE`. For more information, see [Databricks Unity Catalog Support](#databricks-unity-catalog-support).{{< /hint >}}
 
     
     ### Parameters related to stage configuration
@@ -145,7 +145,7 @@ Replicant requires the Databricks JDBC Driver as a dependency. To obtain the app
 ## III. Configure mapper file (optional)
 If you want to define data mapping from your source to Databricks AWS, specify the mapping rules in the mapper file. For more information on how to define the mapping rules and run Replicant CLI with the mapper file, see [Mapper configuration]({{< ref "docs/targets/configuration-files/mapper-reference" >}}) and [Mapper configuration in Databricks]({{< ref "docs/targets/configuration-files/mapper-reference#mapper-configuration-in-databricks" >}}).
 
-## IV. Set up Applier Configuration
+## IV. Set up Applier configuration
 
 1. From `$REPLICANT_HOME`, navigate to the applier configuration file:
     ```BASH
@@ -267,11 +267,8 @@ If you want to define data mapping from your source to Databricks AWS, specify t
 
   For a detailed explanation of configuration parameters in the Applier file, see [Applier Reference]({{< ref "/docs/targets/configuration-files" >}} "Applier Reference").
 
-## Databricks Unity Catalog Support (Beta)
-
-{{< hint "info" >}}**Note:** This feature is in beta. {{< /hint >}}
-
-From version 22.08.31.3 onwards, Arcion has added support for [Databricks Unity Catalog](https://www.databricks.com/product/unity-catalog). The support is still in beta phase, with complete support to land gradually in future releases.
+## Databricks Unity Catalog support
+From version 22.08.31.3 onwards, Arcion supports [Databricks Unity Catalog](https://www.databricks.com/product/unity-catalog).
 
 As of now, note the following about the state of Arcion's Unity Catalog support:
 
@@ -287,7 +284,7 @@ As of now, note the following about the state of Arcion's Unity Catalog support:
 
   Arcion adds support for Unity Catalog by introducing a new child storage type (`DATABRICKS_LAKEHOUSE` child of `DATABRICKS_DELTALAKE`).
 - If you're using Unity Catalog, notice the following when configuring your Target Databricks with Arcion:
-  - Set the connection `type` to `DATABRICKS_LAKEHOUSE` in the [connection configuration file](#ii-set-up-connection-configuration).
+  - Set the connection `type` to `DATABRICKS_LAKEHOUSE` in the [connection configuration file](#parameters-related-to-target-databricks-server-connection).
   - To avoid manual steps to configure staging, Databricks has introduced personal staging. To read the staging URL, we've added a new configuration parameter `UNITY_CATALOG_PERSONAL_STAGE`. The complete `stage` configuration is as follows:
     ```YAML
     stage:

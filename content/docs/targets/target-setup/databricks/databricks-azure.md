@@ -144,7 +144,7 @@ In this step, you need to provide the Databricks connection details to Arcion. T
 
     Change the value of `max-connections` as you need. It specifies the maximum number of connections Replicant can open in Databricks. 
 
-    {{< hint "info" >}}For [Databricks Unity Catalog](https://www.databricks.com/product/unity-catalog), set the connection `type` to `DATABRICKS_LAKEHOUSE`. For more information, see [Databricks Unity Catalog Support](#databricks-unity-catalog-support-beta).{{< /hint >}}
+    {{< hint "info" >}}For [Databricks Unity Catalog](https://www.databricks.com/product/unity-catalog), set the connection `type` to `DATABRICKS_LAKEHOUSE`. For more information, see [Databricks Unity Catalog Support](#databricks-unity-catalog-support).{{< /hint >}}
 
     ### Parameters related to stage configuration
     You must use an external stage to hold the data files and load that data on the target database from there. The `stage` section contains the details Replicant needs to connect to and use a specific stage. 
@@ -185,7 +185,7 @@ In this step, you need to provide the Databricks connection details to Arcion. T
 ## VI. Configure mapper file (optional)
 If you want to define data mapping from your source to Azure Databricks, specify the mapping rules in the mapper file. For more information on how to define the mapping rules and run Replicant CLI with the mapper file, see [Mapper configuration]({{< ref "docs/targets/configuration-files/mapper-reference" >}}) and [Mapper configuration in Databricks]({{< ref "docs/targets/configuration-files/mapper-reference#mapper-configuration-in-databricks" >}}).
 
-## VII. Set up Applier Configuration
+## VII. Set up Applier configuration
 
 1. From `$REPLICANT_HOME`, navigate to the applier configuration file:
     ```BASH
@@ -307,11 +307,8 @@ If you want to define data mapping from your source to Azure Databricks, specify
 
   For a detailed explanation of configuration parameters in the Applier file, read [Applier Reference]({{< ref "/docs/targets/configuration-files" >}} "Applier Reference").
 
-## Databricks Unity Catalog Support (Beta)
-
-{{< hint "info" >}}**Note:** This feature is in beta. {{< /hint >}}
-
-From version 22.08.31.3 onwards, Arcion has added support for [Databricks Unity Catalog](https://www.databricks.com/product/unity-catalog). The support is still in beta phase, with complete support to land gradually in future releases.
+## Databricks Unity Catalog support
+From version 22.08.31.3 onwards, Arcion supports [Databricks Unity Catalog](https://www.databricks.com/product/unity-catalog).
 
 As of now, note the following about the state of Arcion's Unity Catalog support:
 
@@ -327,7 +324,7 @@ As of now, note the following about the state of Arcion's Unity Catalog support:
 
   Arcion adds support for Unity Catalog by introducing a new child storage type (`DATABRICKS_LAKEHOUSE` child of `DATABRICKS_DELTALAKE`).
 - If you're using Unity Catalog, notice the following when configuring your Target Databricks with Arcion:
-  - Set the connection `type` to `DATABRICKS_LAKEHOUSE` in the [connection configuration file](#ii-set-up-connection-configuration).
+  - Set the connection `type` to `DATABRICKS_LAKEHOUSE` in the [connection configuration file](#parameters-related-to-target-databricks-server-connection).
   - To avoid manual steps to configure staging, Databricks has introduced personal staging. To read the staging URL, we've added a new configuration parameter `UNITY_CATALOG_PERSONAL_STAGE`. The complete `stage` configuration is as follows:
     ```YAML
     stage:
