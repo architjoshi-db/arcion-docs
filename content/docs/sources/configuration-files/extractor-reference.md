@@ -386,7 +386,7 @@ Log file from where replication should start.
 #### `position`
 Position within the log file from where replication should start.
 #### `start-timestamp` _[v23.06.30.2]_
-Specifies the timestamp value from where Replicant starts replication from the appropriate log file and position. The timestamp follows the format `YYYY-MM-DD hh:mm: z`, where `z` stands for the time zone—for example, `PST`, `UTC`, or `IST`.
+Specifies the timestamp value from where Replicant starts replication. The timestamp follows the format `YYYY-MM-DD hh:mm: z`, where `z` stands for the time zone—for example, `PST`, `UTC`, or `IST`.
 #### `rewind-realtime-start-position-m` _[v23.06.30.2]_
 This parameter works together with the [`log`](#log) and [`position`](#position) parameters. It rewinds the `start-position` by the value you specify here and starts replication from this new `start-position`.
 {{< /tab >}}
