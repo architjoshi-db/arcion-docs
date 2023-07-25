@@ -61,6 +61,9 @@ type: REDIS_STREAM
 host: HOSTNAME
 port: PORT_NUMBER
 
+username: 'USERNAME'
+password: 'PASSWORD'
+
 ssl:
   enable: true
   trust-store:
@@ -74,6 +77,8 @@ Replace the following:
 
 - *`HOSTNAME`*: the Redis server hostname.
 - *`PORT_NUMBER`*: the port number of Redis host
+- *`USERNAME`*: the username to connect to the Redis server
+- *`PASSWORD`*: the password associated with *`USERNAME`*
 - *`PATH_TO_TRUSTSTORE`*: path to the TrustStore
 - *`TRUSTSTORE_PASSWORD`*: the TrustStore password
 - *`TRUSTSTORE_TYPE`*: the TrustStore type—for example, `PKCS12`
