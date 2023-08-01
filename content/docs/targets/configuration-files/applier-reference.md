@@ -212,7 +212,7 @@ Indicates the type of transactional consistency. The following values are possib
 
 ### `skip-upto-cursors` *[v20.09.14.1]*
 {{< hint "info" >}}
-**Note:** This parameter is applies only [if `replay-consitency` is set to `GLOBAL`](#replay-consistency-v2009141). 
+**Note:** This parameter applies only [if `replay-consitency` is set to `GLOBAL`](#replay-consistency-v2009141). 
 {{< /hint >}}
 
 Here, you can specify a list of cursor positions up to which replication must be skipped. It may not always be possible to persist the operations of a failed transaction in the `failed_txn` table of metadata storage (see [`--skip-failed-txn` in Various Replication Options Explanation](../../running-replicant/#various-replication-options-explanation) for more details). In that case, Replicant logs the operations in a text file. The text file is located in the following path:
