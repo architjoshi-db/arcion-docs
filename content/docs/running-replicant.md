@@ -35,7 +35,7 @@ conf/conn/target_database_name.yaml \
 --id repl1 --replace --overwrite
 ```  
 
-In full mode, Replicant transfers all existing data from the source to the target database setup with a one-time data snapshot. Replicant first creates the destination schemas after that is complete, Replicant transfers the existing data from the source to the destination  Additionally, Replicant will continue synchronizing the destination with the source, even after the snapshot is completed.
+In full mode, Replicant transfers all existing data from the source to the target database setup with a one-time data snapshot. Replicant first creates the destination schemas after that is complete, Replicant transfers the existing data from the source to the destination. Additionally, Replicant will continue synchronizing the destination with the source, even after the snapshot is completed.
 
 As soon as the snapshot data movement is done, Replicant will seamlessly transition from snapshot migration to continuous replication. Once the smooth transition is ensured, Replicant will start listening for incoming changes in the source database using log-based CDC.
 
