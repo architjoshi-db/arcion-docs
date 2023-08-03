@@ -57,7 +57,7 @@ Use the following command to run Replicant in snapshot mode:
  --id repl2 --replace –overwrite
 ```
 
-In snapshot mode, Replicant first creates the destination schemas, just as in full mode. Once the schemas are created, Replicant captures all the existing data from the source and transfers it to the destination, also known as Replicant's data snapshot. Once all data has been moved to the destination, a summary file will be generated and sent in an email notification if you have configured Replicant to do so. After finishing the snapshot, Replicant will immediately shutdown.
+In snapshot mode, Replicant first creates the destination schemas, just as in full mode. Once the schemas are created, Replicant captures all the existing data from the source and transfers it to the destination, also known as Replicant's data snapshot. Once all data has been moved to the destination, a summary file will be generated and sent in an email notification if you have configured Replicant to do so. After finishing the snapshot, Replicant will immediately shut down.
 
 
 ## Replicant realtime mode
