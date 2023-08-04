@@ -7,14 +7,11 @@ url: docs/source-setup/sqlserver/realtime-replication/sqlserver-native-cdc
 ---
 
 # Real-time replication using SQL Server native CDC
-For real-time replicaiton from SQL Server, you can choose to use the native CDC functionality of SQL Server to perform data extraction and replication. Follow these steps to set up real-time replication using the SQL Server's native CDC.
+For real-time replicaiton from SQL Server, you can choose to use the native change data capture (CDC) functionality of SQL Server to perform data extraction and replication. Follow these steps to set up real-time replication using the SQL Server's native CDC.
 
 ## I. Prerequisites
 ### Required permissions
 To allow replication, first verify that the user possesses the necessary permissions on source SQL Server. For more information, see [SQL Server user permissions]({{< relref "../../../source-prerequisites/sqlserver#sql-server-user-permissions" >}}).
-
-### Primary keys on tables
-For [full mode replication]({{< relref "../full-mode-replication" >}}) with SQL Server native CDC, make sure that all the tables that you need to replicate have primary keys.
 
 ## II. Set up connection configuration
 Specify the connection details of your SQL Server instance to Replicant in one of the following two ways:
@@ -58,7 +55,10 @@ Specify the database name if the source is an Azure SQL Managed Instance.
 #### `extractor`
 The CDC Extractor to use for real-time replication. 
 
-To use SQL Server's native CDC functionality as the CDC Extractor, set `extractor` to `CDC`.
+To use SQL Server's native CDC functionality as the CDC Extractor, follow these steps:
+
+- Set `extractor` to `CDC`.
+- Follow the instructions in [Enable CDC in SQL Server](#enable-cdc-in-sql-server).
 
 #### `max-connections` 
 The maximum number of connections Replicant uses to load data into the SQL Server system.
@@ -127,3 +127,32 @@ realtime:
 ```
 
 For more information about the configuration parameters in `realtime` mode, see [Realtime mode]({{< ref "../../../configuration-files/extractor-reference#realtime-mode" >}}).
+
+## Enable CDC in SQL Server
+CDC allows capturing every DML and some DDL operations that occur in the database. To enable logging of DDL and DML records, you must enable CDC at database and table level.
+
+### Enable for a database
+The following stored procedure enables CDC for a database:
+
+```SQL
+EXEC sys.sp_cdc_enable_db 
+```
+
+For more information, see [Enable change data capture for a database](https://learn.microsoft.com/en-us/sql/relational-databases/track-changes/enable-and-disable-change-data-capture-sql-server?view=sql-server-ver16&source=recommendations#enable-for-a-database).
+
+### Enable for a table
+The following stored procedure enables CDC for a table:
+
+```SQL
+EXEC sys.sp_cdc_enable_table  
+@source_schema = N'dbo',  
+@source_name   = N'MyTable',  
+@role_name     = NULL,  
+@supports_net_changes = 1
+```
+
+Use the appropriate schema, source, and role names in the preceding command. The `@support_net_changes` parameter only supports a value of `1` if the table has primary key. For more information, see [Enable change data capture for a table](https://learn.microsoft.com/en-us/sql/relational-databases/track-changes/enable-and-disable-change-data-capture-sql-server?view=sql-server-ver16&source=recommendations#enable-for-a-table).
+
+Replicant throws error if you don't enable CDC for either database or table.
+
+
