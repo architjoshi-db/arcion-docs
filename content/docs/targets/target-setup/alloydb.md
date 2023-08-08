@@ -11,6 +11,15 @@ This page describes how to load data in real time into [Google's AlloyDB](https:
 
 The following steps refer [the extracted Arcion self-hosted CLI download]({{< ref "docs/quickstart/#ii-download-replicant-and-create-a-home-repository" >}}) as the `$REPLICANT_HOME` directory.
 
+## Required permissions
+- Make sure that the specified user has `CREATE TABLE` privilege on the catalogs or schemas where you want to replicate tables to.
+- To create catalogs or schemas on the target AlloyDB system, you must grant `CREATE DATABASE` or `CREATE SCHEMA` privileges respectively to the user.
+- If the user does not have `CREATE DATABASE` privilege, then follow these two steps:
+  1. Create a database manually with the name `io`.
+  2. Grant all privileges for the `io` database to that user. 
+  
+  Replicant uses this `io` database to maintain internal checkpoint and metadata.
+
 ## I. Set up connection configuration
 Specify your AlloyDB connection details to Replicant with a connection configuration file. You can find a sample connection configuration file `alloydb.yaml` in the `$REPLICANT_HOME/conf/conn` directory. 
 
