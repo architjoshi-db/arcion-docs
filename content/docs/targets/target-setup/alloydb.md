@@ -9,7 +9,7 @@ bookHidden: false
 # Destination AlloyDB
 This page describes how to load data in real time into [Google's AlloyDB](https://cloud.google.com/alloydb), a fully managed PostgreSQL-compatible database service.
 
-The following steps refer [the extracted Arcion self-hosted CLI download]({{< ref "docs/quickstart/#ii-download-replicant-and-create-a-home-repository" >}}) as the `$REPLICANT_HOME` directory.
+The following steps refer to the extracted [Arcion self-hosted CLI]({{< ref "docs/quickstart/#ii-download-replicant-and-create-a-home-repository" >}}) download as the `$REPLICANT_HOME` directory.
 
 ## Required permissions
 - Make sure that the specified user has `CREATE TABLE` privilege on the catalogs or schemas where you want to replicate tables to.
