@@ -75,12 +75,12 @@ type: SQLSERVER
 host: localhost
 port: 1433
 
-username: 'USERNAME'
-password: 'PASSWORD'
+username: 'alex'
+password: 'alex1995'
 
 extractor: CHANGE
 
-max-connections: MAX_NUMBER_OF_CONNECTIONS
+max-connections: 30
 ```
 
 ### AWS Secrets Manager

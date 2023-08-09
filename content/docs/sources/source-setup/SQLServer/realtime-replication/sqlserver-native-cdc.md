@@ -75,7 +75,7 @@ port: 1433
 username: 'alex'
 password: 'alex1234'
 auth-type: NATIVE
-database: 'tpcc'  #set only for managed SQL Azure
+database: 'tpcc'
 
 extractor: CDC
 
