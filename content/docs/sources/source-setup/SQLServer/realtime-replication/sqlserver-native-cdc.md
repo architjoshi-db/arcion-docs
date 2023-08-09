@@ -16,11 +16,11 @@ To allow replication, first verify that the user possesses the necessary permiss
 ## II. Set up connection configuration
 Specify the connection details of your SQL Server instance to Replicant in one of the following two ways:
 
-- [A connection configuration file](#using-a-connection-configuration-file)
+- [A connection configuration file](#use-a-connection-configuration-file)
 - [AWS Secrets Manager](#aws-secrets-manager)
 - [KeyStore](#use-keystore-for-credentials)
 
-### Using a connection configuration file.
+### Use a connection configuration file
 The connection configuration fild holds the connection details and login credentials.
 You can find a sample connection configuration file `sqlserver_src.yaml` in the `$REPLICANT_HOME/conf/conn` directory. The following configuration parameters are available:
 
@@ -86,7 +86,7 @@ max-connections: 30
 If you store your connection credentials in AWS Secrets Manager, you can tell Replicant to retrieve them. For more information, see [Retrieve credentials from AWS Secrets Manager]({{< ref "docs/security/secrets-manager" >}}). 
 
 ### Use KeyStore for credentials
-Replicant supports consuming login credentials from a _credentials store_. Instead of specifying username and password [in plain form](#using-a-connection-configuration-file), you can keep them in a KeyStore and provide the KeyStore details in the connection configuration file like below:
+Replicant supports consuming login credentials from a _credentials store_. Instead of specifying username and password [in plain text](#use-a-connection-configuration-file), you can keep them in a KeyStore and provide the KeyStore details in the connection configuration file like below:
 
 ```YAML
 credential-store:
