@@ -51,35 +51,35 @@ To request a temporary PoC license file from the Arcion team, [please contact us
     version: '3.3'
     services:
       postgres-database:
-          container_name: postgres-database
-          environment:
-              - POSTGRES_PASSWORD=postgres
-          ports:
-              - '5432:5432'
-          volumes:
-              - /usr/local/arcion/onpremui/pg:/var/lib/postgresql/data
-          image: postgres:14.8-alpine
+        container_name: postgres-database
+        environment:
+          - POSTGRES_PASSWORD=postgres
+        ports:
+          - '5432:5432'
+        volumes:
+          - /usr/local/arcion/onpremui/pg:/var/lib/postgresql/data
+        image: postgres:14.8-alpine
       replicant-on-premises:
-          container_name: replicant-on-premises
-          ports:
-              - '8080:8080'
-              - '8050:8050'
-          depends_on:
-              - "postgres-database"
-          environment:
-              - DB_HOST=postgres-database
-              - DB_PORT=5432
-              - DB_DATABASE=postgres
-              - DB_USERNAME=postgres
-              - DB_PASSWORD=postgres
-                #- NTP_SERVER=0.pool.ntp.org
-              - PROMETHEUS_ENABLE=true
-          volumes:
-              - /usr/local/arcion/onpremui/data:/data
-              - /usr/local/arcion/onpremui/config:/config
-              - /usr/local/arcion/onpremui/libs:/libs
-          #image: arcionlabs/replicant-on-premises:test
-          image: arcionlabs/replicant-on-premises:latest
+        container_name: replicant-on-premises
+        ports:
+          - '8080:8080'
+          - '8050:8050'
+        depends_on:
+          - "postgres-database"
+        environment:
+          - DB_HOST=postgres-database
+          - DB_PORT=5432
+          - DB_DATABASE=postgres
+          - DB_USERNAME=postgres
+          - DB_PASSWORD=postgres
+          #- NTP_SERVER=0.pool.ntp.org
+          - PROMETHEUS_ENABLE=true
+        volumes:
+          - /usr/local/arcion/onpremui/data:/data
+          - /usr/local/arcion/onpremui/config:/config
+          - /usr/local/arcion/onpremui/libs:/libs
+        #image: arcionlabs/replicant-on-premises:test
+        image: arcionlabs/replicant-on-premises:latest
     ```
 
     The preceding Compose file creates two containers:
