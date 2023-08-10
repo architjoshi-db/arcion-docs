@@ -18,5 +18,5 @@ In this section, we present comprehensive instructions on how to get started wit
 
 ## In this section
 
-- [Cloud SQL for MySQL]()
+- [Cloud SQL for MySQL]({{< relref "cloudsql-mysql" >}})
 - [Cloud SQL for PostgreSQL]({{< relref "cloudsql-postgresql" >}})
