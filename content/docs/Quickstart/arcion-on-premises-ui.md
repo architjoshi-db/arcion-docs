@@ -1,15 +1,15 @@
 ---
-pageTitle: Get started with Arcion on-premises UI
+pageTitle: Get started with Arcion On-premises UI
 title: Arcion On-premises UI
-description: "Quickly get started with Arcion on-premises UI with our hands-on and step-by-step guide."
+description: "Quickly get started with Arcion On-premises UI with our hands-on and step-by-step guide."
 weight: 2
 ---
 
-# Arcion on-premises UI quickstart
-This guide describes the general flow at a high level to create data replication jobs using Arcion on-premises UI.
+# Arcion On-premises UI quickstart
+This guide describes the general flow at a high level to create data replication jobs using Arcion On-premises UI.
 
 {{< hint "info" >}}
-**Tip:**: The default username and password for the console is `admin` and `acrion` respectively.
+**Tip:**: The default username and password for the On-premises console is `admin` and `acrion` respectively.
 {{< /hint >}}
 
 ## Objectives
@@ -23,10 +23,10 @@ This guide describes the general flow at a high level to create data replication
 - Get an overview of your replication job.
 
 ## Prerequisites
-To complete this quickstart, you must first [install and set up Arcion on-premises UI]({{< ref "docs/arcion-on-premises-ui/installation-and-setup" >}}) on your system.
+To complete this quickstart, you must first [install and set up Arcion On-premises UI]({{< ref "docs/arcion-On-premises-ui/installation-and-setup" >}}) on your system.
 
-## Start the on-premises UI Docker
-After you [first start the Docker container]({{< ref "docs/arcion-on-premises-ui/installation-and-setup#start-the-containers" >}}), the Arcion console dashboard appears and shows you a list of replications you might've previously created. Otherwise, the dashboard appears empty.
+## Start the On-premises UI Docker
+After you [first start the Docker container]({{< ref "docs/arcion-on-premises-ui/installation-and-setup#start-the-containers" >}}), the console dashboard appears and shows you a list of replications you might've previously created. Otherwise, the dashboard appears empty.
 
 Click **New Replication** to start a new replication job.
 
@@ -144,6 +144,8 @@ For more information about mapping rules, see [Mapper configuration]({{< ref "do
 ## Replication job overview
 After starting the replication, the next page displays **Initializing** in the top right hand corner. This message changes to **Running** with a green bacground once the initialization process finishes. In the middle of the screen, various replication statistics gradually appears.
 
+![Replication summary page in the Arcion On-premises UI console after a replication has started](/images/replication_summary_page.png)
+
 ### Replication Details
 To view replication details, click **View details**. It shows each catalog and table undergoing replication and the number of each operation performed on each. To go back to the summary page, click **Back to summary** in the top left hand corner of the **View details** page.
 
@@ -174,6 +176,8 @@ Only shows the errors if any exists.
 This tab is currently undergoing implementation.
 </dd>
 </dl>
+
+![The logging pane containing the three preceding tabs in the Arcion On-premises UI console](/images/logging_pane.png)
 
 To search through the contents of a tab, use the **Search** field under the respective tab. To search backward and forward inside a tab, use the **Prev find** and **Next find** buttons.
 
