@@ -12,7 +12,7 @@ This page describes how to load data in real time into [Google's Cloud SQL for M
 The following steps refer to the extracted [Arcion self-hosted CLI]({{< ref "docs/quickstart/#ii-download-replicant-and-create-a-home-repository" >}}) download as the `$REPLICANT_HOME` directory.
 
 ## Prerequisites
-Pay attention to the following before configuring MySQL as the Target system:
+Pay attention to the following before configuring Cloud SQL for MySQL as the target system:
 
 - To replicate tables into the catalogs or schemas you need, make sure that the specified user possesses the `CREATE TABLE` and `CREATE TEMPORARY TABLE` privileges on those catalogs and schemas.
 - If you want Replicant to create catalogs or schemas for you on the target Cloud SQL for MySQL system, then you must grant `CREATE DATABASE` or `CREATE SCHEMA` privileges respectively to the user.
