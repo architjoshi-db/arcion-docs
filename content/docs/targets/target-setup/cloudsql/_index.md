@@ -1,7 +1,7 @@
 ---
 pageTitle: Arcion connectors for Google's Cloud SQL
 title: Cloud SQL
-description: "Arcion offers fast, real-time data ingestion into Google's Cloud SQL for MySQL and PostgreSQL."
+description: "Get fast, reliable, and real-time data replication into Google's Cloud SQL for MySQL and PostgreSQL using Arcion's cutting-edge CDC architecture."
 bookCollapseSection: true
 bookHidden: false
 url: docs/target-setup/cloudsql

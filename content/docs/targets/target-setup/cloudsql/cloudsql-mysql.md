@@ -1,8 +1,8 @@
 ---
 pageTitle: Cloud SQL for MySQL connector by Arcion  
 title: MySQL
-description: "Get fast data ingestion into Google's Cloud SQL for MySQL with Arcion's dedicated connector."
-url: docs/target-setup/cloudsql-for-mysql
+description: "Replicate data in real time into Google's Cloud SQL for MySQL with Arcion's dedicated connector."
+url: docs/target-setup/cloudsql/cloudsql-for-mysql
 bookHidden: false
 ---
 

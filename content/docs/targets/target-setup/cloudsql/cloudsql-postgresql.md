@@ -2,7 +2,7 @@
 pageTitle: Cloud SQL for PostgreSQL connector by Arcion  
 title: PostgreSQL
 description: "Get fast data ingestion into Google's Cloud SQL for PostgreSQL with Arcion's dedicated connector."
-url: docs/target-setup/cloudsql-for-postgresql
+url: docs/target-setup/cloudsql/cloudsql-for-postgresql
 bookHidden: false
 ---
 
