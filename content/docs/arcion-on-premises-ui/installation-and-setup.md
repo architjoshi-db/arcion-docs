@@ -1,12 +1,12 @@
 ---
 pageTitle: Install and set up Arcion On-premises UI
 title: Installation and Setup
-description: "Learn how to install and set up Arcion on-premises UI."
+description: "Learn how to install and set up Arcion On-premises UI."
 weight: 1
 ---
 
-# Install and set up Arcion on-premises UI
-This guide walks you through the necessary steps to get Arcion’s on-premises UI up and running in your network.
+# Install and set up Arcion On-premises UI
+This guide walks you through the necessary steps to get Arcion’s On-premises UI up and running in your network.
 
 If you're using AWS, GCP, Azure, or some other cloud vendor virtual machine (VM) instance, make sure you have network access to and from your source and target databases or data lakes.
 
@@ -309,7 +309,7 @@ Before you start the containers, make sure you complete the following steps:
 2. [Place the license file](#environment-configuration) appropriately.
 3. Download the [required libraries](#download-required-libraries) and place them appropriately.
 
-To start both of the required containers for the on-premises UI,  run the following commands:
+To start both of the required containers for the On-premises UI,  run the following commands:
 
 ```sh
 cd /usr/local/arcion/onpremui
