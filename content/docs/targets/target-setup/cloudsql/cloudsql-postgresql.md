@@ -57,7 +57,7 @@ Feel free to change the following parameter values as you need:
 - *`socket-timeout-s`*: the timeout value in seconds specifying socket read operations. A value of `0` disables socket reads.
 
 {{< hint "warning" >}}
-**Important:** Make sure that the [`max_connections` in PostgreSQL](https://www.postgresql.org/docs/current/runtime-config-connection.html) is greater than the `max-connections` in the preceding connection configuration file.
+**Important:** Make sure that the [`max_connections` in Cloud SQL for PostgreSQL](https://cloud.google.com/sql/docs/postgres/quotas#maximum_concurrent_connections) is greater than the `max-connections` in the preceding connection configuration file.
 {{< /hint >}}
 
 The following demonstrates a sample connnection configuration:
@@ -134,8 +134,8 @@ snapshot:
 
 For more information about the Applier parameters for `snapshot` mode, see [Snapshot mode]({{< relref "docs/targets/configuration-files/applier-reference#snapshot-mode" >}}).
 
-### Configure `realtime` mode
-For operating in [`realtime` mode]({{< ref "docs/running-replicant#replicant-realtime-mode" >}}), specify your configuration under the `realtime` section of the conifiguration file. For example:
+### Configure real-time replication
+For operating in [`realtime` mode]({{< ref "docs/running-replicant#replicant-realtime-mode" >}}) or [`full` mode]({{< ref "docs/running-replicant#replicant-full-mode" >}}), specify your configuration under the `realtime` section of the conifiguration file. For example:
 
 ```YAML
 realtime:
