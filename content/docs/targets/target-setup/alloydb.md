@@ -12,13 +12,30 @@ This page describes how to load data in real time into [Google's AlloyDB](https:
 The following steps refer to the extracted [Arcion self-hosted CLI]({{< ref "docs/quickstart/#ii-download-replicant-and-create-a-home-repository" >}}) download as the `$REPLICANT_HOME` directory.
 
 ## Required permissions
-- Make sure that the specified user has `CREATE TABLE` privilege on the catalogs or schemas where you want to replicate tables to.
-- To create catalogs or schemas on the target AlloyDB system, you must grant `CREATE DATABASE` or `CREATE SCHEMA` privileges respectively to the user.
-- If the user does not have `CREATE DATABASE` privilege, then follow these two steps:
-  1. Create a database manually with the name `io`.
-  2. Grant all privileges for the `io` database to that user. 
-  
-  Replicant uses this `io` database to maintain internal checkpoint and metadata.
+- Make sure that the user being used for replication, has the `CREATE TABLE` privilege on the target catalogs or schemas where you want to replicate the tables to. Use the following command to grant the privileges:
+    ```SQL
+    GRANT CREATE ON DATABASE <catalog_name> TO <replication_user>;
+    ```
+    Replace the following: 
+    - *`catalog_name`*: the catalog name in the target
+    - *`replication_user`*: the user being used for replication 
+- In order to store Arcion’s replication metadata, you must ensure one of the following: 
+    - Point to an external metadata database. For more information, see [Metadata configuration]({{< ref "docs/references/metadata-reference" >}}).
+    - Grant the `CREATEDB` privilege to the user being used for replication. This allows the user to create the `io` database. The user must also possess the privilege to create tables in the `io` database.   Replicant uses this `io` database to maintain internal checkpoint and metadata.
+
+    The following command assigns the `CREATEDB` privilege to a user `alex`:
+    ```SQL
+    ALTER USER alex CREATEDB;
+    ```
+    If the user does not have `CREATEDB` privilege, then follow these two steps:
+    1. Create a database manually with the name `io`:
+        ```SQL
+        CREATE DATABASE io;
+        ```
+    2. Grant all privileges for the `io` database to that user:
+        ```SQL
+        GRANT ALL ON DATABASE io TO alex;
+        ```
 
 ## I. Set up connection configuration
 Specify your AlloyDB connection details to Replicant with a connection configuration file. You can find a sample connection configuration file `alloydb.yaml` in the `$REPLICANT_HOME/conf/conn` directory. 
