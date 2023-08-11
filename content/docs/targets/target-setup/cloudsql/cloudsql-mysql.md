@@ -45,7 +45,7 @@ Replace the following:
 
 - *`CLOUDSQL_MYSQL_IP`*: the IP address of the Cloud SQL for MySQL instance
 - *`PORT_NUMBER`*: the port number
-- *`USERNAME`*: the username of the *`DATABASE_NAME`* user 
+- *`USERNAME`*: the username 
 - *`PASSWORD`*: the password associated with *`USERNAME`*
 
 Feel free to change the following parameter values as you need:
