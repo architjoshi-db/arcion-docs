@@ -97,7 +97,7 @@ To request a temporary PoC license file from the Arcion team, [please contact us
     {{< /hint >}}
 
 ## Install Docker and Docker Compose
-This following instructions cover both Linux and Ubuntu-based operating systems. For other platforms, see [Install Docker engine](https://docs.docker.com/engine/install/).
+This following instructions cover both Linux (CentOS/Rocky Linux) and Ubuntu-based operating systems. For other platforms, see [Install Docker engine](https://docs.docker.com/engine/install/).
 
 ### Install Docker on Linux
 
