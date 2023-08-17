@@ -1,6 +1,6 @@
 /* You can add custom styles here. */
 
-// @import "plugins/numbered";
+@import "defaults";
 // Muller for the rest of the website. Regular
 @font-face {
   font-family: 'Muller';
@@ -59,6 +59,7 @@ summary {
    margin-left: 1em; 
 }
 
+// Styles for keyboard keys
 kbd {
    // Custom variables holding the colors
    $kbd-color-background: #f8f9fa;
@@ -221,4 +222,76 @@ nav#TableOfContents {
   max-height: calc(100vh - 12.125rem);
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+button.copy {
+  -webkit-font-smoothing: antialiased;
+  color-scheme: light;
+  box-sizing: border-box;
+  font: inherit;
+  margin: 0;
+  overflow: visible;
+  text-transform: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  position: absolute;
+  top: 5px;
+  right: 1px;
+  background: none;
+  color: var(--gray-100);
+  border: none;
+}
+
+button.copy:active {
+  border-style: none;
+}
+
+button.copy:focus {
+  outline: none;
+}
+
+span.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 300,
+  'GRAD' 0,
+  'opsz' 24
+}
+
+div.highlight {
+  position: relative;
+}
+
+/* Styles for the "click-to-copy" tooltip */
+.copy {
+  position: relative;
+}
+
+.copy::before,
+.copy::after {
+  --scale: 0;
+  position: absolute;
+  left: 50%;
+  top: -0.25rem;
+  transform: translateX(-50%) translateY(-100%) scale(var(--scale));
+  transition: 150ms transform;
+  transform-origin: bottom center;
+}
+
+.copy::before {
+  content: attr(data-tooltip);
+  color: var(--gray-200);
+  background: #040022;
+  width: max-content;
+  max-width: 100%;
+  padding: .5rem;
+  border-radius: .3rem;
+  text-align: center;
+}
+
+// Disable hover effect when the element has the `no-hover` class
+.copy:not(.no-hover):hover::before {
+  --scale: 1;
 }

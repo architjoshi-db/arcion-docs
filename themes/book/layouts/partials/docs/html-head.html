@@ -39,8 +39,10 @@
 {{ end -}}
 
 <!-- Minify our custom JS in the website bundle -->
-{{ $customjs := resources.Get "js/script.js" | minify }}
-<script defer language="javascript" type="text/javascript"  src="{{ $customjs.RelPermalink }}"></script>
+{{ $scriptjs := resources.Get "js/script.js" | minify }}
+{{ $copyjs := resources.Get "js/copy.js" | minify }}
+<script defer language="javascript" type="text/javascript"  src="{{ $copyjs.RelPermalink }}"></script>
+<script defer language="javascript" type="text/javascript"  src="{{ $scriptjs.RelPermalink }}"></script>
 
 {{ "" | safeHTML }}
 
