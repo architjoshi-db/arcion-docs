@@ -1,6 +1,6 @@
 ---
 pageTitle: Use the null target to measure extraction performance
-title: The null target
+title: The Null Target
 description: "Arcion Replicant supports using the /dev/null device file as target to measure source extraction performance and validate your configurations."
 weight: 10
 url: docs/references/null-target

@@ -1,6 +1,6 @@
 ---
 pageTitle: Replay strategies for realtime replication
-title: Replay strategies
+title: Replay Strategies
 description: "Learn how Arcion captures CDC changes for realtime data ingestion into BigQuery and Databricks."
 bookHidden: false
 weight: 12
