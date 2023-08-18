@@ -277,15 +277,20 @@ For realtime replication, you must create a heartbeat table in the source Postgr
 
     ```YAML
     realtime:
+      threads: 4 
+      fetch-size-rows: 10000
+      fetch-duration-per-extractor-slot-s: 3
+      _traceDBTasks: true
+
       heartbeat:
         enable: true
         catalog: "postgres"
         schema: "public"
         table-name: replicate_io_cdc_heartbeat
         column-name: timestamp
-
-        start-position:
-          start-lsn: 0/3261270
+    
+    start-position:
+      start-lsn: 0/3261270
     ```
 
 For more information about the configuration parameters for `realtime` mode, see [Realtime Mode]({{< ref "../configuration-files/extractor-reference#realtime-mode" >}}).
