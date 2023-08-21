@@ -122,7 +122,7 @@ Option to  fetch ( and replicate) unique key constraints for tables. Default val
 ### `fetch-FK`
 Option to fetch (and replicate) foreign key constraints for tables. Default value is `true.`.
 
-### `fetch-Indexes`
+### `fetch-indexes`
 Option to fetch (and replicate) indexes for table. Default value is `true`.
 
 ### `fetch-user-roles`
@@ -147,7 +147,12 @@ Controls whether or not multiple tables can overlap during extraction. If you se
 
 _Default: `true`._
 
-### `fetchIdentityInfo` *[v23.05.31.9]*
+### `fetch-create-sql`
+`true` or `false`.
+
+Whether to apply exact `CREATE SQL` on source to target. This parameter is only supported for Oracle-to-Oracle pipeline.
+
+### `fetch-identity-info` *[v23.05.31.9]*
 `true` or `false`.
 
 Controls whether or not to replicate identity information of columns (auto-increment columns). If `true`, replication captures and replicates identity information of columns. If `false`, replication omits `AUTO_INCREMENT` (and all equivalent attributes depending on the storage) information while creating tables on the target database. You can also specify this parameter in a [per-table configuration](#per-table-config).
@@ -160,13 +165,13 @@ The following example captures identity column information for all tables except
 ```YAML
 snapshot:
   threads: 16
-  fetchIdentityInfo: true
+  fetch-identity-info: true
 
   per-table-config:
   - catalog: testdb
     tables:
       example_table:
-        fetchIdentityInfo: false
+        fetch-identity-info: false
 ```
 
 ### `per-table-config`
@@ -203,17 +208,17 @@ Specify your table name here. Under the table name, specify your table-specific 
   Specifying an identifier can significantly improve the performance of incremental replication of this table.
 - **`extraction-priority`** *[v20.09.14.1]*. Priority for scheduling extraction of this table. Higher value is higher priority. Both positive and negative values are allowed.
   _Default: `0`._
-* **`normalize`** *[v20.09.14.10]*. Use it to override the global [`normallize`](#normalize-v20091410) parameter for this table.
-- **`fetchIdentityInfo`**. Use it to override the global [`fetchIdentityInfo`](#fetchidentityinfo-v2305319) parameter for this table.
+- **`normalize`** *[v20.09.14.10]*. Use it to override the global [`normallize`](#normalize-v20091410) parameter for this table.
+- **`fetch-create-sql`**. Use it to override the global [`fetch-create-sql`](#fetch-create-sql) parameter for this table.
+- **`fetch-identity-info`**. Use it to override the global [`fetch-identity-info`](#fetch-identity-info-v2305319) parameter for this table.
+- **`fetch-PK`**. Use it to override the global [`fetch-PK`](#fetch-pk) parameter for this table.
+- **`fetch-UK`**. Use it to override the global [`fetch-UK`](#fetch-uk) parameter for this table.
+- **`fetch-FK`**. Use it to override the global [`fetch-FK`](#fetch-fk) parameter for this table.
+- **`fetch-indexes`**. Use it to override the global [`fetch-indexes`](#fetch-indexes) parameter for this table.
 
 </dd>
 </dl>
-
-
 </dd>
-
-
-
 </dl>
 
 You can configure as many tables as necessary and specify them under each other using the preceding format we discussed. For example, configuring two tables would look like the following:
@@ -448,7 +453,7 @@ This parameter is only supported for MongoDB as a source. It configures the norm
 |`de-duplicate`| Whether to de-duplicate data during normalization.|<ul><li>`REINIT`</li><li>`INLINE`</li></ul><p>*Default: `false`* |
 |`extract-upto-depth`| The depth upto which the MongoDB document should be extracted.| *Default: `INT_MAX`*  |
 
-### `fetchIdentityInfo` *[v23.05.31.9]*
+### `fetch-identity-info` *[v23.05.31.9]*
 `true` or `false`.
 
 Controls whether or not to replicate identity information of columns (auto-increment columns). If `true`, replication captures and replicates identity information of columns. If `false`, replication omits `AUTO_INCREMENT` (and all equivalent attributes depending on the storage) information while creating tables on the target database.
@@ -456,7 +461,7 @@ Controls whether or not to replicate identity information of columns (auto-incre
 _Default: `true`._
 
 {{< hint "warning" >}}
-**Important:** In `realtime` mode, `fetchIdentityInfo` only applies with [DDL replication]({{< relref "../ddl-replication" >}}). For example, when `ALTER TABLE ADD COLUMN...`  occurs and the new column is an identity column.
+**Important:** In `realtime` mode, `fetch-identity-info` only applies with [DDL replication]({{< relref "../ddl-replication" >}}). For example, when `ALTER TABLE ADD COLUMN...`  occurs and the new column is an identity column.
 {{< /hint >}}
 
 #### Example
@@ -468,7 +473,7 @@ snapshot:
   ...
 
 realtime:
-  fetchIdentityInfo: false 
+  fetch-identity-info: false 
 ```
 
 ### `per-table-config`
