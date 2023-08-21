@@ -277,7 +277,7 @@ Number of seconds a thread should continue extraction from a given replication c
 After a thread finishes extracting from a particular replication channel, it gets scheduled to process another replication channel. This option is relevant and important to avoid starvation from any replication channel when the number of threads provided is less than the number of replication channels.
 
 ### `heartbeat`
-This parameter is for provisioning [a heartbeat table](#heartbeat-table) to the Replicant on the source system. 
+This parameter provides [a heartbeat table configuration](#heartbeat-table) to Replicant on the source system. 
 
 You can create the heartbeat table with the following DDL:
 
@@ -287,22 +287,23 @@ CREATE TABLE <catalog>.<schema>.arcion_io_cdc_heartbeat(timestamp <data_type_equ
 
 Make sure that the user provided to Replicant has the INSERT, UPDATE, and DELETE privileges for this table.
 
-The following parameters are available to configure heartbeat table:
+Use the following parameters to configure a heartbeat table:
 
 <dl class="dl-indent">
-<dt>enable</dt>
+<dt>
+
+`enable`
+</dt>
 <dd>
 
 `true` or `false`.
 
-Whether to enable heartbeat table mechanism. You must set this to true for realtime replication.
-
+Whether to enable heartbeat table mechanism. You must set this to `true` for real-time replication.
 </dd>
 
 <dt>
 
 `catalog`
-
 </dt>
 <dd>
 
@@ -333,12 +334,19 @@ Name of the heartbeat table.
 
 <dt>
 
-`column-name` *[v20.10.07.9]*
+`timestamp-column-name`
 </dt>
 <dd>
 
-Name of column in heartbeat table (has only one column).
+Name of the timestamp column in the heartbeat table.
+</dd>
+<dt>
 
+`replicantId-column-name`
+</dt>
+<dd>
+
+Column name containing Replicant's ID. This parameter allows you to specify the column name for Replicant's ID in the heartbeat table. To know how to specify Replicant IDs, see the samples in [Running Replicant]({{< ref "docs/running-replicant" >}}).
 </dd>
 
 <dt>
@@ -347,10 +355,21 @@ Name of column in heartbeat table (has only one column).
 </dt>
 <dd>
 
-Interval at which Replicant should update heartbeat table with the latest timestamp (milliseconds since epoch).
+Interval at which Replicant updates heartbeat table with the latest timestamp (milliseconds since epoch).
 </dd>
 
 </dl>
+
+The following shows a sample heartbeat table configuration:
+
+```YAML
+heartbeat:
+  enable: true
+  catalog: tpch
+  interval-ms: 100
+  replicantId-column-name: 'arcion_replicant_id'
+  timestamp-column-name: 'arcion_replicant_timestamp' 
+```
 
 ### `fetch-interval-s` *[v20.07.16.1]*
 Interval in seconds after which Replicant tries to fetch the CDC log.
