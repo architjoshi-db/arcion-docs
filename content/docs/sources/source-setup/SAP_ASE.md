@@ -97,7 +97,7 @@ Replace the following:
 <dl class="dl-indent">
 <dt>
 
-`client-charset`
+`client-charset` *[v23.07.31.03]*
 <dt>
 <dd>
 
