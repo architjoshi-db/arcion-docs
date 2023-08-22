@@ -129,21 +129,27 @@ Replace the following:
 
         {{< hint "warning" >}} **Important:** When using `BCP` as the extraction method with filters, or `split-key` in Extractor configuration, make sure that the Replicant user has access privilege to create views in data schema. {{< /hint >}}
 
-      ### Use realtime mode
-      First, make sure that the ASE account [you specified in the Replicant connection configuration file](#i-set-up-connection-configuration) has [the following permissions granted](https://infocenter.sybase.com/help/index.jsp?topic=/com.sybase.infocenter.dc01672.1572/html/sec_admin/sec_admin136.htm):
+      ### Use `realtime` mode
+      For real-time replication, follow these instructions:
+      #### 1. Grant necessary permissions
+      First, make sure that the ASE account [you specify in the Replicant connection configuration file](#i-set-up-connection-configuration) possesses [the following permissions](https://infocenter.sybase.com/help/index.jsp?topic=/com.sybase.infocenter.dc01672.1572/html/sec_admin/sec_admin136.htm):
 
       - `sa_role`
       - `replication_role`
       - `sybase_ts_role`
       
-      After that, you can specify extraction parameters under the `realtime` section of the configuration file. Below is a working sample:
+      #### 2. Specify Extractor parameters
+      Specify extraction parameters under the `realtime` section of the configuration file. For example:
 
       ```YAML
       realtime:
         threads: 1
         fetch-size-rows: 100000
+
         fetch-interval-s: 10
+      
         _traceDBTasks: true
+
         heartbeat:
           enable: true
           catalog: tpch
@@ -152,16 +158,29 @@ Replace the following:
       ```
 
     {{< hint "warning" >}}
-  **Important:** The `fetch-interval-s` parameter determines interval between each CDC fetch cycle. Always make sure to keep its value above or equal to `10`. For more information, see [Limitations](#limitations).
+  **Important:** 
+  1. The `fetch-interval-s` parameter determines interval between each CDC fetch cycle. Always make sure to keep its value above or equal to `10`. For more information, see [Limitations](#limitations).
+  2. Always enable heartbeat table. Otherwise, truncation point does not move forward.
     {{< /hint >}}
 
     #### Limitations
     - You can run only one Extractor thread for each SAP ASE database. You can run multiple snapshot tasks in parallel.
     - DDL Replication isn't supported.
-    - Running Merge operations during CDC will result in a non-recoverable error. To bring the Target back in sync, you'll need to run reinit or full snapshot again.
-    - View Replication is not supported for realtime but possible for snapshot.
-    - In order to avoid clogging source database, we need to set `fetch-interval-s` to a value greater than or equal to `10` seconds. This will pause the Extractor thread for `fetch-interval-s` seconds before extracting the next batch of logs.
+    - Running [`merge` operations](https://help.sap.com/docs/SAP_ASE/e0d4539d39c34f52ae9ef822c2060077/ab389f37bc2b10149bb5c3bafec694a1.html?version=16.0.4.2) during CDC results in a non-recoverable error. To sync the target database again, you must run `reinit` or `full` snapshot again.
+    - View Replication is not supported for real-time replication but possible for snapshot replication.
+    - To avoid clogging source database, we need to set `fetch-interval-s` to a value greater than or equal to `10` seconds. This pauses the Extractor thread for `fetch-interval-s` seconds before extracting the next batch of logs.
     - It's not possible to manually reset truncation point.
+
+    #### Handling secondary truncation point
+    When a replication starts, Replicant establishes a `$replication_truncation_point` entry in the [`syslogshold` system table](https://help.sap.com/docs/SAP_ASE/ad4a1ddf1bf34768841bd09d1eddf434/ab93c51bbc2b1014b3d7b91d5bc8eca3.html?q=syslogshold). This indicates an ongoing replication process. While Replicant is working, it advances the replication truncation point at regular intervals, according to the amount of data that has already been copied to the target.
+
+    Once Replicant establishes the `$replication_truncation_point` entry, you must keep Replicant running at all times to prevent the database log from becoming excessively large. To stop the replicant task permanently, remove the replication truncation point:
+
+    ```SQL
+    dbcc settrunc('ltm','ignore')
+    ```
+
+    After removing the truncation point, you cannot resume the replication job. If automatic trunction is enabled, ASE continues to automatically truncate the log at the checkpoints.
 
 For a detailed explanation of configuration parameters in the Extractor file, read [Extractor Reference]({{< ref "../configuration-files/extractor-reference" >}} "Extractor Reference").
 
