@@ -11,7 +11,7 @@ In snapshot replication, Replicant first creates the destination schemas. After 
 
 You can enable snapshot replication by running Replicant with the `snapshot` option. For more information, see [Replicant snapshot mode]({{< ref "docs/running-replicant#replicant-snapshot-mode" >}}).
 
-Follow the steps in the following sections to set up SQL Server for `snapshot` mode replication. In these steps, `$REPLICANT_HOME` refers to [your Arcion Self-hosted CLI download directory]({{< ref "docs/quickstart#ii-get-arcion-self-hosted" >}}).
+Follow the steps in the following sections to set up SQL Server for `snapshot` mode replication. In these steps, `$REPLICANT_HOME` refers to [your Arcion Self-hosted CLI download directory]({{< ref "docs/quickstart/arcion-self-hosted#ii-download-replicant-and-create-replicant_home" >}}).
 
 ## I. Required Permissions
 

@@ -9,7 +9,7 @@ url: docs/target-setup/confluent/confluent-platform
 
 # Destination Confluent Platform
 
-In the following steps, we refer [the extracted `replicant-cli`]({{< ref "docs/quickstart#ii-get-arcion-self-hosted" >}}) as the `$REPLICANT_HOME` directory.
+In the following steps, we refer [the extracted `replicant-cli`]({{< ref "docs/quickstart/arcion-self-hosted#ii-download-replicant-and-create-replicant_home" >}}) as the `$REPLICANT_HOME` directory.
 
 {{< hint "info" >}}
 Don't have a Confluent Platform account? Get one [here](https://www.confluent.io/confluent-cloud/?utm_campaign=tm.fm-ams_cd.cwc-arcion-newuser&utm_medium=partnerref).

@@ -9,7 +9,7 @@ url: docs/target-setup/snowflake/setup-guide
 
 # Destination Snowflake setup guide
 
-The following steps refer [the extracted Arcion self-hosted CLI download]({{< ref "docs/quickstart/#ii-download-replicant-and-create-a-home-repository" >}}) as the `$REPLICANT_HOME` directory.
+The following steps refer [the extracted Arcion self-hosted CLI download]({{< ref "docs/quickstart/arcion-self-hosted#ii-download-replicant-and-create-replicant_home" >}}) as the `$REPLICANT_HOME` directory.
 
 ## Required permissions
 - Make sure the user possesses the following privileges on the catalogs or schemas where you want Replicant to replicate tables to: 

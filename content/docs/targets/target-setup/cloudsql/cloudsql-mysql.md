@@ -9,7 +9,7 @@ bookHidden: false
 # Destination Cloud SQL for MySQL
 This page describes how to load data in real time into [Google's Cloud SQL for MySQL](https://cloud.google.com/sql/mysql), a fully managed service for MySQL relational database.
 
-The following steps refer to the extracted [Arcion self-hosted CLI]({{< ref "docs/quickstart/#ii-download-replicant-and-create-a-home-repository" >}}) download as the `$REPLICANT_HOME` directory.
+The following steps refer to the extracted [Arcion self-hosted CLI]({{< ref "docs/quickstart/arcion-self-hosted#ii-download-replicant-and-create-replicant_home" >}}) download as the `$REPLICANT_HOME` directory.
 
 ## Prerequisites
 Pay attention to the following before configuring Cloud SQL for MySQL as the target system:

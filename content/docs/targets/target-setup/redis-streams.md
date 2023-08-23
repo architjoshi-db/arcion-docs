@@ -9,7 +9,7 @@ url: docs/target-setup/redis-streams
 # Destination Redis Streams
 This page describes how to load data in realtime into [Redis Streams](https://redis.io/docs/data-types/streams/), an append-only log data structure.
 
-The following steps refer [the extracted Arcion self-hosted CLI download]({{< ref "docs/quickstart/#ii-download-replicant-and-create-a-home-repository" >}}) as the `$REPLICANT_HOME` directory.
+The following steps refer [the extracted Arcion self-hosted CLI download]({{< ref "docs/quickstart/arcion-self-hosted#ii-download-replicant-and-create-replicant_home" >}}) as the `$REPLICANT_HOME` directory.
 
 ## I. Set up connection configuration
 Specify our Redis connection details to Replicant with a connection configuration file. You can find a sample connection configuration file `redis_stream.yaml` in the `$REPLICANT_HOME/conf/conn` directory.
