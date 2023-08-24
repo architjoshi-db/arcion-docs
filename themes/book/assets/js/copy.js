@@ -18,7 +18,8 @@ function copyCodeBlock(event) {
 
   const codeBlock = copyButton.parentElement.querySelector("div.highlight pre code")
   const code = codeBlock.textContent.trim()
-  window.navigator.clipboard.writeText(code)
+  const strippedCode = code.replace(/^[\s]?\$|postgres=>\s+/gm, "")
+  window.navigator.clipboard.writeText(strippedCode)
 
   // change the button temporarily and restore  
   // the hover effect and copy icon
