@@ -1,13 +1,13 @@
 ---
 pageTitle: Writing data to local storage 
 title: Local Storage
-description: "Arcion supports writing data to the disk in CSV or JSON format instead of sending the data to an external target database."
+description: "Arcion supports writing data to the disk in CSV format instead of sending the data to an external target database."
 url: docs/target-setup/localstorage
 bookHidden: false
 ---
 
 # Destination local storage
-Arcion supports writing data locally to your disk in CSV or JSON format instead of sending it to an external target database. This page contains instructions on how to use your local storage as a real time destination for different data sources.
+Arcion supports writing data locally to your disk in CSV format instead of sending it to an external target database. This page contains instructions on how to use your local storage as a real time destination for different data sources.
 
 The following steps refer to the extracted [Arcion self-hosted CLI]({{< ref "docs/quickstart/arcion-self-hosted#ii-download-replicant-and-create-replicant_home" >}}) download as the `$REPLICANT_HOME` directory.
 
