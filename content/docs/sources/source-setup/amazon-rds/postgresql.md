@@ -2,7 +2,7 @@
 pageTitle: Amazon RDS for PostgreSQL connector by Arcion  
 title: PostgreSQL
 description: "Get fast data ingestion into Amazon RDS for PostgreSQL using Arcion."
-url: docs/source-setup/amazon-rds/amazon-rds-for-postgresql
+url: docs/source-setup/amazon-rds/postgresql
 bookHidden: false
 ---
 

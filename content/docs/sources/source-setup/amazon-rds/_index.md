@@ -15,4 +15,4 @@ Currently, Arcion supports [Amazon RDS for PostgreSQL](https://aws.amazon.com/rd
 In this section, we present comprehensive instructions on how to get started with Arcion and Amazon RDS for PostgreSQL.
 
 ## In this section
-- [Amazon RDS for PostgreSQL]({{< relref "amazon-rds-for-postgresql" >}})
+- [Amazon RDS for PostgreSQL]({{< relref "postgresql" >}})
