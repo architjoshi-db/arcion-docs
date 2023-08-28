@@ -136,11 +136,12 @@ Replace the following:
 You can specify as many slots as you want in this format.
 
 #### Log reader type
-From versions 23.03.01.12 and later, the value of `log-reader-type` defaults to `STREAM`. If you choose `STREAM`, Replicant captures CDC data through `PgReplicationStream`. If you choose `SQL`, RDS for PostgreSQL server periodically receives SQL statements for CDC data extraction.
 
 {{< hint "warning" >}}
-**Important:** From versions 23.03.31 and later, `log-reader-type` is deprecated. Avoid specifying this parameter.
+**Caution:** From versions 23.03.31 and later, `log-reader-type` is deprecated. Avoid specifying this parameter.
 {{< /hint >}}
+From versions 23.03.01.12 and later, the value of `log-reader-type` defaults to `STREAM`. If you choose `STREAM`, Replicant captures CDC data through `PgReplicationStream`. If you choose `SQL`, RDS for PostgreSQL server periodically receives SQL statements for CDC data extraction.
+
 {{< /tab >}}
 
 {{< tab "Fetch credentials from AWS Secrets Manager" >}}
