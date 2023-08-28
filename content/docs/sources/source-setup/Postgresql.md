@@ -247,6 +247,8 @@ snapshot:
   min-job-size-rows: 1_000_000
   max-jobs-per-chunk: 32
 
+  fetch-partition-tables: true
+
   per-table-config:
   - catalog: tpch
     schema: public
@@ -261,6 +263,22 @@ snapshot:
 ```
 
 For more information about the configuration parameters for `snapshot` mode, see [Snapshot Mode]({{< ref "../configuration-files/extractor-reference#snapshot-mode" >}}).
+
+#### Aditional snapshot parameters
+<dl class="dl-indent">
+<dt>
+
+`fetch-partition-tables`
+</dt>
+<dd>
+
+`{true|false}`.
+
+Whether to fetch partition tables.
+
+_Default: `false`._
+</dd>
+</dl>
 
 ### Configure `realtime` replication
 For realtime replication, you must create a heartbeat table in the source PostgreSQL database.
