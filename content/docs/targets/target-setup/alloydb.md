@@ -12,16 +12,21 @@ This page describes how to load data in real time into [Google's AlloyDB](https:
 The following steps refer to the extracted [Arcion self-hosted CLI]({{< ref "docs/quickstart/arcion-self-hosted#ii-download-replicant-and-create-replicant_home" >}}) download as the `$REPLICANT_HOME` directory.
 
 ## Required permissions
-- Make sure that the user being used for replication, has the `CREATE TABLE` privilege on the target catalogs or schemas where you want to replicate the tables to. Use the following command to grant the privileges:
-    ```SQL
-    GRANT CREATE ON DATABASE <catalog_name> TO <replication_user>;
-    ```
-    Replace the following: 
-    - *`catalog_name`*: the catalog name in the target
-    - *`replication_user`*: the user being used for replication 
-- In order to store Arcion’s replication metadata, you must ensure one of the following: 
-    - Point to an external metadata database. For more information, see [Metadata configuration]({{< ref "docs/references/metadata-reference" >}}).
-    - Grant the `CREATEDB` privilege to the user being used for replication. This allows the user to create the `io` database. The user must also possess the privilege to create tables in the `io` database.   Replicant uses this `io` database to maintain internal checkpoint and metadata.
+
+### Privilege to create tables
+Make sure that the user being used for replication has the privilege to create tables on the target catalogs or schemas where you want to replicate the tables to. Use the following command to grant the privileges:
+```SQL
+GRANT CREATE ON DATABASE <catalog_name> TO <replication_user>;
+```
+Replace the following: 
+- *`catalog_name`*: the catalog name in the target
+- *`replication_user`*: the user being used for replication
+
+### Replicant metadata
+In order to store Arcion’s replication metadata, you must ensure one of the following:
+
+- Point to an external metadata database. For more information, see [Metadata configuration]({{< ref "docs/references/metadata-reference" >}}).
+- Grant the `CREATEDB` privilege to the user being used for replication. This allows the user to create the `io` database. The user must also possess the privilege to create tables in the `io` database.   Replicant uses this `io` database to maintain internal checkpoint and metadata.
 
     The following command assigns the `CREATEDB` privilege to a user `alex`:
     ```SQL
@@ -68,8 +73,8 @@ Replace the following:
 
 Feel free to change the following parameter values as you need:
 
-- *`max-connections`*: the maximum number of connections Replicant opens in AlloyDB
-- *`max-retries`*: number of times Replicant retries a failed operation
+- *`max-connections`*: the maximum number of connections Replicant opens in AlloyDB.
+- *`max-retries`*: number of times Replicant retries a failed operation.
 - *`retry-wait-duration-ms`*: duration in milliseconds Replicant waits between each retry of a failed operation.
 - *`socket-timeout-s`*: the timeout value in seconds specifying socket read operations. A value of `0` disables socket reads.
 
