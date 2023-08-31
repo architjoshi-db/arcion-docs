@@ -14,7 +14,7 @@ If you're using AWS, GCP, Azure, or some other cloud vendor virtual machine (VM)
 Before you install and set up Arcion On-premises UI, complete the following prerequisites:
 
 ### Hardware prerequisites
-Ensure a cloud, VM, or bare metal server instance. The server must meet the minimum resources the Arcion team recommends for your specific workload. For most small and proof of concept environments with 10 or less tables, make sure the environment meets the following resources:
+Ensure a cloud, VM, or bare metal server instance. The server must meet the minimum resources the Arcion team recommends for your specific workload. For most small and proof of concept environments with 10 tables or less, make sure the environment meets the following resources:
 
 - 4 virtual CPUs (vCPU)
 - 16 GB of RAM
