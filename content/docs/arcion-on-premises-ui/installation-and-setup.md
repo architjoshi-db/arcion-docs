@@ -11,15 +11,18 @@ This guide walks you through the necessary steps to get Arcion’s On-premises U
 If you're using AWS, GCP, Azure, or some other cloud vendor virtual machine (VM) instance, make sure you have network access to and from your source and target databases or data lakes.
 
 ## Prerequisites
-- A cloud, VM, or bare metal server instance. The server must meet the minimum resources the Arcion team recommends for your specific workload.
+Before you install and set up Arcion On-premises UI, complete the following prerequisites:
+
+### Hardware prerequisites
+Ensure a cloud, VM, or bare metal server instance. The server must meet the minimum resources the Arcion team recommends for your specific workload. For most small and proof of concept environments with 10 or less tables, make sure the environment meets the following resources:
+
+- 4 virtual CPUs (vCPU)
+- 16 GB of RAM
+- 200 GB of free storage space
+
+### Software prerequisites
 - A Linux operating system—for example, Rocky Linux, Ubuntu, or Red Hat.
-- The VM must also have [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/) installed. For more information, see [Install Docker and Docker Compose](#install-docker-and-docker-compose).
-
-For most small environments with the following specifications, you should easily be able to get started with 200 GB of storage:
-
-- Less than a 100 total tables
-- 16 virtual CPUs (vCPU)
-- 32 GB of RAM
+- [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/). For more information, see [Install Docker and Docker Compose](#install-docker-and-docker-compose).
 
 ## Environment configuration
 In your Linux server, create a folder to hold the Docker Compose file, the Docker volumes, and the necessary directories. You can create this folder anywhere on your server. In this example, we use `/usr/local/arcion` as the folder.
