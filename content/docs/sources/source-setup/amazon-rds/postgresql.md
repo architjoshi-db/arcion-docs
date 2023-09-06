@@ -15,7 +15,7 @@ The following steps refer to the extracted [Arcion self-hosted CLI]({{< ref "doc
 
 ### I. Set up parameter group
 1. [Create a database parameter group](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithDBInstanceParamGroups.html#USER_WorkingWithParamGroups.Creating) if you haven't already specified a parameter group for your database instance.
-2. Set the `rds.logical_replication` parameter to `1` and attach `rds.logical_replication` to your database instance. You must reboot your database instance for this change to take effect. After rebooting your database instance, the `wal_level` parameter automatically sets to `logical`.
+2. Set the `rds.logical_replication` parameter to `1` and attach `rds.logical_replication` to your database instance. You must reboot your database instance for this change to take effect. After rebooting your database instance, the system automatically sets the `wal_level` parameter to `logical`.
 
     You can verify the values for `wal_level` and `rds.logical_replication` with the following command from `psql` client:
 
@@ -63,18 +63,12 @@ The following steps refer to the extracted [Arcion self-hosted CLI]({{< ref "doc
     ```
 
 ## Set up connection configuration
-Specify your RDS for PostgreSQL connection details to Replicant with a connection configuration file. To connect to your RDS for PostgreSQL instance, you can choose between two methods for an authenticated connection:
-
-- [Using basic username and password authentication](#connect-with-username-and-password).
-- [Using SSL](#connect-using-ssl).
-
-### Connect with username and password
-To connect to RDS for PostgreSQL database using basic username and password authentication, you have the following two options:
+To connect to your RDS for PostgreSQL instance using basic username and password authentication, you have the following two options:
 
 {{< tabs "username-pwd-authentication" >}}
 {{< tab "Specify credentials in plain text" >}}
 
-Specify your credentials in plain text in the connection configuration:
+Specify your credentials in a plain text YAML connection configuration file:
 
 ```YAML
 type: POSTGRESQL
@@ -148,27 +142,6 @@ From versions 23.03.01.12 and later, the value of `log-reader-type` defaults to 
 If you store your connection credentials in AWS Secrets Manager, you can tell Replicant to retrieve them. For more information, see [Retrieve credentials from AWS Secrets Manager]({{< ref "docs/security/secrets-manager" >}}). 
 {{< /tab >}}
 {{< /tabs >}}
-
-### Connect using SSL
-You can use SSL to connect to your RDS PostgreSQL instance by specifying the SSL details under the `ssl` field:
-
-```YAML
-ssl:
-  ssl-cert: PATH_TO_SERVER_CERTIFICATE_FILE
-  root-cert: PATH_TO_CA_CERTIFICATE_FILE
-  ssl-key: PATH_TO_SERVER_PRIVATE_KEY_FILE
-```
-
-Replace the following:
-- *`PATH_TO_SERVER_CERTIFICATE_FILE`*: location of the SSL server certificate file
-- *`PATH_TO_CA_CERTIFICATE_FILE`*: location of the RDS CA certificate
-- *`PATH_TO_SERVER_PRIVATE_KEY_FILE`*: location of the SSL server private key file
-
-The key file must be in PKCS #12 or in PKCS #8 DER format. You can convert a PEM key to DER format using the following `openssl` command:
-
-```BASH
-openssl pkcs8 -topk8 -inform PEM -in postgresql.key -outform DER -out postgresql.pk8 -v1 PBE-MD5-DES
-```
 
 ### Enable connection by username for `STREAM` log reader
 If you use `STREAM` as the `log-reader-type`, you must allow an authenticated replication connection as the *`USERNAME`* who performs the replication. To do so, modify the `pg_hba.conf` with the following entries depending on the use case:
