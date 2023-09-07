@@ -6,7 +6,7 @@ url: docs/source-setup/amazon-rds/postgresql
 bookHidden: false
 ---
 
-# Destination Amazon RDS for PostgreSQL
+# Source Amazon RDS for PostgreSQL
 This page describes how to replicate data in real time from [Amazon RDS for PostgreSQL](https://aws.amazon.com/rds/postgresql/), a managed service for PostgreSQL relational database.
 
 The following steps refer to the extracted [Arcion self-hosted CLI]({{< ref "docs/quickstart/arcion-self-hosted#ii-download-replicant-and-create-replicant_home" >}}) download as the `$REPLICANT_HOME` directory.
