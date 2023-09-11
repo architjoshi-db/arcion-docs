@@ -7,7 +7,7 @@ description: "Learn how Arcion can retrieve secrets from AWS Secrets Manager usi
 # Use AWS Secrets Manager with Arcion
 [AWS Secrets Manager](https://aws.amazon.com/secrets-manager/) works as a key-value store for secrets like passwords, tokens, and various database connection credentials. AWS encrypts these secrets with the AWS Key Management Service (AWS-KMS).
 
-This page discusses how Arcion works with AWS Secrets Manager and configuration for different authentication methods. You can choose what method Arcion uses to retrieve the necessary secrets for your replication pipelines.
+This page discusses how Arcion works with AWS Secrets Manager and configurations for different authentication methods. You can choose what method Arcion uses to retrieve the necessary secrets for your replication pipelines.
 
 ## Overview
 Arcion uses the concept of [namespaces](#namespaces) to allow different authentication methods with AWS Secrets Manager. Depending on the parameters you specify, you can choose how Arcion establishes an authenticated connection with AWS Secrets Manager and retrieves secrets.
@@ -84,6 +84,9 @@ Replace the following:
 ## The secrets management configuration file
 You can optionally choose to use a YAML configuration file that specifies details about the secrets and how to retrieve them. The configuration file contains the following parameters:
 
+### `type`
+The secrets management service you're using. For Amazon Secrets Manager, set this to `AWS`.
+
 ### `use-password-rotation`
 `{true|false}`.
 
@@ -98,12 +101,12 @@ _Default: `20`._
 
 ### `namespaces`
 Contains the following details: 
-- The secret name in AWS Secrets Manager, or the key vault name in Azure Key Vault. 
+- The secret name in AWS Secrets Manager. 
 - The credentials necessary to access the secrets.
 
-Arcion considers the first part of the secret name or key vault name a namespace. For example, consider the following two names and how Arcion interprets the corresponding namespaces in the secrets URI and the secrets management configuration file:
+Arcion considers the first part of the secret name a namespace. For example, consider the following two names and how Arcion interprets the corresponding namespaces in the secrets URI and the secrets management configuration file:
 
-| Secret name or key vault name | Namespace     |
+| Secret name                   | Namespace     |
 | -----------                   | -----------   |
 | `mysql_src`                   | `mysql_src`   |
 | `mysql_prod/connection`       | `mysql_prod`  |  

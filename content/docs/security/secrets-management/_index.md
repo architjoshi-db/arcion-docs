@@ -82,14 +82,16 @@ Specifies the secrets management service you want to use:
 `AWS`
 </dt>
 <dd>
-Use AWS Secrets Manager as the secrets management service.
+
+[Use AWS Secrets Manager]({{< relref "aws-secrets-manager" >}}) as the secrets management service.
 </dd>
 <dt>
 
 `AZURE`
 </dt>
 <dd>
-Use Azure Key Vault as the secrets management service.
+
+[Use Azure Key Vault]() as the secrets management service.
 </dd>
 <dt>
 
@@ -105,7 +107,8 @@ Replicant expects credentials to be in plain text in the configuration file. The
 `--secret-manager`
 </dt>
 <dd>
-The secrets management configuration file in YAML format.
+
+Location to the secrets management YAML configuration file. For more information, see [Use AWS Secrets Manager]({{< relref "aws-secrets-manager" >}}) and [Use Azure Key Vault]({{< relref "#" >}}).
 </dd>
 </dl>
 
