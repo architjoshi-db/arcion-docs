@@ -3,7 +3,6 @@ pageTitle: Secrets management
 title: Secrets Management
 description: "Arcion natively integrates with AWS Secrets Manager and Azure Key Vault, allowing you to securely and effectively manage secrets."
 bookCollapseSection: true
-
 ---
 
 # Secrets management
@@ -15,8 +14,7 @@ Secrets management allows you to protect sensitive information like passwords, k
 - [AWS Secrets Manager](https://aws.amazon.com/secrets-manager/)
 - [Azure Key Vault](https://azure.microsoft.com/en-us/products/key-vault)
 
-### How secrets management works with Replicant
-Replicant works seamlessly with both Secrets Manager and Key Vault in a single command when you start your replication. This means you don't need to _separately run_ Replicant to fetch your secrets. Replicant automatically fetches the necessary credentials for a replication job according to your specifications.
+Replicant works seamlessly with both AWS Secrets Manager and Azure Key Vault. When you start a replication job, specify the necessary options for using a secrets management service. This means you _don't need to separately run_ Replicant to fetch secrets. Replicant automatically fetches the necessary credentials for a replication job according to your specifications.
 
 ## Use a secrets management service
 Follow these steps to use a secrets management service with Arcion Replicant in a replication job:
@@ -28,7 +26,7 @@ Replicant requires an optional configuration file containing all the details abo
 - Password rotation and the number of secrets cache retries
 - Authentication credentials and secret details 
 
-For more information about the secrets management configuration file, see []().
+For more information about the secrets management configuration file, see [Use AWS Secrets Manager]({{< relref "aws-secrets-manager" >}}) and [Use Azure Key Vault]({{< relref "#" >}}).
 
 ### Specify secrets URI in the connection configuration file
 To locate and access a secret in AWS Secrets Manager or Azure Key Vault, Arcion uses the following URI format for each secret:
@@ -39,14 +37,14 @@ arcion-sm://NAMESPACE/KEY
 
 The preceding URI structure contains the following elements:
 
-- *`NAMESPACE`* represents the secret name in AWS Secrets Manager, or the key vault name in Azure Key Vault. Replace *`NAMESPACE`* with the namespace name you specify under the `namespaces` field of the secrets management configuration file.
-  Arcion considers the first part of the secret name or key vault name a namespace. For example, consider the following two names and how Arcion interprets the corresponding namespaces in the secrets URI and the secrets management configuration file:
+- *`NAMESPACE`* represents the secret name in AWS Secrets Manager, or the key vault name in Azure Key Vault. Replace *`NAMESPACE`* with the namespace name you specify under the `namespaces` field of the secrets management configuration file. For more information, see the [description of `namespaces`]({{< relref "aws-secrets-manager#namespaces" >}}).
+<!--   Arcion considers the first part of the secret name or key vault name a namespace. For example, consider the following two names and how Arcion interprets the corresponding namespaces in the secrets URI and the secrets management configuration file:
 
   | Secret name or key vault name | Namespace     |
   | -----------                   | -----------   |
   | `mysql_src`                   | `mysql_src`   |
   | `mysql_prod/connection`       | `mysql_prod`  |  
-
+ -->
 - *`KEY`*, for AWS Secrets Manager, represents the key of the secret whose value Arcion must retrieve. For Azure Key Vault, *`KEY`* represents the secret name whose value which Arcion must retrieve.
   
 The following sample connection configuration file for a [source MySQL]({{< ref "docs/sources/source-setup/mysql" >}}) specifies the `host`, `port`, `username`, and `password` credentials using secrets URI:
@@ -111,7 +109,7 @@ The secrets management configuration file in YAML format.
 </dd>
 </dl>
 
-For example, the following command [tests the connection]({{< ref "docs/running-replicant#test-connection" >}}) to a MySQL database server using secrets from AWS Secrets Manager:
+For example, the following command [tests the connection]({{< ref "docs/running-replicant#test-connection" >}}) to a MySQL server using secrets from AWS Secrets Manager:
 
 ```sh
 ./bin/replicant test-connection conf/conn/mysql.yaml \
