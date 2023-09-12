@@ -1,7 +1,7 @@
 ---
 pageTitle: AWS Secrets Manager
 title: AWS Secrets Manager
-description: "Learn how Arcion can retrieve secrets from AWS Secrets Manager using some simple configuration parameters."
+description: "Learn how Arcion can retrieve secrets from AWS Secrets Manager."
 ---
 
 # Use AWS Secrets Manager with Arcion
@@ -45,8 +45,8 @@ In this method, you don't need to specify the IAM user's access keys explicitly 
 - The `aws.accessKeyId` and `aws.secretKey` Java system properties.
 - Web identity token from the environment or container.
 - The shared [`credentials` file in the default location](https://docs.aws.amazon.com/sdkref/latest/guide/file-location.html).
-- The Amazon ECS container credentials. The `AWS_CONTAINER_CREDENTIALS_RELATIVE_URI` system environment variable must be set and Secrets Manager must have the permission to access the variable.
-- Amazon EC2 instance IAM role-provided credentials through the Amazon EC2 metadata service. 
+- The Amazon ECS container credentials. You must set the `AWS_CONTAINER_CREDENTIALS_RELATIVE_URI` system environment variable and Secrets Manager must have the permission to access the variable.
+- Amazon EC2 instance IAM role-provided credentials through the Amazon EC2 metadata service.
 
 To use this method, specify the namespace in the following manner:
 
@@ -81,8 +81,10 @@ Replace the following:
 - *`IAM_USER_ACCESS_KEY_ID`*: the access key ID for the IAM user—for example, `AKIAIOSFODNN7EXAMPLE` 
 - *`AWS_REGION`* the AWS region—for example, `us-east-1`
 
-## The secrets management configuration file
-You can optionally choose to use a YAML configuration file that specifies details about the secrets and how to retrieve them. The configuration file contains the following parameters:
+## Configure Secrets Manager details
+You can optionally choose to use a YAML configuration file that specifies details about the secrets and how to retrieve them. Without the the secrets management configuration file, Arcion looks for authentication credentials in some specfic locations. For more information, see the [**AWS Secrets Manager** tab in Configure secrets management details]({{< relref "secrets-management#configure-secrets-management-details" >}}). 
+
+The configuration file contains the following parameters:
 
 ### `type`
 The secrets management service you're using. For Amazon Secrets Manager, set this to `AWS`.
