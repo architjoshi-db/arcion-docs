@@ -79,7 +79,7 @@ You can either use Oracle ASM to access the logs, or use the file system directl
 
 ### Oracle ASM
 
-Replicant supports using Oracle Automatic Storage Management (ASM) for logs. To use ASM, follow the steps below:
+Replicant supports using Oracle Automatic Storage Management (ASM) for logs. To use ASM, follow these steps:
 
 1. Grant the following permissions to Replicant:
 
@@ -87,18 +87,14 @@ Replicant supports using Oracle Automatic Storage Management (ASM) for logs. To 
     GRANT SELECT ON gv_$asm_client TO USERNAME
     ```
 
-2. In [your Oracle connection configuration file]({{< relref "docs/sources/source-setup/oracle/setup-guide/oracle-traditional-database#v-set-up-connection-configuration" >}}), create a new section `asm-connection`.  This section will have the necessary ASM connection configuration. Below is a sample connection configuration file with ASM connection details specified as well:
+2. In [your Oracle connection configuration file]({{< relref "docs/sources/source-setup/oracle/setup-guide/oracle-traditional-database#v-set-up-connection-configuration" >}}), create a new section `asm-connection` that contains the necessary ASM connection details:
 
     ```YAML
     type: ORACLE
-    host: localhost
-    port: 53545
-    service-name: IO
-    username: 'REPLICANT_USERNAME'
-    password: 'REPLICANT_PASSWORD'
+    ...
 
     asm-connection:
-      host: oracle-asm
+      host: //ASM_HOSTNAME
       port: 1521
       service-name: +ASM
       username: 'ASM_USERNAME'
@@ -108,8 +104,7 @@ Replicant supports using Oracle Automatic Storage Management (ASM) for logs. To 
 
     Replace the following:
 
-    - *`REPLICANT_USERNAME`*: your Replicant username.
-    - *`REPLICANT_PASSWORD`*: the password associated with your Replicant username.
+    - *`ASM_HOSTNAME`*: the hostname of the ASM instance. Make sure to prefix the hostname with `//`.
     - *`ASM_USERNAME`*: the username to connect to the ASM instance.
     - *`ASM_PASSWORD`*: the password associated with *`ASM_USERNAME`*.
 
