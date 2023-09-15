@@ -132,11 +132,18 @@ Before transferring the database content, it is recommended to examine the schem
 
 ## Write modes
 
-If a collision occurs at the destination system, Replicant by default warns the user and exits with an error to preserve the existing data at the destination. If probability of collision exists for some data, you can resolve the possible error  by providing the appropriate schema's file for the target database.
+If a collision occurs at the destination system, Replicant by default warns the user and exits with an error to preserve the existing data at the destination. If probability of collision exists for some data, you can resolve the possible error by providing the appropriate schemas file for the target database.
 
-As an alternative to providing a schemas file, you can specify a global rule when you start Replicant. These rules dictate different modes of writing data to the target database. You can specify a write mode by using the corresponding CLI flag. 
+Instead of providing a schemas file, you can specify a global rule when you start Replicant. These rules dictate different modes of writing data to the target database. You can specify a write mode by using the corresponding CLI flag. See the following table for a list of supported write modes and the corresponding Replicant CLI flags:
 
-Replicant CLI supports the following write modes:
+| Write mode    | CLI flag            |
+| -----------   | -----------         |
+| `APPEND`      | `--append-existing` |
+| `MERGE`       | `--merge-existing`  |
+| `REPLACE`     | `--replace-existing`|
+| `SWAP`        | `--swap-existing`   |
+
+### How each write mode works
 
 `--append-existing`
 : Replicant appends the data from the source to the existing data at the destination.
@@ -150,7 +157,12 @@ Replicant CLI supports the following write modes:
 : If the table exists on the destination, then Replicant recreates the table and replaces the destination data with the source data.
 
 `--swap-existing` _[v23.08.31.1]_
-: This write mode performs the following steps:
+: 
+  {{< hint "info" >}}
+  **Note:** `SWAP` write mode is only supported for [Snowflake target]({{< ref "docs/targets/target-setup/snowflake" >}}).
+  {{< /hint >}}
+
+  This write mode performs the following steps:
 
   1. Replicant creates a temporary table on the target system for each table in the user's [filter]({{< ref "docs/sources/configuration-files/filter-reference" >}}) instead of the actual table.
   2. The snapshot process inserts the data into these temporary tables.
@@ -159,7 +171,9 @@ Replicant CLI supports the following write modes:
      a. Replicant drops the actual table.
      
      b. Replicant renames the temporary table to the actual table. Therefore, the temporary table becomes the current live table.
-  4. Real-time replication then starts normally if in [`full` mode](#replicant-full-mode).
+  4. Real-time replication then starts normally in [`full` replication mode](#replicant-full-mode).
+
+  
 
 `--truncate-existing`
 : If the table exists in the destination database, Replicant preserves destination table schemas, but replaces the destination data with the source data.
