@@ -143,7 +143,7 @@ Instead of providing a schemas file, you can specify a global rule when you star
 | `REPLACE`     | `--replace-existing`|
 | `SWAP`        | `--swap-existing`   |
 
-### How each write mode works
+### How write modes work
 
 `--append-existing`
 : Replicant appends the data from the source to the existing data at the destination.
