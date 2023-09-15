@@ -279,13 +279,23 @@ After a thread finishes extracting from a particular replication channel, it get
 ### `heartbeat`
 This parameter provides [a heartbeat table configuration](#heartbeat-table) to Replicant on the source system. 
 
-You can create the heartbeat table with the following DDL:
+To create the heartbeat table, you can use this DDL:
 
 ```SQL
-CREATE TABLE <catalog>.<schema>.arcion_io_cdc_heartbeat(timestamp <data_type_equivalent_to_long>)
+CREATE TABLE catalog_name.schema_name.table_name(timestamp_column_name numeric_long_data_type, replicant_ID_column string_data_type primary key)
 ```
 
-Make sure that the user provided to Replicant has the INSERT, UPDATE, and DELETE privileges for this table.
+Replace the following:
+
+- *`catalog_name`*: the catalog name
+- *`schema_name`*: the schema name
+- *`table_name`*: name of the heartbeat table
+- *`timestamp_column`*: name of the timestamp column
+- *`numeric_long_data_type`*: a numeric long data type for the timestamp column
+- *`replicant_ID_column`*: the column name containing Replicant's ID for the particular replication job
+- *`string_data_type`*: a string data type for the *`replicant_ID_column`* column
+
+Make sure that the user you provide to Replicant has the INSERT, UPDATE, and DELETE privileges for this heartbeat table.
 
 Use the following parameters to configure a heartbeat table:
 
