@@ -159,7 +159,7 @@ Replicant CLI supports the following write modes:
      a. Replicant drops the actual table.
      
      b. Replicant renames the temporary table to the actual table. Therefore, the temporary table becomes the current live table.
-  4. Real-time replication then starts normally if in `full` mode.
+  4. Real-time replication then starts normally if in [`full` mode](#replicant-full-mode).
 
 `--truncate-existing`
 : If the table exists in the destination database, Replicant preserves destination table schemas, but replaces the destination data with the source data.
