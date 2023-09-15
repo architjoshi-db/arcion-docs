@@ -132,17 +132,45 @@ Before transferring the database content, it is recommended to examine the schem
 
 ## Write modes
 
-In case of a collision at the destination system, Replicant will by default warn the user and exit with an error in order to preserve the existing data at the destination. If a collision is expected to happen for some data, the error can be resolved by providing the appropriate destination schema's file.
+If a collision occurs at the destination system, Replicant by default warns the user and exits with an error to preserve the existing data at the destination. If probability of collision exists for some data, you can resolve the possible error  by providing the appropriate schema's file for the target database.
 
-As an alternative to providing a destination schemas file, you can specify a golbal rule while starting Replicant by providing one of the following write modes ``[--append-existing|--replace-existing|--truncate-existing]``.
+As an alternative to providing a schemas file, you can specify a global rule when you start Replicant. These rules dictate different modes of writing data to the target database. You can specify a write mode by using the corresponding CLI flag. 
 
-When using `--append-existing`, the data from the source will be appended to the existing data at the destination. Alternatively, you can replace  the destination data by the source data by using `--replace-existing`.
+Replicant CLI supports the following write modes:
 
-  * **Note**: If the destination system is a database `--truncate-existing` can be used instead of `--replace-existing` to preserve destination table schemas.
+`--append-existing`
+: Replicant appends the data from the source to the existing data at the destination.
 
-Additionally, while using `--truncate-existing` or `--replace-existing`, a you can give a `--lazy-init` flag. When you do so, the existing data will be replaced at the last moment. By default, the existing data will be deleted during Replicant initialization.
+`--merge-existing` _[v21.06.14.9]_
+: If the table exists on the destination database, Replicant merges the source data with the existing destination data _if_ the table has primary key. For tables without primary keys, `--merge-existing` behaves like `--truncate-existing`. 
 
-Replicant has another write mode, `--synchronize-deletes`,  which is relevant only for delta-snapshot mode (incremental replication) of operation. When replicant is started in delta-snapshot mode and you specify the `--synchronize-deletes` write mode, Replicant deletes all rows from a target table which are not present in the respective source table. Once the row synchronization is done, Replicant shuts down. Replicant can be started again in `resume mode` by taking off this write mode, after which Replicant will resume the incremental replication that it was performing.
+  `--merge-existing` also preserves destination table schemas.
+
+`--replace-existing`
+: If the table exists on the destination, then Replicant recreates the table and replaces the destination data with the source data.
+
+`--swap-existing` _[v23.08.31.1]_
+: This write mode performs the following steps:
+
+  1. Replicant creates a temporary table on the target system for each table in the user's [filter]({{< ref "docs/sources/configuration-files/filter-reference" >}}) instead of the actual table.
+  2. The snapshot process inserts the data into these temporary tables.
+  3. When the snapshot process completes, Replicant performs two things:
+
+     a. Replicant drops the actual table.
+     
+     b. Replicant renames the temporary table to the actual table. Therefore, the temporary table becomes the current live table.
+  4. Real-time replication then starts normally if in `full` mode.
+
+`--truncate-existing`
+: If the table exists in the destination database, Replicant preserves destination table schemas, but replaces the destination data with the source data.
+
+### Additional flags and features
+- You can provide the `--lazy-init` flag while using `--truncate-existing` or `--replace-existing`. This instructs Replicant to replace the existing data at the last moment. By default, Replicant removes the existing data during Replicant's initialization phase.
+- Replicant has another write mode `--synchronize-deletes` that only applies to [delta-snapshot replication](#replicant-delta-snapshot-mode). When you start Replicant in `delta-snapshot` mode with the `--synchronize-deletes` flag, the following events occur:
+  - Replicant deletes all rows from a target table that don't exist in the corresponding source table. 
+  - Replicant shuts down after finishing the row synchronization. 
+  
+  You can restart Replicant in `--resume` mode by omitting the `--synchronize-deletes` flag, allowing Replicant to resume the delta-snapshot replication.
 
 ## Test connection
 Replicant can perform validation checks on the connection configuration file of a database using the `test-connection` CLI option. This option checks the validity of credentials, host, port, and other connection parameters before you run the actual replication. This allows you to confirm that you possess a valid connection configuration file and Replicant can connect to the database.
