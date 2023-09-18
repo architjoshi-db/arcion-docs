@@ -134,29 +134,34 @@ Before transferring the database content, it is recommended to examine the schem
 
 If a collision occurs at the destination system, Replicant by default warns the user and exits with an error to preserve the existing data at the destination. If probability of collision exists for some data, you can resolve the possible error by providing the appropriate schemas file for the target database.
 
-Instead of providing a schemas file, you can specify a global rule when you start Replicant. These rules dictate different modes of writing data to the target database. You can specify a write mode by using the corresponding CLI flag. See the following table for a list of supported write modes and the corresponding Replicant CLI flags:
+Instead of providing a schemas file, you can specify a global rule when you start Replicant. These rules dictate different modes of writing data to the target database. You can specify a write mode by using the corresponding CLI flag. 
 
-| Write mode    | CLI flag            |
-| -----------   | -----------         |
-| `APPEND`      | `--append-existing` |
-| `MERGE`       | `--merge-existing`  |
-| `REPLACE`     | `--replace-existing`|
-| `SWAP`        | `--swap-existing`   |
+
+### CLI flags
+The following table lists the supported write modes and the corresponding Replicant CLI flags. Use the CLI flag when you run Replicant to enable a particular write mode.
+
+| Write mode    | CLI flag                |
+| -----------   | -----------             |
+| `APPEND`      | `--append-existing`     |
+| `MERGE`       | `--merge-existing`      |
+| `REPLACE`     | `--replace-existing`    |
+| `SWAP`        | `--swap-existing`       |
+| `TRUNCATE`    | `--truncate-existing`   |
 
 ### How write modes work
 
-`--append-existing`
+`APPEND`
 : Replicant appends the data from the source to the existing data at the destination.
 
-`--merge-existing` _[v21.06.14.9]_
+`MERGE` _[v21.06.14.9]_
 : If the table exists on the destination database, Replicant merges the source data with the existing destination data _if_ the table has primary key. For tables without primary keys, `--merge-existing` behaves like `--truncate-existing`. 
 
   `--merge-existing` also preserves destination table schemas.
 
-`--replace-existing`
+`REPLACE`
 : If the table exists on the destination, then Replicant recreates the table and replaces the destination data with the source data.
 
-`--swap-existing` _[v23.08.31.1]_
+`SWAP` _[v23.08.31.1]_
 : 
   {{< hint "info" >}}
   **Note:** `SWAP` write mode is only supported for [Snowflake target]({{< ref "docs/targets/target-setup/snowflake" >}}).
@@ -173,9 +178,7 @@ Instead of providing a schemas file, you can specify a global rule when you star
      b. Replicant renames the temporary table to the actual table. Therefore, the temporary table becomes the current live table.
   4. Real-time replication then starts normally in [`full` replication mode](#replicant-full-mode).
 
-  
-
-`--truncate-existing`
+`TRUNCATE`
 : If the table exists in the destination database, Replicant preserves destination table schemas, but replaces the destination data with the source data.
 
 ### Additional flags and features
