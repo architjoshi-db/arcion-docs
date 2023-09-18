@@ -265,20 +265,14 @@ snapshot:
 For more information about the configuration parameters for `snapshot` mode, see [Snapshot Mode]({{< ref "../configuration-files/extractor-reference#snapshot-mode" >}}).
 
 #### Aditional snapshot parameters
-<dl class="dl-indent">
-<dt>
 
-`fetch-partition-tables`
-</dt>
-<dd>
+`fetch-partition-tables` _[v23.08.31.1]_
 
-`{true|false}`.
+: `{true|false}`.
+  
+  Whether to fetch partition tables.
 
-Whether to fetch partition tables.
-
-_Default: `false`._
-</dd>
-</dl>
+  _Default: `false`._
 
 ### Configure `realtime` replication
 For realtime replication, you must create a heartbeat table in the source PostgreSQL database.
