@@ -198,6 +198,20 @@ realtime:
 
 For more information about the Extractor parameters for `realtime` mode, see [Realtime mode]({{< relref "../configuration-files/extractor-reference#realtime-mode" >}}).
 
+#### Additional real-time parameters
+`dump-transactions`
+
+: `{true|false}`.
+
+  Enables dumping of committed transaction logs. If `false`, transaction log eventually consumes all available disk space. Set this parameter to `false` if you don't want Replicant to dump transaction logs.
+
+  _Default: `true`._
+
+`update-truncation-point-and-dump-transactions-intervalS`
+: Controls the frequency of truncation point update and transaction log dump in seconds. This parameter takes effect only if sufficient logs exist and page number has changed from the last update. If you set `dump-transaction` to `false`, Replicant only updates the truncation point.
+
+  _Default: `60`._
+
 #### Limitations
 - You can run only one Extractor thread for each SAP ASE database. You can run multiple snapshot tasks in parallel.
 - DDL Replication isn't supported.
