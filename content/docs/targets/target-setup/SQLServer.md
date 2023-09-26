@@ -32,7 +32,7 @@ The maximum number of connections Replicant uses to load data into the SQL Serve
 
 {{< hint "info" >}}
 #### For Arcion self-hosted only
-You can store your connection credentials in AWS Secrets Manager instead of putting them in plain form in the connection configuration file. In that case, you can tell Replicant to retrieve those credentials. For more information, see [Retrieve credentials from AWS Secrets Manager]({{< ref "docs/security/secrets-manager" >}}).
+You can store your connection credentials in a secrets management service and tell Replicant to retrieve the credentials. For more information, see [Secrets management]({{< ref "docs/security/secrets-management" >}}).
 {{< /hint >}}
 
 The following is a sample connection configuration:

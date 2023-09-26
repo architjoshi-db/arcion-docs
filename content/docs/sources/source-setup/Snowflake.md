@@ -60,8 +60,8 @@ Make sure that you possess the following object privileges for CDC-based replica
     To connect to Snowflake using basic username and password authentication, you have three options:
 
     {{< tabs "basic-username-pwd-auth" >}}
-    {{< tab "AWS Secrets Manager" >}}
-  You can choose to store your username and password in AWS Secrets Manager, and tell Replicant to retrieve them. For more information, see [Retrieve credentials from AWS Secrets Manager]({{< ref "docs/security/secrets-manager" >}}).
+    {{< tab "Secrets management service" >}}
+  You can store your connection credentials in a secrets management service and tell Replicant to retrieve the credentials. For more information, see [Secrets management]({{< ref "docs/security/secrets-management" >}}).
     {{< /tab >}}
     {{< tab "Credentials in plain text" >}}
   You can also specify your credentials in plain form in the connection configuration file like the sample below:

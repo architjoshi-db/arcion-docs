@@ -19,9 +19,9 @@ For [full mode replication]({{< relref "../full-mode-replication" >}}) with chan
 ## II. Set up connection configuration
 Specify the connection details of your SQL Server instance to Replicant in one of the following ways:
 
-- [A connection configuration file](#use-a-connection-configuration-file)
-- [AWS Secrets Manager](#aws-secrets-manager)
-- [KeyStore](#use-keystore-for-credentials)
+- [A connection configuration file](#using-a-connection-configuration-file)
+- [Secrets management service](#use-a-secrets-management-service)
+- [KeyStore](#using-keystore-for-credentials)
 
 ### Use a connection configuration file
 The connection configuration fild holds the connection details and login credentials.
@@ -83,8 +83,8 @@ extractor: CHANGE
 max-connections: 30
 ```
 
-### AWS Secrets Manager
-If you store your connection credentials in AWS Secrets Manager, you can tell Replicant to retrieve them. For more information, see [Retrieve credentials from AWS Secrets Manager]({{< ref "docs/security/secrets-manager" >}}). 
+### Use a secrets management service
+You can store your connection credentials in a secrets management service and tell Replicant to retrieve the credentials. For more information, see [Secrets management]({{< ref "docs/security/secrets-management" >}}). 
 
 ### Use KeyStore for credentials
 Replicant supports consuming login credentials from a _credentials store_. Instead of specifying username and password [in plain text](#use-a-connection-configuration-file), you can keep them in a KeyStore and provide the KeyStore details in the connection configuration file like below:

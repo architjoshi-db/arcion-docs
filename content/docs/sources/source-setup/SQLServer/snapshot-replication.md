@@ -18,10 +18,10 @@ Follow the steps in the following sections to set up SQL Server for `snapshot` m
 To allow replication, you need to first verify that the necessary permissions are in place on source SQL Server. For more information, see [SQL Server User Permissions]({{< relref "../../source-prerequisites/sqlserver#sql-server-user-permissions" >}})
 
 ## II. Set up connection configuration
-Specify the connection details of your SQL Server instance to Replicant in one of the following two ways:
+Specify the connection details of your SQL Server instance to Replicant in one of the following ways:
 
 - [A connection configuration file](#using-a-connection-configuration-file)
-- [AWS Secrets Manager](#aws-secrets-manager)
+- [Secrets management service](#use-a-secrets-management-service)
 - [KeyStore](#using-keystore-for-credentials)
 
 ### Using a connection configuration file.
@@ -74,8 +74,8 @@ password: 'PASSWORD'
 max-connections: MAX_NUMBER_OF_CONNECTIONS
 ```
 
-### AWS Secrets Manager
-If you store your connection credentials in AWS Secrets Manager, you can tell Replicant to retrieve them. For more information, see [Retrieve credentials from AWS Secrets Manager]({{< ref "docs/security/secrets-manager" >}}). 
+### Use a secrets management service
+You can store your connection credentials in a secrets management service and tell Replicant to retrieve the credentials. For more information, see [Secrets management]({{< ref "docs/security/secrets-management" >}}). 
 
 ### Use KeyStore for credentials
 Replicant supports consuming login credentials from a _credentials store_. Instead of specifying username and password [in plain form](#using-a-connection-configuration-file), you can keep them in a KeyStore and provide the KeyStore details in the connection configuration file like below:

@@ -36,22 +36,48 @@ The extracted `replicant-cli` will be referred to as the `$REPLICANT_HOME` direc
     socket-timeout-s: 60
     ```
 
-    Replace the following:
+Replace the following:
+
+- *`HOSTNAME`*: the hostname of the YugabyteDB cluster.
+- *`PORT_NUMBER`*: the port number. Default port is `5433`.
+- *`DATABASE_NAME`*: the database name you want to connect to. Default database is `yugabyte`.
+- *`USERNAME`*: the username for the user that connects to the `database`. Default username is also `yugabyte`.
+- *`PASSWORD`*: the password associated with *`USERNAME`*. Default password is `yugabyte`.
+
+Feel free to change the following parameter values as you need:
+
+- *`max-connections`*: the maximum number of connections Replicant opens in YugabyteDB.
+- *`max-retries`*: number of times Replicant retries a failed operation.
+- *`retry-wait-duration-ms`*: duration in milliseconds Replicant waits between each retry of a failed operation.
+- *`socket-timeout-s`*: the timeout value in seconds specifying socket read operations. A value of `0` disables socket reads.
+
+For more information on connection credentials in Yugabyte SQL, see [Default user and password](https://docs.yugabyte.com/preview/secure/enable-authentication/ysql/#default-user-and-password).
+
+{{< /tab >}}
+
+{{< tab "Use a secrets management service" >}}
+You can store your connection credentials in a secrets management service and tell Replicant to retrieve the credentials. For more information, see [Secrets management]({{< ref "docs/security/secrets-management" >}}). 
+{{< /tab >}}
+{{< /tabs >}}
+
+### Connect using SSL
+To connect to Yugabyte SQL using SSL, follow these steps:
+
+1. Generate server certificates and set up YugabyteDB for encrypted connection by following the instructions in [Create server certificates
+](https://docs.yugabyte.com/preview/secure/tls-encryption/server-certificates/).
+2. Specify the SSL connection details to Replicant in the connection configuration file in the following format:
+
+    ```YAML
+    ssl:
+      enable: true
+      root-cert: 'PATH_TO_ROOT_CERTIFICATE_FILE'
+      hostname-verification: {true|false}
+    ```
+
+    Replace *`PATH_TO_ROOT_CERTIFICATE_FILE`* with the location of [the root certificate file](https://docs.yugabyte.com/preview/secure/tls-encryption/server-certificates/#generate-the-root-certificate-file). 
     
-    - *`HOSTNAME`*: the hostname of the YugabyteDB cluster
-    - *`PORT_NUMBER`*: the port number (default port is `5433`)
-    - *`DATABASE_NAME`*: the name of the database you're connecting to (default is `yugabyte`)
-    - *`USERNAME`*: the username for the YugabyteDB database
-    - *`PASSWORD`*: the password associated with *`USERNAME`*
+    `hostname-verification` enables hostname verification against the server identity according to the specification in the server's certificate. This defaults to `true`.
 
-    The timeout value `socket-timeout-s` is used for socket read operations. The timeout is specified in seconds and a value of zero means that it is disabled.
-
-    Pay attention to the following before proceeding to the next steps:
-    - Make sure the specified user has `CREATE TABLE` on the catalogs/schemas into which replicated tables should be created.
-    - If you want Replicant to create catalogs/schemas for you on the target YugabyteSQL system, then you also need to grant `CREATE DATABASE`/`CREATE SCHEMA` privileges to the user.
-    - If this user does not have `CREATE DATABASE` privilege, then create a database manually with name `io` and grant all privileges for it to the user specified here. Replicant uses this database for internal checkpointing and metadata management.  
-
-        {{< hint "info" >}} The database or schema of your choice on a different instance of your choice name can be configured using the metadata config feature. For more information, see [Metadata Configuration]({{< ref "docs/references/metadata-reference" >}}).{{< /hint >}}
 
 ## II. Configure mapper file (optional)
 If you want to define data mapping from source to your target YugabyteSQL, specify the mapping rules in the mapper file. The following is a sample mapper configuration for a **Oracle-to-YugabyteSQL** pipeline:
