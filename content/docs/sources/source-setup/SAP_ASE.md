@@ -59,8 +59,8 @@ Feel free to change the following parameter values as you need:
 If you want to use [the `bcp` utility](https://help.sap.com/docs/SAP_ASE/da6c1d172bef4597a78dc5e81a9bb947/a80af36ebc2b1014adabde105795cc5b.html?version=16.0.3.8) to extract data from your source ASE, you need specify some additional parameters in the connection configuration file. For more information, see [Use `bcp` Utility for Extraction](#use-bcp-utility-for-extraction).
 
 {{< /tab >}}
-{{< tab "Fetch credentials from AWS Secrets Manager" >}}
-If you store your connection credentials in AWS Secrets Manager, you can tell Replicant to retrieve them. For more information, see [Retrieve credentials from AWS Secrets Manager]({{< ref "docs/security/secrets-manager" >}}).
+{{< tab "Use a secrets management service" >}}
+You can store your connection credentials in a secrets management service and tell Replicant to retrieve the credentials. For more information, see [Secrets management]({{< ref "docs/security/secrets-management" >}}).
 {{< /tab >}}
 {{< /tabs >}}
 
