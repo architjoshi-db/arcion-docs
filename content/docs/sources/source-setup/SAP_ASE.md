@@ -207,7 +207,7 @@ For more information about the Extractor parameters for `realtime` mode, see [Re
 
   _Default: `true`._
 
-`update-truncation-point-and-dump-transactions-intervalS`
+`purge-interval-s`
 : Controls the frequency of truncation point update and transaction log dump in seconds. This parameter takes effect only if sufficient logs exist and page number has changed from the last update. If you set `dump-transaction` to `false`, Replicant only updates the truncation point.
 
   _Default: `60`._
