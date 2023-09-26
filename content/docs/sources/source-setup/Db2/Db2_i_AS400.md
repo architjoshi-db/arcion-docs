@@ -76,7 +76,7 @@ For enabling CDC-based replication, follow the steps described below.
 
 ### Configure Replicant
 
-You need to configure your Source Db2 connection configuration file for Replicant. If you store your connection credentials in AWS Secrets Manager, you can tell Replicant to retrieve them. For more information, see [Retrieve credentials from AWS Secrets Manager]({{< ref "docs/security/secrets-manager" >}}). 
+You need to configure your Source Db2 connection configuration file for Replicant. You can store your connection credentials in a secrets management service and tell Replicant to retrieve the credentials. For more information, see [Secrets management]({{< ref "docs/security/secrets-management" >}}). 
     
 Otherwise, you can put your credentials like usernames and passwords in plain form like the sample below:
 

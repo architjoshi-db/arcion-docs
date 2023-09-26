@@ -43,8 +43,8 @@ The following steps refer [the extracted Arcion self-hosted CLI download]({{< re
 
     To connect to Snowflake with basic username and password authentication, you have two options:
 
-    #### Fetch credentials from AWS Secrets Manager
-    You can choose to store your username and password in AWS Secrets Manager, and tell Replicant to retrieve them. For more information, see [Retrieve credentials from AWS Secrets Manager]({{< ref "docs/security/secrets-manager" >}}).
+    #### Use a secrets management service
+    You can store your connection credentials in a secrets management service and tell Replicant to retrieve the credentials. For more information, see [Secrets management]({{< ref "docs/security/secrets-management" >}}).
 
     #### Specify credentials in plain form
     You can also specify your credentials in plain form in the connection configuration file like the following sample:

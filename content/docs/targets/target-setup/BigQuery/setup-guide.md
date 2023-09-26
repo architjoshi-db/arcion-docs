@@ -27,7 +27,7 @@ To load data into BigQuery, you need to make sure you have the necessary IAM per
 Specify our BigQuery connection details to Replicant with a connection configuration file. You can find a sample connection configuration file `bigquery.yaml` in the `$REPLICANT_HOME/conf/conn` directory.
 
 ### Configure BigQuery server connection
-If you store your connection credentials in AWS Secrets Manager, you can tell Replicant to retrieve them. For more information, see [Retrieve credentials from AWS Secrets Manager]({{< ref "docs/security/secrets-manager" >}}). 
+You can store your connection credentials in a secrets management service and tell Replicant to retrieve the credentials. For more information, see [Secrets management]({{< ref "docs/security/secrets-management" >}}). 
     
 Otherwise, you can put your credentials like usernames and passwords in plain form like the following sample:
 

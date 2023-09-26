@@ -22,9 +22,9 @@ To set up Arcion CDC Agent, follow the instructions in [Arcion CDC Agent]({{< re
 ## II. Set up connection configuration
 Specify the connection details of your SQL Server instance to Replicant in one of the following ways:
 
-- [A connection configuration file](#use-a-connection-configuration-file)
-- [AWS Secrets Manager](#aws-secrets-manager)
-- [KeyStore](#use-keystore-for-credentials)
+- [A connection configuration file](#using-a-connection-configuration-file)
+- [Secrets management service](#use-a-secrets-management-service)
+- [KeyStore](#using-keystore-for-credentials)
 
 ### Use a connection configuration file
 The connection configuration fild holds the connection details and login credentials.
@@ -101,8 +101,8 @@ If you specify `config-username`, Arcion CDC Agent uses this user to set up repl
 
 We recommend that you explicitly specify these three parameters if you're using version 23.03.01.10 and later.
 
-### AWS Secrets Manager
-If you store your connection credentials in AWS Secrets Manager, you can tell Replicant to retrieve them. For more information, see [Retrieve credentials from AWS Secrets Manager]({{< ref "docs/security/secrets-manager" >}}). 
+### Use a secrets management service
+You can store your connection credentials in a secrets management service and tell Replicant to retrieve the credentials. For more information, see [Secrets management]({{< ref "docs/security/secrets-management" >}}). 
 
 ### Use KeyStore for credentials
 Replicant supports consuming login credentials from a _credentials store_. Instead of specifying username and password [in plain text](#use-a-connection-configuration-file), you can keep credentials in a KeyStore and provide the KeyStore details in the connection configuration file:

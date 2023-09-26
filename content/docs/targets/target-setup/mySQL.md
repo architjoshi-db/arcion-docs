@@ -54,8 +54,8 @@ Replace the following:
 
 {{< /tab >}}
 
-{{< tab "Fetch credentials from AWS Secrets Manager" >}}
-If you store your connection credentials in AWS Secrets Manager, you can tell Replicant to retrieve them. For more information, see [Retrieve credentials from AWS Secrets Manager]({{< ref "docs/security/secrets-manager" >}}).
+{{< tab "Use a secrets management service" >}}
+You can store your connection credentials in a secrets management service and tell Replicant to retrieve the credentials. For more information, see [Secrets management]({{< ref "docs/security/secrets-management" >}}).
 {{< /tab >}}
 {{< /tabs>}}
 

@@ -31,7 +31,7 @@ The database/schema of your choice on a different instance of your choice name c
 2. You can establish connection with Target MariaDB using either SSL or plain username and password.
 
     ### Connect using username and password
-    If you store your connection credentials in AWS Secrets Manager, you can tell Replicant to retrieve them. For more information, see [Retrieve credentials from AWS Secrets Manager]({{< ref "docs/security/secrets-manager" >}}). 
+    You can store your connection credentials in a secrets management service and tell Replicant to retrieve the credentials. For more information, see [Secrets management]({{< ref "docs/security/secrets-management" >}}). 
         
     Otherwise, you can put your credentials like usernames and passwords in plain form like the sample below:
     ```YAML
