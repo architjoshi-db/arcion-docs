@@ -7,7 +7,7 @@ description: "Learn how Arcion can retrieve secrets from Azure Key Vault."
 # Use Azure Key Vault with Arcion
 [Azure Key Vault](https://azure.microsoft.com/en-us/products/key-vault) offers cloud service for storing and accessing secrets such as usernames, passwords, and various database credentials.
 
-This page discusses how Arcion works with Azure Key Vault and the configuration for accessing the secrets.
+Arcion supports Key Vault as a secrets management service from version 23.08.31.1. This page discusses how Arcion works with Azure Key Vault and the configuration for accessing the secrets.
 
 ## Overview
 Arcion uses the concept of [namespaces](#namespaces) to authenticate with Azure Key Vault and access secrets in key vaults. You can define multiple namespaces, and have access to multiple key vaults and the secrets in those key vaults.
