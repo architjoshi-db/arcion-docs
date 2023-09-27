@@ -17,21 +17,23 @@ The extracted `replicant-cli` will be referred to as the `$REPLICANT_HOME` direc
     psql -U $POSTGRESQL_ROOT_USER
     ```
 
-2. Create a user for replication:
+2. Create a user for replication in the source PostgreSQL instance. For example, the following creates a user `alex`:
 
     ```SQL
-    CREATE USER <username> PASSWORD '<password>';
+    postgres=> CREATE USER alex PASSWORD 'alex12345';
     ```
 
 3. Grant the following permissions:
 
     ```SQL
-    GRANT USAGE ON SCHEMA "<schema>" TO <username>;
-    GRANT SELECT ON ALL TABLES IN SCHEMA "<schema>" TO <username>;
-    ALTER ROLE <username> WITH REPLICATION;
+    postgres=> GRANT USAGE ON SCHEMA "arcion" TO alex;
+    postgres=> GRANT SELECT ON ALL TABLES IN SCHEMA "arcion" TO alex;
+    postgres=> ALTER ROLE alex WITH REPLICATION;
     ```
 
-## II. Set up PostgreSQL for Replication
+    The preceding commands grant the necessary permissions to user `alex` for the schema `arcion`.
+
+## II. Set up PostgreSQL for replication
 
 1. Open the PostgreSQL configuration file `postgresql.conf`:
 
@@ -39,48 +41,20 @@ The extracted `replicant-cli` will be referred to as the `$REPLICANT_HOME` direc
    vi $PGDATA/postgresql.conf
    ```
 
-2. Change the following parameters:
+2. Set the following parameters:
 
-    ```
+    ```toml
     wal_level = logical
     max_replication_slots = 1 #Can be increased if more slots need to be created
     ```
 
-3. To perform log consumption for CDC replication from the PostgreSQL server, you must do either of the following:
+3. To perform log consumption for CDC replication from the PostgreSQL server, you must choose between these logical decoding output plugins:
 
-    - Use the `test_decoding` plugin that is by default installed in PostgreSQL.
-    - Install the logical decoding plugin `wal2json`.
+    - [Use the `test_decoding` plugin](#use-the-test_decoding-plugin). This plugin is by default installed in PostgreSQL.
+    - [Use the `wal2json` logical decoding plugin](#use-the-wal2json-plugin).
 
     See the following two sections for instructions on how to set up these plugins.
 
-    ### Instructions for using `wal2json`
-    1. Follow the instructions in [the `wal2json` project README](https://github.com/eulerto/wal2json/blob/master/README.md) to Install the `wal2json` plugin.
-
-    2. Create a logical replication slot for the catalog to be replicated with the following SQL:
-
-        ```SQL
-        SELECT 'init' FROM pg_create_logical_replication_slot('<replication_slot_name>', 'wal2json');
-        ```
-    3. Verify the slot has been created:
-        ```sql
-        SELECT * from pg_replication_slots;
-        ```
-
-    ### Instructions for using `test_decoding`
-
-    If you're using the `test_decoding` plugin, you don't need to install anything as it comes pre-installed with PostgreSQL.
-
-    1. Use the following SQL to create a logical replication slot for the `test_decoding` plugin:
-
-        ```SQL
-        SELECT 'init' FROM pg_create_logical_replication_slot('<replication_slot_name>', 'test_decoding');
-        ```
-        
-    2. Verify that the slot has been created:
-
-        ```SQL
-        SELECT * from pg_replication_slots;
-        ```
 
 4. Set the Replicant identity to `FULL` for the tables  part of the replication process that do no have a primary key:
 
@@ -88,139 +62,187 @@ The extracted `replicant-cli` will be referred to as the `$REPLICANT_HOME` direc
    ALTER TABLE <table_name> REPLICA IDENTITY FULL;
    ```
 
-## III. Set up Connection Configuration
+### Use the `test_decoding` plugin
 
-1. From `$REPLICANT_HOME`, navigate to the connection configuration file:
-    ```BASH
-    vi conf/conn/postgresql.yaml
+If want to use the `test_decoding` plugin, you don't need to install anything as it comes pre-installed with PostgreSQL.
+
+1. Create a logical replication slot for the `test_decoding` plugin:
+
+    ```SQL
+    SELECT 'init' FROM pg_create_logical_replication_slot('arcion_test', 'test_decoding');
     ```
 
-2. You can store your connection credentials in a secrets management service and tell Replicant to retrieve the credentials. For more information, see [Secrets management]({{< ref "docs/security/secrets-management" >}}). 
+    The preceding command creates a replication slot with the name `arcion_test`.
+2. Verify that you've successfully created a replication slot:
+
+    ```SQL
+    SELECT * from pg_replication_slots;
+    ```
+
+### Use the `wal2json` plugin
+1. Follow the instructions in [the `wal2json` project README](https://github.com/eulerto/wal2json/blob/master/README.md) to install the `wal2json` plugin.
+
+2. Create a logical replication slot for the catalog you want to replicate:
+
+    ```SQL
+    SELECT 'init' FROM pg_create_logical_replication_slot('arcion_test', 'wal2json');
+    ```
+
+    The preceding command creates a replication slot with the name `arcion_test`..
+3. Verify that you've successfully created a replication slot:
+    ```sql
+    SELECT * from pg_replication_slots;
+    ```
+
+## III. Set up connection configuration
+
+Specify our Redis connection details to Replicant with a connection configuration file. You can find a sample connection configuration file `postgresql.yaml` in the `$REPLICANT_HOME/conf/conn` directory.
+
+You can store your connection credentials in a secrets management service and tell Replicant to retrieve the credentials. For more information, see [Secrets management]({{< ref "docs/security/secrets-management" >}}). 
     
-    Otherwise, you can put your credentials like usernames and passwords in plain form like the sample below:
-    ```YAML
-    type: POSTGRESQL
+Otherwise, you can put your credentials like usernames and passwords in plain text like the following sample:
 
-    host: localhost #Replace localhost with your PostgreSQL host name
-    port: 5432 #Replace the default port number 5432 if needed
+```YAML
+type: POSTGRESQL
 
-    database: "postgres" #Replace postgres with your database name
-    username: "replicant" #Replace replicant with your postgresql username
-    password: "Replicant#123" #Replace Replicant#123 with your user's password
+host: localhost
+port: 5432
 
-    max-connections: 30 #Maximum number of connections replicant can open in postgresql
-    socket-timeout-s: 60 #The timeout value for socket read operations. The timeout is in seconds and a value of zero means that it is disabled.
-    max-retries: 10 #Number of times any operation on the source system will be re-attempted on failures.
-    retry-wait-duration-ms: 1000 #Duration in milliseconds Replicant should wait before performing then next retry of a failed operation.
+database: "DATABASE_NAME" 
+username: "USERNAME"
+password: "PASSWORD"
 
-    #List your replication slots (slots which hold the real-time changes of the source database) as follows
-      replication-slots:
-        io_replicate: #Replace "io-replicate" with your replication slot name
-          - wal2json #plugin used to create replication slot (wal2json | test_decoding)
-        io_replicate1: #Replace "io-replicate1" with your replication slot name
-          - wal2json
+max-connections: 30 
+socket-timeout-s: 60
+max-retries: 10
+retry-wait-duration-ms: 1000
 
-    log-reader-type: {STREAM|SQL}
-    ```
+#List your replication slots (slots which hold the real-time changes of the source database) as follows
+  replication-slots:
+    io_replicate: #Replace "io-replicate" with your replication slot name
+      - wal2json #plugin used to create replication slot (wal2json | test_decoding)
+    io_replicate1: #Replace "io-replicate1" with your replication slot name
+      - wal2json
 
-    The value of `log-reader-type` defaults to `STREAM`. If you choose `STREAM`, Replicant captures CDC data through `PgReplicationStream`. If you choose `SQL`, PostgreSQL server periodically receives SQL statements for CDC data extraction.
-      {{< hint "warning" >}}
-  **Important:** 
-  - Make sure that the `max_connections` in PostgreSQL exceeds the `max_connections` in the preceding connection configuration file.
-  - From versions 23.03.01.12 and later, 23.03.31 and later, `log-reader-type` is deprecated. Avoid specifying this parameter.
-    {{< /hint >}}
+log-reader-type: {STREAM|SQL}
+```
 
+Replace the following:
 
-1. You can also enable SSL for your connection by including the `ssl` field and specifying the necessary parameters as below:
-    ```YAML
-    ssl:
-      ssl-cert: <full_path_to_SSL_certificate_file>
-      root-cert: <full_path_to_SSL_root_certificate_file>
-      ssl-key: <full_path_to_SSL_key_file>
-    ```
-    The key file must be in PKCS-12 or in PKCS-8 DER format. A PEM key can be converted to DER format using the following openssl command:
+- *`HOSTNAME`*: the hostname of the PostgreSQL server
+- *`PORT_NUMBER`*: the port number of the host
+- *`DATABASE_NAME`*: the PostgreSQL database name
+- *`USERNAME`*: the PostgreSQL username to log into the server 
+- *`PASSWORD`*: the password associated with *`USERNAME`*
 
-    ```BASH
-    openssl pkcs8 -topk8 -inform PEM -in postgresql.key -outform DER -out postgresql.pk8 -v1 PBE-MD5-DES
-    ```
+Feel free to change the following parameter values as you need:
 
-{{< hint "info" >}} The `socket-timeout-s` parameter has been introduced in *v22.02.12.16* and isn't available in previous versions.{{< /hint >}}
+- *`max-connections`*: the maximum number of connections Replicant opens in AlloyDB.
+- *`max-retries`*: number of times Replicant retries a failed operation.
+- *`retry-wait-duration-ms`*: duration in milliseconds Replicant waits between each retry of a failed operation.
+- *`socket-timeout-s`*: the timeout value in seconds specifying socket read operations. A value of `0` disables socket reads.
 
-{{< hint "info" >}} If the `log-reader-type` is set to `STREAM`, the replication connection must be allowed as the <username> that will be used to perform the replication. To enable replication connection, the `pg_hba.conf` file needs to be modified with some of the following entries depending on the usecase:
+The value of `log-reader-type` defaults to `STREAM`. If you choose `STREAM`, Replicant captures CDC data through `PgReplicationStream`. If you choose `SQL`, PostgreSQL server periodically receives SQL statements for CDC data extraction.
 
-1. From `$REPLICANT_HOME`, navigate to the pg_hba file:
-   ```BASH
-   vi $PGDATA/pg_hba.conf
-   ```
-2. Make the necessary changes as follows:
-   ```BASH
+{{< hint "warning" >}}
+**Important:** 
+- Make sure that the `max_connections` in PostgreSQL exceeds the `max_connections` in the preceding connection configuration file.
+- From versions 23.03.01.12 and later, 23.03.31 and later, `log-reader-type` is deprecated. Avoid specifying this parameter.
+{{< /hint >}}
+
+### Replication slots
+The replication slots hold the real-time changes of the source database. The preceding sample specifies two replicaiton slots in the following format:
+
+```YAML
+replication-slots:
+  SLOT_NAME:
+    - PLUGIN_NAME
+```
+
+Replace the following: 
+- *`SLOT_NAME`*: the replication slot name
+- *`PLUGIN_NAME`*: the plugin you've used to create the replication slot—`wal2json` or `test_decoding`.
+
+You can specify as many slots as you want in this format.
+
+### Log reader type
+{{< hint "warning" >}}
+**Caution:** From versions 23.03.31 and later, `log-reader-type` is deprecated. Avoid specifying this parameter.
+{{< /hint >}}
+From versions 23.03.01.12 and later, the value of `log-reader-type` defaults to `STREAM`. If you choose `STREAM`, Replicant captures CDC data through `PgReplicationStream`. If you choose `SQL`, PostgreSQL server periodically receives SQL statements for CDC data extraction. To use `STREAM`, follow the instructions in [Enable connection by username for `STREAM` log reader](#enable-connection-by-username-for-stream-log-reader).
+
+#### Enable connection by username for `STREAM` log reader
+If you use `STREAM` as the `log-reader-type`, you must allow an authenticated replication connection as the *`USERNAME`* who performs the replication. To do so, modify the `pg_hba.conf` with the following entries depending on the use case:
+
+1. Locate and open [the `pg_hba.conf` file](https://www.postgresql.org/docs/current/auth-pg-hba-conf.html). You can find the default `pg_hba.conf` file inside the data directory initialized by [initdb](https://www.postgresql.org/docs/current/app-initdb.html).
+2. Make the following changes:
+   ```CONF
    # TYPE  DATABASE        USER                  ADDRESS                 METHOD
 
-   # allow local replication connection to <username> (IPv4 + IPv6)
-   local     replication         <username>                                         trust
-   host      replication         <username>    127.0.0.1/32                     <auth-method>
-   host      replication         <username>    ::1/128                          <auth-method>
+   # allow local replication connection to USERNAME (IPv4 + IPv6)
+   local     replication         USERNAME                                         trust
+   host      replication         USERNAME    127.0.0.1/32                     <auth-method>
+   host      replication         USERNAME    ::1/128                          <auth-method>
 
-   # allow remote replication connection from any client machine  to <username> (IPv4 + IPv6)
-   host     replication          <username>    0.0.0.0/0                        <auth-method>
-   host     replication          <username>    ::0/0                            <auth-method>
+   # allow remote replication connection from any client machine  to USERNAME (IPv4 + IPv6)
+   host     replication          USERNAME    0.0.0.0/0                        trust
+   host     replication          USERNAME    ::0/0                            trust
    ```
-   {{< /hint >}}
 
-## IV. Setup Filter Configuration
-
-1. From `$REPLICANT_HOME`, navigate to the filter configuration file:
-    ```BASH
-    vi filter/postgresql_filter.yaml
-    ```
-2. In accordance to you replication needs, specify the data which is to be replicated. Use the format of the example explained below:
-
-    ```YAML
-    allow:
-      #In this example, data of object type Table in the catalog postgres and schema public will be replicated
-      catalog: "postgres"
-      schema: "public"
-      types: [TABLE]
-
-      #From catalog postgres and schema public, only the CUSTOMERS, ORDERS, and RETURNS tables will be replicated.
-      #Note: Unless specified, all tables in the catalog will be replicated
-      allow:
-        CUSTOMERS:
-        #Within CUSTOMERS, the FB and IG columns will be replicated  
-          allow: ["FB, IG"]
+   Replace *`USERNAME`* with the PostgreSQL database username that you want to authenticate for replication.
 
 
-        ORDERS:  
-          #Within ORDERS, only the product and service columns will be replicated as long as they meet the condition o_orderkey < 5000
-          allow: ["product", "service"]
-          conditions: "o_orderkey < 5000"
+## Set up filter configuration (optional)
+If you want to filter data from your source PostgreSQL database, specify the filter rules in the filter file. For more information on how to define the filter rules and run Replicant CLI with the filter file, see [Filter configuration]({{< ref "docs/sources/configuration-files/filter-reference" >}}).
+
+For example:
+
+```YAML
+allow:
+  catalog: "postgres"
+  schema: "public"
+  types: [TABLE]
+
+  allow:
+    CUSTOMERS:
+      allow: ["FB, IG"]
+
+    ORDERS:  
+      allow: ["product", "service"]
+      conditions: "o_orderkey < 5000"
+
+    RETURNS:
+```
+
+The preceding sample consists of the following elements:
+
+- Data of object type `TABLE` in the catalog `postgres` and the schema `public` goes through replication.
+- From catalog `postgres`, only the `CUSTOMERS`, `ORDERS`, and `RETURNS` tables go through replication.
+- From `CUSTOMERS` table, only the `FB` and `IG` columns go through replication.
+- From the `ORDERS` table, only the `product` and `service` columns go through replication as long as those columns meet the condition in `conditions`.
+- Since the `RETURNS` table doesn't specify anything, the entire table goes through replication.
+
+Unless you specify, Replicant replicates all tables in the catalog.
+
+The following illustrates the format you must follow:
+
+```YAML
+allow:
+  catalog: <your_catalog_name>
+  types: <your_object_type>
 
 
+  allow:
+    <your_table_name>:
+      allow: ["your_column_name"]
+      condtions: "your_condition"
 
-        RETURNS: #All columns in the table PART will be replicated without any predicates
-    ```
+    <your_table_name>:  
+      allow: ["your_column_name"]
+      conditions: "your_condition"
 
-    The following is a template of the format you must follow:
-
-      ```YAML
-      allow:
-        catalog: <your_catalog_name>
-        schema: <your_schema_name>
-        types: <your_object_type>
-
-      #If not collections are specified, all the data tables in the provided catalog and schema will be replicated
-      allow:
-        <your_table_name>:
-          allow: ["your_column_name"]
-          condtions: "your_condition"
-
-        <your_table_name>:  
-          allow: ["your_column_name"]
-          conditions: "your_condition"
-
-        <your_table_name>:    
-        ```
-For a detailed explanation of configuration parameters in the filter file, read: [Filter Reference]({{< ref "../configuration-files/filter-reference" >}} "Filter Reference")
+    <your_table_name>:
+```
 
 ## V. Set up Extractor Configuration
 To configure replication according to your requirements, specify your configuration in the Extractor configuration file. You can find a sample Extractor configuration file `postgresql.yaml` in the `$REPLICANT_HOME/conf/src` directory. For a detailed explanation of configuration parameters in the Extractor file, see [Extractor Reference]({{< ref "../configuration-files/extractor-reference" >}} "Extractor Reference").
@@ -262,7 +284,7 @@ snapshot:
           split-key-max-value: 60_00
 ```
 
-For more information about the configuration parameters for `snapshot` mode, see [Snapshot Mode]({{< ref "../configuration-files/extractor-reference#snapshot-mode" >}}).
+For more information about the configuration parameters for `snapshot` mode, see [Snapshot mode]({{< ref "../configuration-files/extractor-reference#snapshot-mode" >}}).
 
 #### Aditional snapshot parameters
 
@@ -305,7 +327,7 @@ For realtime replication, you must create a heartbeat table in the source Postgr
         start-lsn: 0/3261270
     ```
 
-For more information about the configuration parameters for `realtime` mode, see [Realtime Mode]({{< ref "../configuration-files/extractor-reference#realtime-mode" >}}).
+For more information about the configuration parameters for `realtime` mode, see [Realtime mode]({{< ref "../configuration-files/extractor-reference#realtime-mode" >}}).
 
 #### Support for DDL replication
 Replicant [supports DDL replication for real-time PostgreSQL source]({{< ref "docs/sources/ddl-replication" >}}). For more information, [contact us](https://arcion.io/contact).
@@ -336,4 +358,4 @@ delta-snapshot:
         replicate-deletes: false
 ```
 
-For more information about the configuration parameters for `delta-snapshot` mode, see [Delta-snapshot Mode]({{< ref "../configuration-files/extractor-reference#delta-snapshot-mode" >}}).
+For more information about the configuration parameters for `delta-snapshot` mode, see [Delta-snapshot mode]({{< ref "../configuration-files/extractor-reference#delta-snapshot-mode" >}}).
