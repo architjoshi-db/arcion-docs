@@ -35,37 +35,54 @@ The extracted `replicant-cli` will be referred to as the `$REPLICANT_HOME` direc
         GRANT ALL ON DATABASE io TO alex;
         ```
   
-## I. Set up Connection Configuration
+## I. Set up connection configuration
+To connect to your PostgreSQL target database, you have these two options:
 
-1. From `$REPLICANT_HOME`, navigate to the sample PostgreSQL connection configuration file:
-    ```BASH
-    vi conf/conn/postgresql_dst.yaml
-    ```
-2. You can store your connection credentials in a secrets management service and tell Replicant to retrieve the credentials. For more information, see [Secrets management]({{< ref "docs/security/secrets-management" >}}). 
-    
-    Otherwise, you can put your credentials like usernames and passwords in plain form like the sample below:
+{{< tabs "postgres-connection">}}
+{{< tab "Use a connection configuration file" >}}
+You can specify your connection details to Replicant with a YAML connection configuration file. You can find a sample connection configuration file `cloudsql_postgresql.yaml` in the `$REPLICANT_HOME/conf/conn` directory. 
 
-    ```YAML
-    type: POSTGRESQL
+```YAML
+type: POSTGRESQL
 
-    host: localhost #Replace localhost with your PostgreSQL host
-    port: 5432  #Replace the 57565 with the port of your host
+host: HOSTNAME
+port: PORT_NUMBER
 
-    database: 'tpch' #Replace tpch with your database name
-    username: 'replicant' #Replace replicant with the username of your user that connects to your PostgreSQL server
-    password: 'Replicant#123' #Replace Replicant#123 with your user's password
+database: 'DATABASE_NAME' 
+username: 'USERNAME'
+password: 'PASSWORD'
 
-    max-connections: 30 #Specify the maximum number of connections Replicant can open in PostgreSQL
-    socket-timeout-s: 60 #The timeout value for socket read operations. The timeout is in seconds and a value of zero means that it is disabled.
-    max-retries: 10 #Number of times any operation on the system will be re-attempted on failures.
-    retry-wait-duration-ms: 1000 #Duration in milliseconds replicant should wait before performing then next retry of a 
-    ```
+max-connections: 30
+socket-timeout-s: 60
+max-retries: 10
+retry-wait-duration-ms: 1000
+```
 
-    {{< hint "warning" >}}
-  **Important:** Make sure that the `max_connections` in PostgreSQL is greater than the `max_connections` in the preceding connection configuration file.
-    {{< /hint >}}
+Replace the following:
 
-    The `socket-timeout-s` parameter is only supported for versions 22.02.12.16 and newer.
+- *`HOSTNAME`*: the hostname of the target PostgreSQL instance
+- *`PORT_NUMBER`*: the port number
+- *`DATABASE_NAME`*: the database name
+- *`USERNAME`*: the username of the user that connects to the PostgreSQL server
+- *`PASSWORD`*: the password associated with *`USERNAME`*
+
+Feel free to change the following parameter values as you need:
+
+- *`max-connections`*: the maximum number of connections Replicant opens in Cloud SQL instance.
+- *`max-retries`*: number of times Replicant retries a failed operation.
+- *`retry-wait-duration-ms`*: duration in milliseconds Replicant waits between each retry of a failed operation.
+- *`socket-timeout-s`*: the timeout value in seconds specifying socket read operations. A value of `0` disables socket reads. This parameter is only supported for Arcion self-hosted CLI versions 22.02.12.16 and newer.
+
+{{< hint "warning" >}}
+**Important:** Make sure that [`max_connections` in PostgreSQL](https://www.postgresql.org/docs/current/runtime-config-connection.html#GUC-MAX-CONNECTIONS) exceeds the `max-connections` in the preceding connection configuration file.
+{{< /hint >}}
+{{< /tab>}}
+
+{{< tab "Use a secrets management service" >}}
+You can store your connection credentials in a secrets management service and tell Replicant to retrieve the credentials. For more information, see [Secrets management]({{< ref "docs/security/secrets-management" >}}). 
+{{< /tab>}}
+{{< /tabs >}}
+
 
 ## II. Configure mapper file (optional)
 If you want to define data mapping from source to your target PostgreSQL, specify the mapping rules in the mapper file. The following is a sample mapper configuration for a **MySQL-to-PostgreSQL** pipeline:
@@ -77,57 +94,56 @@ rules:
     - [tpch]
 ```
 
-For more information on how to define the mapping rules and run Replicant CLI with the mapper file, see [Mapper Configuration]({{< ref "../configuration-files/mapper-reference" >}}).
+For more information on how to define the mapping rules and run Replicant CLI with the mapper file, see [Mapper configuration]({{< ref "../configuration-files/mapper-reference" >}}).
 
-## III. Set up Applier Configuration
+## III. Set up Applier configuration
+To configure replication mode according to your requirements, specify your configuration in the Applier configuration file. You can find a sample Applier configuration file `postgresql.yaml` in the `$REPLICANT_HOME/conf/dst` directory. For example:
 
-1. From `$REPLICANT_HOME`, naviagte to the sample PostgreSQL Applier configuration file:
-    ```BASH
-    vi conf/dst/postgresql.yaml    
-    ```
-2. The configuration file has two parts:
+You can configure PostgreSQL for operating in either [snapshot](#configure-snapshot-mode) or [realtime](#configure-realtime-mode) modes.
 
-    - Parameters related to snapshot mode.
-    - Parameters related to realtime mode.
+### Configure `snapshot` mode
+For operating in [snapshot mode]({{< ref "docs/running-replicant#replicant-snapshot-mode" >}}), specify your configuration under the `snapshot` section of the conifiguration file. For example:
 
-    ### Parameters related to snapshot mode
-    For snapshot mode, below is a sample configuration:
+```YAML
+snapshot:
+  threads: 16
+  batch-size-rows: 5_000
+  txn-size-rows: 1_000_000
+  skip-tables-on-failures: false
 
-    ```YAML
-    snapshot:
-      threads: 16
-      batch-size-rows: 5_000
-      txn-size-rows: 1_000_000
-      skip-tables-on-failures: false
+  map-bit-to-boolean: false
 
-      map-bit-to-boolean: false
+  bulk-load:
+    enable: true
+    type: FILE # FILE or PIPE
 
-      bulk-load:
-        enable: true
-        type: FILE # FILE or PIPE
+  _traceDBTasks: true
+  use-quoted-identifiers: true
+```
 
-      _traceDBTasks: true
-      use-quoted-identifiers: true
-    ```
-    
-      - `map-bit-to-boolean`: Tells Replicant whether to map `bit(1)` and `varbit(1)` data types from Source to `boolean` on Target:
+#### Additional `snapshot` parameters
 
-        - `true`: map `bit(1)`/`varbit(1)` data types from Source to `boolean` on Target PostgreSQL
-        - `false`: map `bit(1)`/`varbit(1)` data types from Source to `bit(1)`/`varbit(1)` on Target PostgreSQL
+`map-bit-to-boolean` 
+: Tells Replicant whether to map `bit(1)` and `varbit(1)` data types from source to `boolean` on target.
 
-        *Default: `false`.*
 
-    ### Parameters related to realtime mode
-    If you want to operate in realtime mode, you can use the `realtime` section to specify your configuration. For example:
+  If `true`, Replicant maps `bit(1)`/`varbit(1)` data types from source to `boolean` on target PostgreSQL. If `false`, Replicant maps `bit(1)`/`varbit(1)` data types from source to `bit(1)`/`varbit(1)` on target PostgreSQL.
 
-    ```YAML
-    realtime:
-      threads: 8
-      txn-size-rows: 10000
-      batch-size-rows: 1000
-      skip-tables-on-failures : false
+  *Default: `false`.*
 
-      use-quoted-identifiers: true
-    ```
-    
-For a detailed explanation of configuration parameters in the applier file, see [Applier Reference]({{< ref "../configuration-files/applier-reference" >}} "Applier Reference").
+For more information about the Applier parameters for `snapshot` mode, see [Snapshot mode]({{< relref "../configuration-files/applier-reference#snapshot-mode" >}}).
+
+### Configure `realtime` mode
+If you want to operate in [real time]({{< ref "docs/running-replicant#replicant-realtime-mode" >}}), use the `realtime` section to specify your configuration. For example:
+
+```YAML
+realtime:
+  threads: 8
+  txn-size-rows: 10000
+  batch-size-rows: 1000
+  skip-tables-on-failures : false
+
+  use-quoted-identifiers: true
+```
+
+For more information about the configuration parameters for `realtime` mode, see [Realtime mode]({{< ref "../configuration-files/applier-reference#realtime-mode" >}}).
