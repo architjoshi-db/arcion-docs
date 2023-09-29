@@ -1,6 +1,6 @@
 ---
-pageTitle: Integrate Prometheus with Arcion On-premises UI.
-title: Prometheus integration
+pageTitle: Integrate Prometheus with Arcion On-premises UI
+title: Prometheus Integration
 description: "Learn how to integrate Prometheus with Arcion On-premises UI to monitor ongoing replications."
 weight: 2
 ---
