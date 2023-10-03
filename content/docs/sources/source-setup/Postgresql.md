@@ -96,7 +96,7 @@ If want to use the `test_decoding` plugin, you don't need to install anything as
 
 ## III. Set up connection configuration
 
-Specify our Redis connection details to Replicant with a connection configuration file. You can find a sample connection configuration file `postgresql.yaml` in the `$REPLICANT_HOME/conf/conn` directory.
+Specify the connection details to Replicant with a connection configuration file. You can find a sample connection configuration file `postgresql.yaml` in the `$REPLICANT_HOME/conf/conn` directory.
 
 You can store your connection credentials in a secrets management service and tell Replicant to retrieve the credentials. For more information, see [Secrets management]({{< ref "docs/security/secrets-management" >}}). 
     
