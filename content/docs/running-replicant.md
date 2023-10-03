@@ -379,16 +379,20 @@ Replicant has the following four replication options:
 <!--   * **continue-inconsistent-post-failure**: When this option is specified, replicant logs a failed transaction in a failed_txn table and continues replication without stopping. Note that using this option may introduce inconsistencies in the destination database. -->
 
 ## Encrypting Replicant
+You can encrypt your configuration files that Replicant uses to perform replication. After you have finished editing a particular configuration file, use the following command to encrypt that configuration file:
 
-If necessary, you may encrypt your configuration files that Replicant will be using to run.  
-
-Once you have finished editing a particular configuration file with all the necessary values specified, run the following command to encrypt that configuration file:
-```BASH
-./bin/replicant encrypt-config path/of/configuration/file
+```sh
+./bin/replicant encrypt-config PATH_TO_CONFIGURATION_FILE
 ```
 
-To encrypt all the configuration files in a given directory, run:
-```BASH
-./bin/replicant encrypt-config path/of/directory
+Replace *`PATH_TO_CONFIGURATION_FILE`* with the full path to the configuration file you want to encrypt.
+
+To encrypt all the configuration files in a directory, specify the path to that directory:
+
+```sh
+./bin/replicant encrypt-config PATH_TO_DIRECTORY
 ```
-**Note**: There is no command to decrypt an encrypted configuration file. This is to avoid any unwanted attempts of decryption of sensitive information which is present in the configuration files. If you needs to modify a configuration file that you have already encrypted, you must bring the original plain text configuration file from your own backup storage, modify it, and encrypt it again using encrypt-config command.
+
+Replace *`PATH_TO_DIRECTORY`* with the full path to the directory.
+
+You can't decrypt an encrypted configuration file. This prevents any unwanted attempts of decryption of sensitive information present in the configuration files. If you need to modify a configuration file that you have already encrypted, you must bring the original plain text configuration file from your own backup storage, modify it, and encrypt it again using `encrypt-config` option.
