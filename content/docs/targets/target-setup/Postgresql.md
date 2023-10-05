@@ -74,7 +74,7 @@ Feel free to change the following parameter values as you need:
 - *`socket-timeout-s`*: the timeout value in seconds specifying socket read operations. A value of `0` disables socket reads. This parameter is only supported for Arcion self-hosted CLI versions 22.02.12.16 and newer.
 
 {{< hint "warning" >}}
-**Important:** Make sure that [`max_connections` in PostgreSQL](https://www.postgresql.org/docs/current/runtime-config-connection.html#GUC-MAX-CONNECTIONS) exceeds the `max-connections` in the preceding connection configuration file.
+**Important:** Make sure that [`max_connections` in PostgreSQL](https://www.postgresql.org/docs/current/runtime-config-connection.html#GUC-MAX-CONNECTIONS) exceeds the `max-connections` parameter in the preceding connection configuration file.
 {{< /hint >}}
 {{< /tab>}}
 
