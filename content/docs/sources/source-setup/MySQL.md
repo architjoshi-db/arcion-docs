@@ -79,18 +79,18 @@ To ensure that you possess the appropriate version of `mysqlbinlog` utility, ins
 ### III. Set up MySQL user for Replicant
 1.	Create MySQL user:
     ```SQL
-    CREATE USER 'username'@'replicate_host' IDENTIFIED BY 'password';
+    CREATE USER 'USERNAME'@'REPLICANT_HOST' IDENTIFIED BY 'PASSWORD';
     ```
 2.	Grant the following privileges on all tables relevant to the replication:
     ```SQL
-    GRANT SELECT ON "<user_database>"."<table_name>" TO 'username'@'replicate_host';
+    GRANT SELECT ON "USER_DATABASE"."TABLE_NAME" TO 'USERNAME'@'REPLICANT_HOST';
     ```
-3.	Grant the following Replication privileges:
+3.	Grant the `REPLICATION` privileges:
     ```SQL
-    GRANT REPLICATION CLIENT ON *.* TO 'username'@'replicate_host';
-    GRANT REPLICATION SLAVE ON *.* TO 'username'@'replicate_host';
+    GRANT REPLICATION CLIENT ON *.* TO 'USERNAME'@'REPLICANT_HOST';
+    GRANT REPLICATION SLAVE ON *.* TO 'USERNAME'@'REPLICANT_HOST';
     ```
-4.	Verify if this new user can access binary logs:
+4.	Verify that this new user can access binary logs:
     ```SQL
     mysql> show binary logs;
     +------------------+-----------+
@@ -103,6 +103,15 @@ To ensure that you possess the appropriate version of `mysqlbinlog` utility, ins
     +------------------+-----------+
     4 rows in set (0.001 sec)
     ```
+
+Replace the following:
+
+- *`USERNAME`*: the username for the user
+- *`REPLICANT_HOST`*: the hostname of the machine running Replicant
+- *`PASSWORD`*: the user password
+- *`USER_DATABASE`*: the MySQL database name to grant privilege to
+- *`TABLE_NAME`*: the relevant table name in *`USER_DATABASE`*
+
 
 ## I. Set up connection configuration
 Specify your MySQL connection details to Replicant with a connection configuration file. You can find a sample connection configuration file `mysql.yaml` in the `$REPLICANT_HOME/conf/conn` directory.
