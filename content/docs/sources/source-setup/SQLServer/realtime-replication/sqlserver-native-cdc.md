@@ -102,14 +102,8 @@ Replace the following:
 - *`PREFIX_OF_THE_KEYSTORE_ENTRY`*: The prefix of your KeyStore entries. You can create entries in the credential store using a prefix that preceeds each credential alias. For example, you can create KeyStore entries with aliases `sqlserver_username` and `sqlserver_password`. You can then set `key-prefix` to `sqlserver_`.
 - *`KEYSTORE_PASSWORD`*: The KeyStore password. This parameter is optional. If you don’t want to specify the KeyStore password here, then you must use the UUID from your license file as the KeyStore password. Remember to keep your license file somewhere safe in order to keep the KeyStore password secure.
 
-## III. Create the heartbeat table 
-For [`full` mode replication]({{< relref "../full-mode-replication" >}}), you need to create a heartbeat table. For example:
 
-```SQL
-CREATE TABLE "tpcc"."dbo"."replicate_io_cdc_heartbeat"("timestamp" BIGINT NOT NULL, PRIMARY KEY("timestamp"))
-```
-
-## IV. Set up Extractor configuration
+## III. Set up Extractor configuration
 To configure real-time replication according to your requirements, specify your configuration in the Extractor configuration file. You can find a sample `sqlserver.yaml` in the `$REPLICANT_HOME/conf/src` directory. 
 
 All configuration parameters for `realtime` mode live under the `realtime` section. The following shows a sample configuration:
@@ -119,11 +113,6 @@ realtime:
   threads: 4
   fetch-size-rows: 10000
   fetch-duration-per-extractor-slot-s: 3
-  heartbeat:
-    enable: true
-    catalog: "tpcc"
-    schema: "dbo"
-    interval-ms: 10000
 ```
 
 For more information about the configuration parameters in `realtime` mode, see [Realtime mode]({{< ref "../../../configuration-files/extractor-reference#realtime-mode" >}}).
