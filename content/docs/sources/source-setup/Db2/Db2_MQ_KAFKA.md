@@ -9,7 +9,15 @@ bookHidden: false
 # Source IBM Db2 with Kafka/MQ
 This page describes how to set up Source Db2 with Kafka and MQ.
 
-The following steps refer [the extracted Arcion self-hosted CLI download]({{< ref "docs/quickstart/arcion-self-hosted#ii-download-replicant-and-create-replicant_home" >}}) as the `$REPLICANT_HOME` directory.
+## Obtain the dependency files
+Arcion Replicant requires the Db2 JDBC driver as a dependency. If you use [IBM MQ to store CDC logs](#configure-cdc-logs-and-monitoring), you must also obtain the MQ Java client files. 
+
+Click the following buttons to download the appropriate versions of the JDBC driver and client files. After downloading, put the JAR files inside the `lib/` directory of your [Replicant self-hosted download folder]({{< ref "docs/quickstart/arcion-self-hosted#download-replicant-and-create-replicant_home" >}}).
+
+{{< button href="https://repo1.maven.org/maven2/com/ibm/db2/jcc/db2jcc/db2jcc4/db2jcc-db2jcc4.jar" >}}Download IBM Db2 JDBC driver{{< /button >}}
+
+{{< button href="https://repo1.maven.org/maven2/com/ibm/mq/com.ibm.mq.allclient/9.1.5.0/com.ibm.mq.allclient-9.1.5.0.jar" >}}Download IBM MQ Java client files{{< /button >}}
+
 
 ## I. Check permissions
 You need to verify that the user possesses necessary permissions on source Db2 in order to perform replication. To know about the permissions, see [IBM Db2 permissions]({{< ref "docs/sources/source-prerequisites/db2#permissions" >}}).

@@ -10,6 +10,12 @@ bookHidden: false
 
 You may want to use the [db2ReadLog API](https://www.ibm.com/docs/en/db2/11.1?topic=apis-db2readlog-read-log-records) to read log records from the Db2 database logs, or query the Log Manager for current log state information. This page describes how to use the db2ReadLog API in Arcion when using Db2 as source.
 
+## Obtain the Db2 JDBC driver
+Arcion Replicant requires Db2 JDBC driver as a dependency. To make sure Replicant possesses the necessary dependency files, follow these steps:
+
+1. Download [the Db2 JDBC driver JAR file](https://repo1.maven.org/maven2/com/ibm/db2/jcc/db2jcc/db2jcc4/db2jcc-db2jcc4.jar). 
+2. After downloading the JAR file, put it inside the `lib/` directory of your [Replicant self-hosted download folder]({{< ref "docs/quickstart/arcion-self-hosted#download-replicant-and-create-replicant_home" >}}).
+
 ## I. Check permissions
 The user must possess the following permissions:
 

@@ -7,7 +7,13 @@ bookHidden: false
 ---
 # Destination IBM Informix
 
-The extracted `replicant-cli` will be referred to as the `$REPLICANT_HOME` directory in the proceeding steps.
+The following steps refer [the extracted Arcion self-hosted CLI download]({{< ref "docs/quickstart/arcion-self-hosted#download-replicant-and-create-replicant_home" >}}) as the `$REPLICANT_HOME` directory.
+
+## Obtain the Informix JDBC driver
+Arcion Replicant requires Informix JDBC driver as a dependency. To make sure Replicant can access the necessary dependency files, follow these steps:
+
+1. Download [the Informix JDBC driver JAR file](https://repo1.maven.org/maven2/com/ibm/informix/jdbc/4.50.3/jdbc-4.50.3.jar). 
+2. After downloading the JAR file, put it inside the `lib/` directory of your [Replicant self-hosted download folder]({{< ref "docs/quickstart/arcion-self-hosted#download-replicant-and-create-replicant_home" >}}).
 
 ## I. Set up Connection Configuration
 

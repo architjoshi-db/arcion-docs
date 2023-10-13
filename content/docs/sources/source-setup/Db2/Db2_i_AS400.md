@@ -10,6 +10,11 @@ bookHidden: false
 
 This page describes how to set up CDC-based replication from Source Db2 server on the IBM i AS/400 platform.
 
+## Obtain the Db2 JDBC driver
+Arcion Replicant requires Db2 JDBC driver as a dependency. To make sure Replicant can access the necessary dependency files, follow these steps:
+
+1. Download [the Db2 JDBC driver JAR file](https://repo1.maven.org/maven2/com/ibm/db2/jcc/db2jcc/db2jcc4/db2jcc-db2jcc4.jar). 
+2. After downloading the JAR file, put it inside the `lib/` directory of your [Replicant self-hosted download folder]({{< ref "docs/quickstart/arcion-self-hosted#download-replicant-and-create-replicant_home" >}}).
 
 ## I. Check Permissions
 
