@@ -9,44 +9,46 @@ url: docs/target-setup/oracle
 
 The extracted `replicant-cli` will be referred to as the `$REPLICANT_HOME` directory in the proceeding steps.
 
-## I. Obtain the JDBC Driver for Oracle
+## I. Obtain the JDBC driver for Oracle
 
-Replicant requires Oracle JDBC Driver as a dependency. To obtain the appropriate driver, follow the steps below: 
+Replicant requires Oracle JDBC Driver as a dependency. To obtain the appropriate driver, follow these steps: 
 
 - Go to the [Oracle Database JDBC driver Downloads page](https://www.oracle.com/database/technologies/appdev/jdbc-downloads.html).
 - We recommend JDBC Driver 18c and Java 8 compatible driver. So navigate to the **Oracle Database 18c Downloads** section. 
 - From there, download the [Oracle JDBC Driver `ojdbc8.jar`](https://download.oracle.com/otn-pub/otn_software/jdbc/1815/ojdbc8.jar).
 - Put the `ojdbc8.jar` file inside `$REPLICANT_HOME/lib` directory.
 
-## II. Set up Shared Directory
+## II. Set up shared directory
 
 Replicant uses the [external directory feature in Oracle](https://docs.oracle.com/cd/B19306_01/server.102/b14215/et_concepts.htm) for efficient loading of data into target Oracle. You must specify the shared directory [in the `stage` section of the connection configuration file](#iv-set-up-connection-configuration).
 
 1. Create a directory shared between Replicant host and Oracle host with `READ` and `WRITE` access.
-2. One way to create the shared directory is using NFS. You can follow NFS recommendation:
+2. You can use network file system (NFS) to create the shared directory. For more information, see [About NFS](https://docs.oracle.com/en/operating-systems/oracle-linux/7/fsadmin/fsadmin-SharedFileSystemAdministration.html#ol7-about-nfs) and [Configuring an NFS server](https://docs.oracle.com/en/operating-systems/oracle-linux/7/fsadmin/fsadmin-SharedFileSystemAdministration.html#ol7-cfgsvr-nfs).
 
-From here onwards, we'll consider the directory created in this step to have the following path: `/data/shared_fs`.
+The following steps use `/data/shared_fs` as the shared directory.
 
-## III. Set up Oracle User Permissions
-The following step must be executed in an Oracle client.
+## III. Set up Oracle user permissions
+Follow these steps in an Oracle client:
 
-1. Grant the following privileges to the host replicant user
+1. Grant the following privileges to the host Replicant user:
    ```SQL
     GRANT CREATE TABLE TO <USERNAME>;
     --If you are unable to provide the permission above, you must manually create all the tables
 
-    GRANT CREATE ANY DIRECTORY TO <USERNAME>;
+    GRANT CREATE ANY DIRECTORY TO USERNAME;
     --If you are unable to provide the permission above, you must manually create the following directories:
     CREATE OR REPLACE DIRECTORY csv_data_dir AS '/data/shared_fs';
     CREATE OR REPLACE DIRECTORY csv_log_dir AS '/data/shared_fs';
 
 
-    GRANT ALTER TABLE TO <USERNAME>;
-    --
+    GRANT ALTER TABLE TO USERNAME;
+    these--
     ```
+
+    Replace `USERNAME`
 2. Manually create user schema and a schema named io_replicate. Grant both of them permission to access a tablespace
 
-## IV. Set up Connection Configuration
+## IV. Set up connection configuration
 
 1. From `$REPLICANT_HOME`, navigate to the sample connection configuration file:
     ```BASH
@@ -87,7 +89,7 @@ The following step must be executed in an Oracle client.
     ### Additional parameters
     * `max-metadata-connections`*[v21.05.04.6]*: When `--metadata` switch is not provided, the target is used as a metadata store. This config will determine the connection pool size for metadata storage.
 
-## V. Set up Applier Configuration
+## V. Set up Applier configuration
 
 Replicant supports creating/loading tables at the partition and subpartition levels. Follow the instructions below if you want to change the behavior.
 
@@ -162,7 +164,7 @@ Replicant supports creating/loading tables at the partition and subpartition lev
 
 ## Oracle Native Import
 
-For Oracle as both Source and Target systems, Replicant uses Oracle's native Data Pump Import (`impdp`) utility to load data into the Target. To set up Replicant and Target Oracle to use this feature, follow the instructions below:
+For Oracle as both source and target systems, Replicant uses Oracle's native Data Pump Import (`impdp`) utility to load data into the target. To set up Replicant and target Oracle to use this feature, follow the instructions below:
 
 ### Set up `impdp` in Replicant host machine
 - Download the [Oracle Instant Client Tools Package ZIP](https://download.oracle.com/otn_software/linux/instantclient/216000/instantclient-tools-linux.x64-21.6.0.0.0dbru.zip) and extract the files.
@@ -175,7 +177,7 @@ For Oracle as both Source and Target systems, Replicant uses Oracle's native Dat
   export LD_LIBRARY_PATH="$ORACLE_HOME":$LD_LIBRARY_PATH
   export PATH="$ORACLE_HOME:$PATH"
   ```
-### Create directory object in Source and Target Oracle
+### Create directory object in Source and target Oracle
 Replicant uses the [external directory feature of Oracle](https://docs.oracle.com/cd/B19306_01/server.102/b14215/et_concepts.htm) for efficient loading of data into Target Oracle. So you need to create a directory shared between Replicant host and Oracle host (both Source and Target) with `READ` and `WRITE` access. To do so, follow the steps below:
 
 - Launch Oracle SQL Plus from the terminal.
