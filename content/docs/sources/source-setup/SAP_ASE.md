@@ -199,11 +199,23 @@ realtime:
 For more information about the Extractor parameters for `realtime` mode, see [Realtime mode]({{< relref "../configuration-files/extractor-reference#realtime-mode" >}}).
 
 #### Additional real-time parameters
+
+`cdc-log-fetch-timeout-s`
+: Sets the timeout for CDC log scan in seconds. 
+
+  _Default: `600`._
+
 `dump-transactions` _[v23.08.31.4]_
 
 : `{true|false}`.
 
-  Enables dumping of committed transaction logs. If `false`, transaction log eventually consumes all available disk space. Set this parameter to `false` if you don't want Replicant to dump transaction logs.
+  Enables dumping of committed transaction logs. Set this parameter to `false` if you don't want Replicant to dump transaction logs. 
+  
+  Setting this parameter to `false` results in the following behavior:
+  
+  - Transaction log eventually consumes all available disk space.
+  - ASE server doesn't automatically truncate transaction logs. 
+  
 
   _Default: `true`._
 
@@ -217,7 +229,6 @@ For more information about the Extractor parameters for `realtime` mode, see [Re
 - DDL Replication isn't supported.
 - Running [`merge` operations](https://help.sap.com/docs/SAP_ASE/e0d4539d39c34f52ae9ef822c2060077/ab389f37bc2b10149bb5c3bafec694a1.html?version=16.0.4.2) during CDC results in a non-recoverable error. To sync the target database again, you must run `reinit` or `full` snapshot again.
 - View Replication is not supported for real-time replication but possible for snapshot replication.
-- To avoid clogging source database, we need to set `fetch-interval-s` to a value greater than or equal to `10` seconds. This pauses the Extractor thread for `fetch-interval-s` seconds before extracting the next batch of logs.
 - It's not possible to manually reset truncation point.
 
 #### Handling secondary truncation point
