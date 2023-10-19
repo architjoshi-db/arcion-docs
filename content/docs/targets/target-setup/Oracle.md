@@ -45,9 +45,9 @@ Follow these steps in an Oracle client to grant the [necessary privileges](https
     CREATE OR REPLACE DIRECTORY csv_data_dir AS '/data/shared_fs';
     CREATE OR REPLACE DIRECTORY csv_log_dir AS '/data/shared_fs';
     ```
-3. Grant the `ALTER TABLE` privilege:
+3. Grant the `ALTER ANY TABLE` privilege:
     ```SQL
-    GRANT ALTER TABLE TO alex;
+    GRANT ALTER ANY TABLE TO alex;
     ```
 4. Manually create user schema and a schema `io_replicate`. Grant both of these schemas permission to access a [tablespace](https://docs.oracle.com/en/database/oracle/oracle-database/23/cncpt/glossary.html#GUID-AA66891C-71B2-4D55-8F64-0E427AE24E88).
 
