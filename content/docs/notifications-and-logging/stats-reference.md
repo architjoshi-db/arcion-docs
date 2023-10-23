@@ -56,7 +56,7 @@ Storage configuration for statistics.
 : Specifies how Replicant archives the statistics data. The following values are supported:
    
   `METADATA_DB`
-  : Uses the [metadata database]({{< ref "docs/row-verificator/metadata-configuration" >}}) to store statistics data.
+  : Uses the [metadata database]({{< ref "docs/references/metadata-reference" >}}) to store statistics data.
   
   `FILE_SYSTEM`
   : Stores statistics data in a file.
