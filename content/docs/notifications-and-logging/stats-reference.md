@@ -5,36 +5,93 @@ description: "Arcion Replicant provides full statistical history of an ongoing r
 weight: 6
 url: docs/references/stats-reference
 ---
+
 # Statistics Configuration
+Arcion Replicant provides full statistical history of an ongoing replication. This page describes how to set up and configure statistics logging.
 
+## Overview
+Replicant uses a [YAML configuration file](#statistics-configuration-file) and logs full statistical history of an ongoing replication. Replicant creates a table `replicate_io_replication_statistics_history` to log the full history of insert, update, delete, and upsert operations across all Replicant jobs. Replicant logs an entry in this table in the following format upon each successful write on a target table:
 
-The statistics configuration is used to provide a full statistical history of an ongoing replication. Replicant creates a table named replicate_io_replication_statistics_history to log the full history of inserts/updates/deletes/upserts across all replicant jobs with following details and each successful write on a target table has a log entry in this table in the following format:
+- `replication_id`
+- `catalog_name`
+- `schema_name`
+- `Table_name`
+- `Snapshot_start_range`
+- `Snapshot_end_range`
+- `Start_time`
+- `End_time`
+- `Insert_count`
+- `Update_count`
+- `Upsert_count`
+- `Delete_count`
+- `Elapsed_time_sec`
+- `replicant_lag` _[v20.10.07.10]_
+- `total_lag` _[v20.10.07.10]_
 
-- replication_id
-- catalog_name
-- schema_name
-- Table_name
-- Snapshot_start_range
-- Snapshot_end_range
-- Start_time
-- End_time
-- Insert_count
-- Update_count
-- Upsert_count
-- Delete_count
-- Elapsed_time_sec
-- replicant_lag [20.10.07.10]
-- total_lag [20.10.07.10]
+## Statistics configuration file
+The statistics configuration file specifies different aspects of statistics logging like statistics history and  storage. The configuration file uses YAML syntax. If you're new to YAML and want to learn more, see [Learn YAML in Y minutes](https://learnxinyminutes.com/docs/yaml/). For a sample configuration, see `statistics.yaml` in the `conf/statistics/` directory of your [Replicant self-hosted CLI download folder]({{< ref "docs/quickstart/arcion-self-hosted#ii-download-replicant-and-create-replicant_home" >}}).
 
-1. **enable**: enable/disable statistics logging
+You can define and configure the following parameters in the statistics configuration file:
 
-2. **purge-statistics**: Configuration to specify purge rules for the statistics history
-    * **enable**: enable purging of replication statistics history.
-    * **purge-stats-before-days**: Number of days to keep the stats. E.g. If set to 30 then replicant will keep the history for the last 30 days.
+### `enable`
+`{true|false}`.
 
-3. **storage[20.10.07.16]**: Storage configuration for statistics.
-    * **stats-archive-type**: Type of stats archive. Allowed values are METADATA_DB(stats will be stored in metadata DB), FILE_SYSTEM(stats will be stored in a file), DST_DB(stats will be stored in destination DB).
-    * **storage-location**: Directory location where statistics files will be stored. Should be used only when stats-archive-type is FILE_SYSTEM
-    * **format**: The format of statistics file. Allowed values are CSV and JSON.
-    * **catalog [20.12.04.2]**: Catalog in which statistics will be stored when stats-archive-type is DST_DB.
-    * **schema [20.12.04.2]**: Schema in which statistics will be stored when stats-archive-type is DST_DB.
+Enables or disables statistics logging.
+
+### `purge-statistics`
+Specifies the purge rules for the statistics history.
+
+`enable`
+: `{true|false}`.
+
+    Enables purging of replication statistics history.
+
+`purge-stats-before-days`
+: Number of days to keep the statistics. For example, set this parameter to `30` to keep the statistics history for the last 30 days.
+
+### `storage` _[v20.10.07.16]_
+Storage configuration for statistics.
+
+`stats-archive-type`
+: Specifies how Replicant archives the statistics data. The following values are supported:
+   
+  `METADATA_DB`
+  : Uses the [metadata database]({{< ref "docs/row-verificator/metadata-configuration" >}}) to store statistics data.
+  
+  `FILE_SYSTEM`
+  : Stores statistics data in a file.
+  
+  `DST_DB`
+  : Stores statistics data in the target database.
+  
+   
+`storage-location`
+: Directory location where Replicant stores statistics files when `stats-archive-type` is `FILE_SYSTEM`.
+
+`format`
+: The format of statistics file when `stats-archive-type` is `FILE_SYSTEM`. 
+
+  The following formats are supported: 
+  - `CSV`
+  - `JSON`
+
+  _Default: `CSV`._
+
+`catalog`_[v20.12.04.2]_
+: The catalog to store statistics in when `stats-archive-type` is `DST_DB`.
+
+`schema` _[v20.12.04.2]_
+: The schema to store statistics in when `stats-archive-type` is `DST_DB`.
+
+### Sample configuration
+```YAML
+enable: true
+purge-statistics:
+  enable: true
+  purge-stats-before-days: 30
+  purge-stats-interval-iterations: 100
+storage:
+  stats-archive-type:  DST_DB
+  catalog: "io"
+  schema: "replicate"
+```
