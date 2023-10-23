@@ -41,47 +41,47 @@ Enables or disables statistics logging.
 ### `purge-statistics`
 Specifies the purge rules for the statistics history.
 
-`enable`
-: `{true|false}`.
+### `purge-statistics.enable`
+`{true|false}`.
 
-    Enables purging of replication statistics history.
+Enables purging of replication statistics history.
 
-`purge-stats-before-days`
-: Number of days to keep the statistics. For example, set this parameter to `30` to keep the statistics history for the last 30 days.
+### `purge-statistics.purge-stats-before-days`
+Number of days to keep the statistics. For example, set this parameter to `30` to keep the statistics history for the last 30 days.
 
 ### `storage` _[v20.10.07.16]_
 Storage configuration for statistics.
 
-`stats-archive-type`
-: Specifies how Replicant archives the statistics data. The following values are supported:
+### `storage.stats-archive-type`
+Specifies how Replicant archives the statistics data. The following values are supported:
    
-  `METADATA_DB`
-  : Uses the [metadata database]({{< ref "docs/references/metadata-reference" >}}) to store statistics data.
-  
-  `FILE_SYSTEM`
-  : Stores statistics data in a file.
-  
-  `DST_DB`
-  : Stores statistics data in the target database.
+`METADATA_DB`
+: Stores statistics data in the [metadata database]({{< ref "docs/references/metadata-reference" >}}).
+
+`FILE_SYSTEM`
+: Stores statistics data in a file.
+
+`DST_DB`
+: Stores statistics data in the target database.
   
    
-`storage-location`
-: Directory location where Replicant stores statistics files when `stats-archive-type` is `FILE_SYSTEM`.
+### `storage.storage-location`
+Directory location where Replicant stores statistics files when [`storage.stats-archive-type`](#storagestats-archive-type) is `FILE_SYSTEM`.
 
-`format`
-: The format of statistics file when `stats-archive-type` is `FILE_SYSTEM`. 
+### `storage.format`
+The format of statistics file when [`storage.stats-archive-type`](#storagestats-archive-type) is `FILE_SYSTEM`. 
 
-  The following formats are supported: 
-  - `CSV`
-  - `JSON`
+The following formats are supported: 
+- `CSV`
+- `JSON`
 
-  _Default: `CSV`._
+_Default: `CSV`._
 
-`catalog`_[v20.12.04.2]_
-: The catalog to store statistics in when `stats-archive-type` is `DST_DB`.
+### `storage.catalog`_[v20.12.04.2]_
+The catalog to store statistics in when [`storage.stats-archive-type`](#storagestats-archive-type) is `DST_DB`.
 
-`schema` _[v20.12.04.2]_
-: The schema to store statistics in when `stats-archive-type` is `DST_DB`.
+### `storage.schema` _[v20.12.04.2]_
+The schema to store statistics in when [`storage.stats-archive-type`](#storagestats-archive-type) is `DST_DB`.
 
 ### Sample configuration
 ```YAML
@@ -89,7 +89,6 @@ enable: true
 purge-statistics:
   enable: true
   purge-stats-before-days: 30
-  purge-stats-interval-iterations: 100
 storage:
   stats-archive-type:  DST_DB
   catalog: "io"
