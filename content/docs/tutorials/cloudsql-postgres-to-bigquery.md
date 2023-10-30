@@ -73,8 +73,6 @@ Follow these instructions if you want to install Google Cloud CLI in Debian and 
     </li>
     </ol>
 
-
-
 ### Set the region and zone
 Run the following commands using `glcoud` CLI to set the region to `us-central1` and zone to `us-central1-a`:
 
@@ -85,16 +83,19 @@ gcloud config set compute/zone us-central1-a
 
 For more information, see [Set a default region and zone](https://cloud.google.com/compute/docs/gcloud-compute#set_default_zone_and_region_in_your_local_client).
 
+## Step 1: Set up Tau T2A virtual machine instance
+Tau T2A virtual machines (VMs) in the `us-central1` region are available for a free trial until March 31, 2024. For more information, see [Tau T2A free trial](https://cloud.google.com/compute/docs/instances/create-arm-vm-instance#t2afreetrial).
 
-### Set up authentication for VM instance
-This tutorial uses the [Tau T2A Compute Engine virtual machine (VM)](https://cloud.google.com/compute/docs/instances/arm-on-compute). To authenticate to the VM instance, you use the credentials of the service account attached to the VM instance. You must also grant the following roles to your Google account to create and manage the VM instances:  
+Follow these steps to set up the T2A VM instance for this tutorial.
+
+### Authentication and required permissions
+To authenticate to the VM instance, you use the credentials of the service account attached to the VM instance. You must also grant the following roles to your Google account to create and manage the VM instances:  
 
 - [`roles/compute.admin`](https://cloud.google.com/iam/docs/understanding-roles#predefined_roles)
 - [`roles/iam.serviceAccountUser`](https://cloud.google.com/iam/docs/service-account-permissions#user-role)
 
- Ask your Google Cloud admin to grant you the roles. If you are the admin, then follow these steps. Make sure you switch back to your service account after completing these steps:
-
-    
+Ask your Google Cloud admin to grant you the roles. If you are the admin, then follow these steps. Make sure you switch back to your service account after completing these steps:
+   
 1. Grant full control of all Compute Engine resources for the T2A VMs:
 
     ```sh
@@ -123,27 +124,13 @@ This tutorial uses the [Tau T2A Compute Engine virtual machine (VM)](https://clo
 
 For more information on authenticating T2A Compute Engine VM, see [Set up authentication for Compute Engine on Google Cloud](https://cloud.google.com/compute/docs/authentication#on-gcp).
 
-### Required permissions to create datasets in BigQuery
-To be able to make datasets under your project name, you need to have [`roles/bigquery.admin` IAM role](https://cloud.google.com/bigquery/docs/access-control#bigquery.admin) associated with your service account. Ask your admin to grant you the role. If you have admin access, switch to that account: 
-
-```sh
-gcloud config set account ACCOUNT
-```
-
-Replace the *`ACCOUNT`* with the full email address of the account. Make sure you switch back to your service account later.
-
-## Step 1: Set up Tau T2A virtual machine instance
-Tau T2A virtual machines (VMs) in the `us-central1` region are available for a free trial until March 31, 2024. For more information, see [Tau T2A free trial](https://cloud.google.com/compute/docs/instances/create-arm-vm-instance#t2afreetrial).
-
-Follow these steps to set up the T2A VM instance for this tutorial:
-
-1. Make sure you have the [required IAM permissions to authenticate to VM instance](#set-up-authentication-for-vm-instance).
-2. View the list of [public OS images](https://cloud.google.com/compute/docs/images#gcloud) available for your T2A Compute Engine:
+### Set up VM instance
+1. View the list of [public OS images](https://cloud.google.com/compute/docs/images#gcloud) available for your T2A Compute Engine:
 
     ```sh
     gcloud compute images list
     ```
-3. Choose the appropriate image for your OS. Then use the [`gcloud compute instances create` command](https://cloud.google.com/sdk/gcloud/reference/compute/instances/create) to create an Arm VM:
+2. Choose the appropriate image for your OS. Then use the [`gcloud compute instances create` command](https://cloud.google.com/sdk/gcloud/reference/compute/instances/create) to create an Arm VM:
 
     ```sh
     gcloud compute instances create VM_NAME \
@@ -165,11 +152,11 @@ Follow these steps to set up the T2A VM instance for this tutorial:
 
     The preceding command creates the VM instance with [Google Virtual NIC (gVNIC)](https://cloud.google.com/compute/docs/networking/using-gvnic) support.
 
-4. Check the description of the VM:
+3. Check the description of the VM:
     ```sh
     gcloud compute instances describe VM_NAME
     ```
-5. Establish a SSH connection to your VM:
+4. Establish a SSH connection to your VM:
     ```sh
     gcloud compute ssh --project=PROJECT_ID --zone=ZONE VM_NAME
     ```
@@ -180,12 +167,12 @@ Follow these steps to set up the T2A VM instance for this tutorial:
     - *`VM_NAME`*: [name](https://cloud.google.com/compute/docs/naming-resources#resource-name-format) of the VM 
 
     Remember to create a passphrase that can further secure the SSH key every time you try to establish a connection.
-6. To get IP addresses of your VM instance, use the following:
+5. To get IP addresses of your VM instance, use the following:
     ```sh
     gcloud compute instances list
     ```
 
-7. To start and stop your VM instance, use the [`start`](https://cloud.google.com/sdk/gcloud/reference/compute/instances/start) and [`stop`](https://cloud.google.com/sdk/gcloud/reference/compute/instances/stop) commands of `gcloud compute instances` respectively:
+6. To start and stop your VM instance, use the [`start`](https://cloud.google.com/sdk/gcloud/reference/compute/instances/start) and [`stop`](https://cloud.google.com/sdk/gcloud/reference/compute/instances/stop) commands of `gcloud compute instances` respectively:
     ```sh
     gcloud compute instances start VM_NAME
     gcloud compute instances stop VM_NAME
@@ -221,15 +208,40 @@ After [completing the preceding steps](#step-1-set-up-tau-t2a-virtual-machine-in
     If you get `replicant exited with error code: 0` at the end of the output text, you've successfully set up Arcion in your VM.
 
 ## Step 3: Set up Google BigQuery
-1. Make sure you have the [necessary IAM permissions to create datasets in BigQuery](#required-permissions-to-create-datasets-in-bigquery).
-2. [Create a new dataset](https://cloud.google.com/bigquery/docs/datasets#bq):
+### Required permissions
+To be able to make datasets under your project name, you must have [`roles/bigquery.admin` IAM role](https://cloud.google.com/bigquery/docs/access-control#bigquery.admin) associated with your service account. Ask your admin to grant you the role. If you have admin access, follow these steps:
+
+1. Switch to the admin account: 
+
+    ```sh
+    gcloud config set account ACCOUNT
+    ```
+
+    Replace the *`ACCOUNT`* with the full email address of the account.
+
+2. Grant the `roles/bigquery.admin` IAM role:
+    ```sh
+    gcloud projects add-iam-policy-binding PROJECT_ID \
+    --member="serviceAccount:SERVICE_ACCOUNT_NAME" \
+    --role=roles/bigquery.admin
+    ```
+
+    Replace the following:
+
+    - *`PROJECT_ID`*: the project ID where you have created the service account
+    - *`SERVICE_ACCOUNT_NAME`*: the name of the service account
+
+Make sure you switch back to your service account later after completing the preceding steps.
+
+### Setup instructions
+1. [Create a new dataset](https://cloud.google.com/bigquery/docs/datasets#bq):
     ```sh
     bq mk DATASET_NAME
     ```
 
     Replace *`DATASET_NAME`* with your dataset name.
-3. To verify that you've successfully created the dataset, use the `bq ls` command. It shows you the list of available datasets under your project.
-4. For replication, copy the JSON key file generated in the [sixth step during `gcloud` CLI installation](#install-google-cloud-cli-in-debian-and-ubuntu) to your VM:
+2. To verify that you've successfully created the dataset, use the `bq ls` command. It shows you the list of available datasets under your project.
+3. For replication, copy the JSON key file generated in the [sixth step during `gcloud` CLI installation](#install-google-cloud-cli-in-debian-and-ubuntu) to your VM:
     ```sh
     gcloud compute scp PATH_TO_JSON_KEY_FILE VM_NAME:REMOTE_DIR
     ```
@@ -249,3 +261,123 @@ After [completing the preceding steps](#step-1-set-up-tau-t2a-virtual-machine-in
     - *`PATH_TO_JDBC_JAR_FILE`*: the path to the `GoogleBigQueryJDBC42.jar` JAR file on your local machine
     - *`VM_NAME`*: the name of your VM
     - *`REMOTE_DIR`*: a directory on the remote VM where the `replicant-cli` folder is located
+
+## Step 4: Set up Cloud SQL for PostgreSQL instance
+### Required permissions
+To create and manage SQL instances in your Google Cloud environment, you must have [`roles/cloudsql.admin` IAM role](https://cloud.google.com/sql/docs/mysql/iam-roles) associated with your service account. Ask your admin to grant you the role. If you have admin access, follow these steps:
+
+1. Switch to that account:
+
+    ```sh
+    gcloud config set account ACCOUNT
+    ```
+
+    Replace the *`ACCOUNT`* with the full email address of the account.
+
+2. Grant the `roles/cloudsql.admin` IAM role:
+    ```sh
+    gcloud projects add-iam-policy-binding PROJECT_ID \
+    --member="serviceAccount:SERVICE_ACCOUNT_NAME" \
+    --role=roles/bigquery.admin
+    ```
+
+    Replace the following:
+
+    - *`PROJECT_ID`*: the project ID where you have created the service account
+    - *`SERVICE_ACCOUNT_NAME`*: the name of the service account
+
+Make sure you switch back to your service account later after completing the preceding steps.
+
+### Setup instructions
+1. Create a PostgreSQL database instance using [`gcloud sql instances create`](https://cloud.google.com/sdk/gcloud/reference/sql/instances/create):
+    ```sh
+    gcloud sql instances create INSTANCE_NAME \
+    --database-version=DATABASE_VERSION \
+    --cpu=VCPU_NUMBER --memory=MEMORY \
+    --region=us-central1
+    ```
+
+    Replace the following:
+
+    - *`INSTANCE_NAME`*: name of the Cloud SQL for PostgreSQL instance
+    - *`DATABASE_VERSION`*: the PostgreSQL database version—for example, `POSTGRES_14`
+    - *`VCPU_NUMBER`*: the number of vCPUs
+    - *`MEMORY`*: the memory size
+
+    The following restrictions apply to values of vCPUs and memory size:
+    
+    - CPUs must be either 1 or an even number between 2 and 96.
+    - Memory must be:
+        - 0.9 to 6.5 GB per CPU
+        - A multiple of 256 MB
+        - At least 3.75 GB
+
+    For more information, see [Create Cloud SQL for PostgreSQL instances](https://cloud.google.com/sql/docs/postgres/create-instance).
+2. Create the password for the default `postgres` user:
+    ```sh
+    gcloud sql users set-password postgres \
+    --instance INSTANCE_NAME \
+    --password PASSWORD
+    ```
+
+      Replace the following:
+
+      - *`INSTANCE_NAME`*: the name of the instance
+      - *`PASSWORD`*: the password for the user
+3. To connect to your instance, install the `psql` PostgreSQL client that ships with the PostgreSQL server:
+    ```sh
+    sudo apt-get update
+    sudo apt install postgresql
+    ```
+4. Connect to your Cloud SQL for PostgreSQL instance:
+    ```sh
+    gcloud sql connect INSTANCE_NAME --user=postgres
+    ```
+
+    Replace *`INSTANCE_NAME`* with your instance name.
+5. To allow connection from your VM, whitelist the IP address of the VM in your database instance:
+    ```sh
+    gcloud sql instances patch INSTANCE_NAME --authorized-networks=VM_IP
+    ```
+
+    Replace the following:
+
+    - *`INSTANCE_NAME`*: the name of your instance
+    - *`VM_IP`*: the IP address of your VM
+6. To start, stop, or restart your instance, change the [activation policy](https://cloud.google.com/sql/docs/mysql/start-stop-restart-instance#activation_policy):
+    {{< tabs "start-stop-restart-instance" >}}
+    {{< tab "Start instance" >}}
+  To start an instance, use `ALWAYS` for the activation policy:
+  ```sh
+  gcloud sql instances patch INSTANCE_NAME --activation-policy=ALWAYS
+  ```
+
+  Replace *`INSTANCE_NAME`* with your instance name.
+    {{< /tab>}}
+    {{< tab "Stop instance" >}}
+  To stop an instance, use `NEVER` for the activation policy:
+  ```sh
+  gcloud sql instances patch INSTANCE_NAME --activation-policy=NEVER
+  ```
+
+  Replace *`INSTANCE_NAME`* with your instance name.
+    {{< /tab >}}
+    {{< tab "Restart instance" >}}
+  To restart an instance, use the `restart` command:
+  ```sh
+  gcloud sql instances restart INSTANCE_NAME
+  ```
+
+  Replace *`INSTANCE_NAME`* with your instance name.
+    {{< /tab >}}
+    {{< /tabs>}}
+7. To get information about your instance, use the `describe` command:
+    ```sh
+    gcloud sql instances describe INSTANCE_NAME
+    ```
+
+    Replace *`INSTANCE_NAME`* with your instance name.
+
+
+
+
