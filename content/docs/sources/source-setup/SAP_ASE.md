@@ -179,7 +179,7 @@ realtime:
   threads: 1
   fetch-size-rows: 100000
 
-  fetch-interval-s: 10
+  fetch-interval-s: 1
 
   _traceDBTasks: true
 
@@ -192,8 +192,7 @@ realtime:
 
 {{< hint "warning" >}}
 **Important:** 
-1. The `fetch-interval-s` parameter determines interval between each CDC fetch cycle. Always make sure to keep its value above or equal to `10`. For more information, see [Limitations](#limitations).
-2. Always enable heartbeat table. Otherwise, truncation point does not move forward.
+Always enable heartbeat table. Otherwise, truncation point does not move forward.
 {{< /hint >}}
 
 For more information about the Extractor parameters for `realtime` mode, see [Realtime mode]({{< relref "../configuration-files/extractor-reference#realtime-mode" >}}).
@@ -209,18 +208,19 @@ For more information about the Extractor parameters for `realtime` mode, see [Re
 
 : `{true|false}`.
 
-  Enables dumping of committed transaction logs. Set this parameter to `false` if you don't want Replicant to dump transaction logs. 
-  
-  Setting this parameter to `false` results in the following behavior:
-  
-  - Transaction log eventually consumes all available disk space.
-  - ASE server doesn't automatically truncate transaction logs. 
-  
-
+  Specifies the behavoir of dumping committed transaction logs.
+  {{< columns >}}
+  ##### `true`
+   1. Replicant disables automatic log dump on the ASE server.
+   2. Replicant manually dumps commited transaction logs acccording to the value you set in `purge-interval-s`.
+  <--->
+  ##### `false`
+  The current ASE server settings control dumping of commited transaction logs.
+  {{< /columns >}}
   _Default: `true`._
 
 `purge-interval-s` _[v23.08.31.4]_
-: Controls the frequency of truncation point update and transaction log dump in seconds. This parameter takes effect only if sufficient logs exist and page number has changed from the last update. If you set `dump-transaction` to `false`, Replicant only updates the truncation point.
+: Controls the frequency of truncation point update and transaction log dump in seconds. This parameter takes effect only if sufficient logs exist and page number has changed from the last update. If you set `dump-transactions` to `false`, Replicant only updates the truncation point.
 
   _Default: `60`._
 
