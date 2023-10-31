@@ -83,6 +83,10 @@ gcloud config set compute/zone us-central1-a
 
 For more information, see [Set a default region and zone](https://cloud.google.com/compute/docs/gcloud-compute#set_default_zone_and_region_in_your_local_client).
 
+### Get Arcion self-hosted CLI
+1. Arcion self-hosted CLI comes as a ZIP file that you must download. [Contact us](http://www.arcion.io/contact) to get access to the self-hosted ZIP and license file.
+2. Once you have access to the ZIP file, download it to the directory of your choice and unzip it. Unzipping the archive creates a directory `replicant-cli`. You can find the Replicant binary in `replicant-cli/bin/` directory.
+
 ## Step 1: Set up Tau T2A virtual machine instance
 Tau T2A virtual machines (VMs) in the `us-central1` region are available for a free trial until March 31, 2024. For more information, see [Tau T2A free trial](https://cloud.google.com/compute/docs/instances/create-arm-vm-instance#t2afreetrial).
 
@@ -183,9 +187,8 @@ For more information on authenticating T2A Compute Engine VM, see [Set up authen
 ## Step 2: Set up Arcion
 After [completing the preceding steps](#step-1-set-up-tau-t2a-virtual-machine-instance), you have a T2A VM instance Compute Engine deployed in Google Cloud. Now you need to set up [Arcion self-hosted CLI](https://www.arcion.io/self-hosted) in your VM instance.
 
-1. Arcion self-hosted CLI comes as a ZIP file that you must download. [Contact us](http://www.arcion.io/contact) to get access to the self-hosted ZIP and license file.
-2. Once you have access to the ZIP file, download it to the directory of your choice and unzip it. Unzipping the archive creates a directory `replicant-cli`. You can find the Replicant binary in `replicant-cli/bin/` directory. 
-3. Copy the Replicant binary and license files from your local machine and upload them to your VM:
+1. Get [Arcion self-hosted CLI](#get-arcion-self-hosted-cli). 
+2. Copy the Replicant binary and license files from your local machine and upload them to your VM:
     ```sh
     gcloud compute scp --recursive LOCAL_FILE_PATH VM_NAME:REMOTE_DIRECTORY
     ```
@@ -195,12 +198,12 @@ After [completing the preceding steps](#step-1-set-up-tau-t2a-virtual-machine-in
     - *`LOCAL_FILE_PATH`*: the path to the Replicant binary or license file on your local machine
     - *`VM_NAME`*: the name of your VM
     - *`REMOTE_DIR`*: a directory on the remote VM
-4. Install JDK 8 if you don't have it already:
+3. Install JDK 8 if you don't have it already:
     ```sh
     sudo apt-get update
     sudo apt install openjdk-8-jdk
     ```
-5. To verify that you've successfully set up Arcion, check the Replicant version:
+4. To verify that you've successfully set up Arcion, check the Replicant version:
     ```sh
     ./bin/replicant version
     ```
@@ -378,6 +381,218 @@ Make sure you switch back to your service account later after completing the pre
 
     Replace *`INSTANCE_NAME`* with your instance name.
 
+## Step 5: Configure Cloud SQL for PostgreSQL instance
+To enable real-time data replication from Cloud SQL for PostgreSQL, follow these steps to configure your instance:
 
+1. PostgreSQL supports logical decoding by writing additional information to its write-ahead log (WAL). To enable this feature, set the `cloudsql.logical_decoding` flag to `on` and set the maximum number of replication slots.
 
+    ```sh
+    gcloud sql instances patch INSTANCE_NAME \
+    --database-flags=cloudsql.logical_decoding=on,max_replication_slots=10
+    ```
 
+    Replace *`INSTANCE_NAME`* with your instance name.
+2. To perform log consumption for change data capture (CDC) replication from the PostgreSQL server, you must use a logical decoding plugin:
+    - `test_decoding`
+    - `wal2json`
+
+    This tutorial uses `wal2json`. This plugin is pre-installed in Cloud SQL for PostgreSQL.
+
+    <ol type="a">
+    <li>
+
+    Assign the `replication` role to the current user:
+    ```sql
+    ALTER USER postgres WITH replication;
+    ```
+    To create a specific user for replication,  follow the instructions in [Create a user in PostgreSQL]({{< ref "docs/sources/source-setup/postgresql#i-create-a-user-in-postgresql" >}}). In this tutorial, we use the default `postgres` user to keep things simple. 
+    </li>
+    <li>
+
+    Create a logical replication slot:
+    ```sql
+    SELECT 'init' FROM pg_create_logical_replication_slot('<slot_name>', 'wal2json');
+    ```
+
+    To see the list of replication slots, run the following command:
+    ```sql
+    SELECT * FROM pg_replication_slots;
+    ```
+
+    You can create more replication slots as long it doesn't exceed the maximum number you specify in the first step.
+
+    </li>
+    </ol>
+
+## Step 6: Configure Arcion
+For a simple data replication, you must configure the following:
+
+- Connection details for source and target databases
+- Extractor for source
+- Filter
+
+In this tutorial, Cloud SQL for PostgreSQL is the source and Big Query the target.
+
+First, connect to the VM and navigate to the `replicant-cli` folder:
+```sh
+#connect to the vm
+gcloud compute ssh --project=PROJECT_ID --zone=ZONE VM_NAME
+
+#navigate to the folder
+cd replicant-cli
+```
+
+Replace the following:
+- *`PROJECT_ID`*: the project ID where you have created the service account
+- *`ZONE`*: the name of the zone that the VM is located in
+- *`VM_NAME`*: the name of your VM
+
+Then follow these instructions:
+
+### Configure connection details for source and target database
+1. Navigate to the `replicant-cli/conf/conn/postgresql_src.yaml` sample connection configuration for [PostgreSQL source]({{< ref "docs/sources/source-setup/postgresql" >}}).
+    ```YAML
+    type: POSTGRESQL
+
+    host: IP
+    port: PORT_NUMBER
+
+    database: 'DATABASE_NAME'
+    username: 'USERNAME'
+    password: 'PASSWORD'
+
+    max-connections: 30
+    socket-timeout-s: 60
+    max-retries: 10
+    retry-wait-duration-ms: 1000
+
+    replication-slots:
+      SLOT_NAME:
+        - wal2json
+    ```
+
+    Replace the following:
+
+   - *`IP`*: the IP address of the Cloud SQL for PostgreSQL instance
+   - *`PORT_NUMBER`*: the port number
+   - *`DATABASE_NAME`*: the PostgreSQL database name
+   - *`USERNAME`*: the database username 
+   - *`PASSWORD`*: the password associated with *`USERNAME`*
+   - *`SLOT_NAME`*: the [replication slot]({{< ref "docs/sources/source-setup/postgresql#replication-slots" >}}) name
+
+   Feel free to change the following parameter values as you need:
+
+    - *`max-connections`*: the maximum number of connections Replicant opens in Cloud SQL instance
+    - *`max-retries`*: number of times Replicant retries a failed operation
+    - *`retry-wait-duration-ms`*: duration in milliseconds Replicant waits between each retry of a failed operation.
+    - *`socket-timeout-s`*: the timeout value in seconds specifying socket read operations. A value of `0` disables socket reads.
+
+    {{< hint "warning" >}}
+  **Important:** Make sure that the [`max_connections` number in Cloud SQL for PostgreSQL](https://cloud.google.com/sql/docs/postgres/quotas#maximum_concurrent_connections) exceeds the `max-connections` number in the preceding connection configuration file.
+    {{< /hint >}}
+
+2. Navigate to the `replicant-cli/conf/conn/bigquery_dst.yaml` sample connection configuration for [BigQuery target]({{< ref "docs/targets/target-setup/bigquery" >}}).
+    ```YAML
+    type: BIGQUERY
+
+    host: https://www.googleapis.com/bigquery/v2
+    port: PORT_NUMBER
+    project-id: PROJECT_ID
+    auth-type: 0
+    o-auth-service-acc-email: SERVICE_ACCOUNT_WITH_ADMIN_ROLE
+    o-auth-pvt-key-path: PATH_TO_JSON_CREDENTIALS_FILE
+    location: US
+    timeout: 500
+    max-connections: 20
+    max-retries: 10
+    retry-wait-duration-ms: 1000
+    ```
+
+     Replace the following:
+
+   - *`PORT_NUMBER`*: the port number
+   - *`PROJECT_ID`*: BigQuery project ID
+   - *`SERVICE_ACCOUNT_WITH_ADMIN_ROLE`*: the service account name possessing the `roles/bigquery.admin` IAM role
+   - *`PATH_TO_JSON_CREDENTIALS_FILE`*: path to your JSON credentials file you generate when installing `gcloud` CLI. For more information, see [step 6b in Install Google Cloud CLI in Debian and Ubuntu](#install-google-cloud-cli-in-debian-and-ubuntu).
+
+### Configure Extractor for source
+Navigate to the sample Extractor configuration `replicant-cli/conf/src/postgresql.yaml`:
+
+#### Configure `snapshot` mode
+```YAML
+snapshot:
+  threads: 16
+  fetch-size-rows: 5_000
+  per-table-config:
+  - catalog: demo #database-name
+    schema: public #schema-name
+    tables:
+      usertable:   #table-name
+        split-key: ycsb_key #primary-key
+```
+
+The preceding sample defines uses `snapshot.per-table-config` to define table-specific configurations. For example, the `usertable` table under `public` schema and `demo` catalog.
+
+For more information about the configuration parameters for `snapshot` mode, see [Snapshot mode]({{< ref "docs/sources/configuration-files/extractor-reference#snapshot-mode" >}}).
+
+#### Configure `realtime` mode
+1. First, create a heartbeat table in your source Cloud SQL for PostgreSQL instance:
+    ```sh
+    CREATE TABLE "DATABASE"."SCHEMA"."replicate_io_cdc_heartbeat"("timestamp" BIGINT NOT NULL, PRIMARY KEY("timestamp"))
+    ```
+
+    Replace *`DATABASE`* and *`SCHEMA`* with the database name and schema name respectively.
+
+2. Specify the parameters for real time replication under `realtime` field. For example:
+    ```YAML
+    realtime:
+      threads: 4
+      fetch-size-rows: 10000
+      fetch-duration-per-extractor-slot-s: 3
+      _traceDBTasks: true
+      heartbeat:
+        enable: true
+        catalog: demo
+        schema: public
+        interval-ms: 10000
+    ```
+
+For more information about the configuration parameters for `realtime` mode, see [Realtime mode]({{< ref "docs/sources/configuration-files/extractor-reference#realtime-mode" >}}).
+
+### Configure filter (optional)
+If you want to filter data from your source Cloud SQL for PostgreSQL database, specify the filter rules in the filter file. You can find a sample filter file `postgresql_filter.yaml` in the `replicant-cli/filter/` directory. 
+
+```YAML
+allow:
+- catalog: "demo"
+  schema: "public"
+  types: [TABLE]
+  allow:
+    CUSTOMERS:
+    ORDERS:
+```
+
+The preceding configuration defines the following filter rules:
+
+- Data of object type `TABLE` in the database `demo` and the schema `public` goes through replication.
+- From the `demo` database, only the `CUSTOMERS` and `ORDERS` tables go through replication.
+
+For a more complicated filter example, see [Set up filter configuration]({{< ref "docs/sources/source-setup/postgresql#set-up-filter-configuration-optional" >}}) in PostgreSQL source documentation.
+
+For more information about filter rules in general, see [Filter configuration]({{< ref "docs/sources/configuration-files/filter-reference" >}}).
+
+## Step 7: Start the replication
+Arcion can run the replication in three [modes]({{< ref "docs/running-replicant" >}}): 
+- `snapshot`
+- `realtime`
+- `full`
+
+Use the following command to run Replicant in [`full`]({{< ref "docs/running-replicant#replicant-full-mode" >}}) mode to start the replication process. Full mode replication combines snapshot and real time replication schemes.
+
+```sh
+./bin/replicant full \
+conf/conn/postgresql_src.yaml conf/conn/bigquery_dst.yaml \
+--extractor conf/src/postgresql.yaml \
+--filter filter/postgresql_filter.yaml \
+--replace-existing --overwrite
+```
