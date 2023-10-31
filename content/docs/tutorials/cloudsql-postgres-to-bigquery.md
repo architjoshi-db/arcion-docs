@@ -411,15 +411,17 @@ To enable real-time data replication from Cloud SQL for PostgreSQL, follow these
 
     Create a logical replication slot:
     ```sql
-    SELECT 'init' FROM pg_create_logical_replication_slot('<slot_name>', 'wal2json');
+    SELECT 'init' FROM pg_create_logical_replication_slot('SLOT_NAME', 'wal2json');
     ```
+    Replace *`SLOT_NAME`* with the replication slot name.
+    
+    You can create more replication slots as long it doesn't exceed the maximum number you specify in the first step.
 
     To see the list of replication slots, run the following command:
     ```sql
     SELECT * FROM pg_replication_slots;
     ```
 
-    You can create more replication slots as long it doesn't exceed the maximum number you specify in the first step.
 
     </li>
     </ol>
