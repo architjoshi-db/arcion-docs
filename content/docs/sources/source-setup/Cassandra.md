@@ -102,7 +102,7 @@ Arcion Replicant supports two mechanisms for accessing the Cassandra CDC log fil
     vi filter/cassandra_filter.yaml
     ```
 
-2. In accordance to you replication needs, specify the data which is to be replicated. Use the format of the example explained below:
+2. In accordance to you replication needs, specify the data which is to be replicated. Use the format of the below explained example:
 
     ```yaml
     allow:
