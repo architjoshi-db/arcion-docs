@@ -102,7 +102,7 @@ Arcion Replicant supports two mechanisms for accessing the Cassandra CDC log fil
     vi filter/cassandra_filter.yaml
     ```
 
-2. In accordance to you replication needs, specify the data which is to be replicated. Use the format of the below explained example:
+2. In accordance to your replication needs, specify the data which is to be replicated. Use the format of the below explained example:
 
     ```yaml
     allow:
@@ -110,7 +110,7 @@ Arcion Replicant supports two mechanisms for accessing the Cassandra CDC log fil
       schema: "tpch"
       types: [TABLE]
 
-      #From schema tpch, only the lineitem, ng_test, and usertable tables will be replicated.
+      #From schema tpch, only the lineitem, ORDERS, and usertable tables will be replicated.
       #Note: Unless specified, all tables in the catalog will be replicated
       allow:
         lineitem:
@@ -148,7 +148,7 @@ For a detailed explanation of configuration parameters in the filter file, read:
 
 ## III. Set up Extractor Configuration
 
-For real-time replication, you must create a heartbeat table in the source Casandra.
+For real-time replication, you must create a heartbeat table in the source Cassandra.
 
 1. Create a heartbeat table in the catalog you are going to replicate with the following DDL:
    ```SQL
@@ -182,7 +182,7 @@ For real-time replication, you must create a heartbeat table in the source Casan
     ```
 ## Limitations
 
-The following limitations will apply when replicating from Casandra as a source:
+The following limitations will apply when replicating from Cassandra as a source:
 
 1. Replication of counter tables is not supported.
 2. Changes resulted from any of these features are ignored:
