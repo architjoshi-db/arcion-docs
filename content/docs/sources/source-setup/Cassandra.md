@@ -51,7 +51,7 @@ Arcion Replicant supports two mechanisms for accessing the Cassandra CDC log fil
 
 1. From `$REPLICANT_HOME` navigate to the connection configuration file:
     ```BASH
-    vi conf/conn/cassadra.yaml
+    vi conf/conn/cassandra.yaml
     ```
 
 2. You can store your connection credentials in a secrets management service and tell Replicant to retrieve the credentials. For more information, see [Secrets management]({{< ref "docs/security/secrets-management" >}}). 
