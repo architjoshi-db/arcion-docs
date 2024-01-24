@@ -25,12 +25,13 @@ The extracted `replicant-cli` will be referred to as the `$REPLICANT_HOME` direc
    ```YAML
    type: TERADATA
 
-   #url: jdbc:teradata://192.168.0.106/DBS_PORT=1025,ENCRYPTDATA=ON,TYPE=FASTEXPORT,USER=replicant,PASSWORD=Replicant#123
-   host: 192.168.44.128
-   port: 1025
+   #url: jdbc:teradata://<ip-address>/DBS_PORT=<port>,ENCRYPTDATA=ON,TYPE=FASTEXPORT,USER=<username>,PASSWORD=<password>
+   host: <ip-address>
+   port: <port>
+   #client-charset: UTF8
 
-   username: 'replicant'
-   password: 'Replicant#123'
+   username: <username>
+   password: <password>
 
    #credential-store:
    #  type: PKCS12
@@ -39,9 +40,9 @@ The extracted `replicant-cli` will be referred to as the `$REPLICANT_HOME` direc
    #  password: #If password to key-store is not provided then default password will be used
 
    tpt-connection: #Connection configuration for TPT jobs
-     host: 192.168.0.108 #Teradata host name
-     username: 'replicant' #Teradata server username
-     password: 'Replicant#123'
+     host: <ip-address> #Teradata host name
+     username: <username> #Teradata server username
+     password: <password>
        #credential-store:
        #  type: PKCS12
        #  path: #path to your keystore file
@@ -62,11 +63,21 @@ The extracted `replicant-cli` will be referred to as the `$REPLICANT_HOME` direc
    max-conn-retries: #Number of times any operation on the source system will be re-attempted on failures.
    conn-retry-wait-duration-ms: 5000 #Duration in milliseconds Replicant should wait before performing then next retry of a failed operation
    ```
-   - **url**: You can directly specify the exact URL that the JDBC driver will use to connect to the source. In that case you don't need to specify the `host`, `port`, `usrename`, and `password` parameters separately. Instead, embed them within the URL as the example above shows:
+   - **url**: You can directly specify the exact URL that the JDBC driver will use to connect to the source. In that case you don't need to specify the `host`, `port`, `username`, and `password` parameters separately. Instead, embed them within the URL as the example above shows:
 
      ```YAML
-     url: jdbc:teradata://192.168.0.106/DBS_PORT=1025,ENCRYPTDATA=ON,TYPE=FASTEXPORT,USER=replicant,PASSWORD=Replicant#123
+     url: jdbc:teradata://<ip-address>/DBS_PORT=<port>,ENCRYPTDATA=ON,TYPE=FASTEXPORT,USER=<username>,PASSWORD=<password>
       ```
+   - **client-charset**: Replicant allows users to deal with different character encodings supported by `Teradata` (eg: UTF8, LATIN1_0A, etc.) based on the extraction method used. It offers two extraction methods: 
+        - **`QUERY`**: When using `QUERY` extraction method, you have to define the Teradata equivalent Java character set in `client-charset` under connection configuration file which specifies the character encoding to be used by the `JDBC` client. To get the list of the character set mapping, head over to teradata official [docs](https://docs.teradata.com/r/Ge3CNVQsfOeWkiwQv5xfOQ/l~WpcSErb4ZVAyKlJOHzgw). 
+        
+            For example: If the teradata session character set is `LATIN1_0A` then the value of `client-charset` would be:
+        ```YAML
+            client-charset: ISO8859_1
+        ```
+
+        - **`TPT`**: In case of `TPT` extraction method, define the `charset` parameter under the `native-extract-options` in the extractor configuration [file](#ii-set-up-extractor-configuration). The possible values are `ASCII`, `UTF8` and `UTF16`. 
+
    - **credential-store**: Replicant supports consuming `username`, `password`, and `url` configurations from a _credentials store_ rather than having users specify them in plain text config file. You can use keystores to store your credentials related to your Teradata server connections and TPT jobs. You should create entries in the credential store for your configs using a prefix and specify the prefix in your config file. For example, you can create keystore entries with aliases `tdserver1_username` and `tdserver1_password`. You can then specify the prefix here as `tdserver1_`.
 
    {{< hint "info" >}}
@@ -104,7 +115,7 @@ The extracted `replicant-cli` will be referred to as the `$REPLICANT_HOME` direc
       extraction-method: QUERY # Allowed values are QUERY, TPT
       tpt-num-files-per-job: 16
       native-extract-options:
-        charset: "ASCII"  #Allowed values are ASCII, UTF8
+        charset: "ASCII"  #Allowed values are ASCII, UTF8 and UTF16
         compression-type: "GZIP" #Allowed values are GZIP and NONE
     ```
     You can also configure your table-specific requirements under the `per-table-config` section like the following:
@@ -131,7 +142,7 @@ The extracted `replicant-cli` will be referred to as the `$REPLICANT_HOME` direc
             split-key-min-value: 1
             split-key-max-value: 60_000
           native-extract-options:
-            charset: "ASCII"  #Allowed values are ASCII, UTF8
+            charset: "ASCII"  #Allowed values are ASCII, UTF8 and UTF16
             column-size-map:  #User specified column size/length to be used while exporting with TPT
               "COL1": 2
               "COL2": 4
@@ -155,7 +166,7 @@ The extracted `replicant-cli` will be referred to as the `$REPLICANT_HOME` direc
       extraction-method: QUERY # Allowed values are QUERY, TPT
       tpt-num-files-per-job: 16
       native-extract-options:
-        charset: "ASCII"  #Allowed values are ASCII, UTF8
+        charset: "ASCII"  #Allowed values are ASCII, UTF8 and UTF16
         compression-type: "GZIP"
 
       split-key: last_update_time
@@ -175,6 +186,7 @@ The extracted `replicant-cli` will be referred to as the `$REPLICANT_HOME` direc
           split-key: split-key-column  # Any numeric/timestamp column with sufficiently large number of distincts
           extraction-method: TPT
           native-extract-options:
+            charset: "ASCII" #Allowed values are ASCII, UTF8 and UTF16
             compression-type: "GZIP"
             control-chars:
               delimiter: '~'
