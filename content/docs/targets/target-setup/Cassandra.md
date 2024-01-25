@@ -9,7 +9,7 @@ bookHidden: false
 
 ## I. Setup Connection Configuration
 
-1. From ```HOME```, navigate to the sample connection configuration file
+1. From ```HOME```, navigate to the sample connection configuration file:
     ```BASH
     vi conf/conn/cassandra.yaml
     ```
