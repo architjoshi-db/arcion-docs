@@ -18,9 +18,15 @@ The extracted `replicant-cli` will be referred to as the `$REPLICANT_HOME` direc
    vi conf/conn/teradata.yaml
    ```
 
+    To connect to Teradata, Arcion provides two methods for an authenticated connection:
+    - Using username and password without SSL
+    - Using SSL for TLS connection
 2. You can store your connection credentials in a secrets management service and tell Replicant to retrieve the credentials. For more information, see [Secrets management]({{< ref "docs/security/secrets-management" >}}). 
-    
-   Otherwise, you can put your credentials in plain form like the sample below:
+
+  {{< tabs "username-pwd-ssl-method" >}}
+{{< tab "Connect using username and password" >}}
+You can specify your credentials in plain form in the connection configuration file like the folowing sample:
+
 
    ```YAML
    type: TERADATA
@@ -63,6 +69,82 @@ The extracted `replicant-cli` will be referred to as the `$REPLICANT_HOME` direc
    max-conn-retries: #Number of times any operation on the source system will be re-attempted on failures.
    conn-retry-wait-duration-ms: 5000 #Duration in milliseconds Replicant should wait before performing then next retry of a failed operation
    ```
+{{< /tab >}}
+
+{{< tab "Connect using SSL for TLS connection" >}}
+
+   ```YAML
+   type: TERADATA
+
+   #url: jdbc:teradata://<ip-address>/DBS_PORT=<port>,ENCRYPTDATA=ON,TYPE=FASTEXPORT,USER=<username>,PASSWORD=<password>
+   host: <ip-address>
+   port: <port>
+   #client-charset: UTF8
+
+   username: <username>
+   password: <password>
+
+   #credential-store:
+   #  type: PKCS12
+   #  path: #Location of key-store
+   #  key-prefix: "teradata_"
+   #  password: #If password to key-store is not provided then default password will be used
+   ssl:
+     enable: true
+     ssl-mode: PREFER #Allowed values are {DISABLE/ALLOW/PREFER/REQUIRE/VERIFY-CA/VERIFY-FULL}. By default, PREFER.
+
+    # Details of file that contains trusted database server certificates and/or Certificate Authority (CA) certificates
+    # for use with SSLMODE=VERIFY-CA or VERIFY-FULL
+     trust-store:
+       path: '<trustStore_directory_path>'
+       password: '<truststore_password>'
+       ssl-store-type: '<truststore_type>'
+
+    # File/Folder path of a PEM file(s) that contains Certificate Authority (CA) certificates for
+    # use with SSLMODE=VERIFY-CA or VERIFY-FULL.
+     ssl-cert: <CA_Certs_directory_or_file_path>
+
+   tpt-connection: #Connection configuration for TPT jobs
+     host: <ip-address> #Teradata host name
+     username: <username> #Teradata server username
+     password: <password>
+       #credential-store:
+       #  type: PKCS12
+       #  path: #path to your keystore file
+       #  key-prefix: # prefix of the keystore entry
+       #  password: # optional, keystore password
+     #use-ldap: true  #Whether TPT should use LDAP mechanism to connect to TD
+     #max-sessions: 16  #Max sessions per TPT job
+     #min-sessions: 1 #Min sessions per TPT job
+     #tenacity-hrs: 1 #Number of hours TPT continues trying logon
+     #tenacity-sleep-mins: 1 #Sleep duration before each retry
+
+
+   max-connections: 30 # Maximum number of connections replicant would use to fetch data from source Teradata.
+
+   max-retries: 10 
+   retry-wait-duration-ms: 1000
+
+   max-conn-retries: #Number of times any operation on the source system will be re-attempted on failures.
+   conn-retry-wait-duration-ms: 5000 #Duration in milliseconds Replicant should wait before performing then next retry of a failed operation
+   ```
+   - **ssl-mode**: Teradata supports multiple `SSLMODE` which specifies the mode for connecting to the database as per below:
+      - `ssl-mode: DISABLE` disables HTTPS/TLS connections and uses only non-TLS connections.
+      - `ssl-mode: ALLOW` uses non-TLS connection unless the database requires HTTPS/TLS connections and Java has TLSv1.2.
+      - `ssl-mode: PREFER` uses HTTPS/TLS connections unless the database does not offer HTTPS/TLS connections or Java does not have TLSv1.2. It is the default config.
+      - `ssl-mode: REQUIRE` uses HTTPS/TLS connections.
+      - `ssl-mode: VERIFY-CA` uses HTTPS/TLS connections and verifies that the server certificate is valid and trusted.
+      - `ssl-mode: VERIFY-FULL` uses HTTPS/TLS connections, verifies that the server certificate is valid and trusted, and verifies that the server certificate matches the database hostname.
+
+  - **trust-store**:
+      - `path`: Specifies the file name of a Java TrustStore file that contains trsuted database server certificates and/or `Certificate Authority (CA)` certificates for use with `ssl-mode: VERIFY-CA` or `ssl-mode: VERIFY-FULL`.
+      - `password`: Specifies the password for the Java TrustStore file identified by the `trust-store` connection parameter. When this parameter is omitted, no password is specified for the Java TrustStore file.
+      - `ssl-store-type`: Specifies the type for the Java TrustStore file identified by the `trust-store` connection parameter. When omitted, the Java TrustStore file is assumed to be the Java default TrustStore type.
+
+  - **ssl-cert**: File path/directory path of a PEM file that contains Certificate Authority (CA) certificates for use with `ssl-mode: VERIFY-CA` or `ssl-mode: VERIFY-FULL`.
+{{< /tab >}}
+{{< /tabs>}}
+
    - **url**: You can directly specify the exact URL that the JDBC driver will use to connect to the source. In that case you don't need to specify the `host`, `port`, `username`, and `password` parameters separately. Instead, embed them within the URL as the example above shows:
 
      ```YAML
