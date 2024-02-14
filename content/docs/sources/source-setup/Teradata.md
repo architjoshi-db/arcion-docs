@@ -44,7 +44,7 @@ The extracted `replicant-cli` will be referred to as the `$REPLICANT_HOME` direc
    #  password: #If password to key-store is not provided then default password will be used
    ssl:
      enable: true
-     ssl-mode: PREFER #Allowed values are {DISABLE/ALLOW/PREFER/REQUIRE/VERIFY-CA/VERIFY-FULL}. By default, PREFER.
+     ssl-mode: PREFER #Allowed values are {PREFER/REQUIRE/VERIFY-CA/VERIFY-FULL}. By default, PREFER.
 
     # Details of file that contains trusted database server certificates and/or Certificate Authority (CA) certificates
     # for use with SSLMODE=VERIFY-CA or VERIFY-FULL
