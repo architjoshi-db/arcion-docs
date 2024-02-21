@@ -284,6 +284,7 @@ You can specify your credentials in plain form in the connection configuration f
               # https://docs.teradata.com/r/Teradata-Parallel-Transporter-Reference/July-2017/DataConnector-Operator/
               # Usage-Notes/TextDelimiter-and-EscapeTextDelimiter
               escape: "\\"
+              #null-string: "NULL" #Null string is not supported for extraction-method TPT
               line-end: "\n"
               # If multi-char-delimiter is provided, it will have higher precedence than delimiter.
               # Applicable only if extraction method is TPT.
