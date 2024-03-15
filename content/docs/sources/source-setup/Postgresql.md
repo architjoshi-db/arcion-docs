@@ -119,7 +119,7 @@ retry-wait-duration-ms: 1000
 
 #Add your replication slot (slot which holds the real-time changes of the source database) as follows:
   replication-slots:
-    io_replicate: #Replace "io-replicate" with your replication slot name
+    arcion_test: #Replace "io-replicate" with your replication slot name
       - wal2json #plugin used to create replication slot (wal2json | test_decoding)
 
 log-reader-type: {STREAM|SQL}
