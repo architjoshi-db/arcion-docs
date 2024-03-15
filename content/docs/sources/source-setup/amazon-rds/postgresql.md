@@ -85,10 +85,9 @@ socket-timeout-s: 60
 max-retries: 10
 retry-wait-duration-ms: 1000
 
+#Add your replication slot (slot which holds the real-time changes of the source database) as follows:
 replication-slots:
-  io_replicate:
-    - wal2json
-  io_replicate1:
+  arcion_test:
     - wal2json
 
 log-reader-type: {STREAM|SQL}
@@ -114,8 +113,8 @@ Feel free to change the following parameter values as you need:
 **Important:** Make sure that the value of `max_connections` in your RDS for PostgreSQL instance exceeds the value of `max-connections` in the preceding connection configuration file. For more information, see [Maximum number of database connections in Amazon RDS](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Limits.html#RDS_Limits.MaxConnections).
 {{< /hint >}}
 
-#### Replication slots
-The replication slots hold the real-time changes of the source database. The preceding sample specifies two replicaiton slots in the following format:
+#### Replication slot
+The replication slot holds the real-time changes of the source database. The preceding sample specifies a replication slot in the following format:
 
 ```YAML
 replication-slots:
@@ -127,7 +126,7 @@ Replace the following:
 - *`SLOT_NAME`*: the replication slot name
 - *`PLUGIN_NAME`*: the plugin you've used to create the replication slot. In this case, it's `wal2json`.
 
-You can specify as many slots as you want in this format.
+Currently only one slot can be specified.
 
 #### Log reader type
 
