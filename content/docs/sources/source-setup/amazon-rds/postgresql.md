@@ -88,8 +88,6 @@ retry-wait-duration-ms: 1000
 replication-slots:
   io_replicate:
     - wal2json
-  io_replicate1:
-    - wal2json
 
 log-reader-type: {STREAM|SQL}
 ```
@@ -115,7 +113,7 @@ Feel free to change the following parameter values as you need:
 {{< /hint >}}
 
 #### Replication slots
-The replication slots hold the real-time changes of the source database. The preceding sample specifies two replicaiton slots in the following format:
+The replication slot hold the real-time changes of the source database. The preceding sample specifies a replication slot in the following format:
 
 ```YAML
 replication-slots:
@@ -127,7 +125,7 @@ Replace the following:
 - *`SLOT_NAME`*: the replication slot name
 - *`PLUGIN_NAME`*: the plugin you've used to create the replication slot. In this case, it's `wal2json`.
 
-You can specify as many slots as you want in this format.
+You can only specify a single slot in this format.
 
 #### Log reader type
 

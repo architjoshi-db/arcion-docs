@@ -45,7 +45,7 @@ The extracted `replicant-cli` will be referred to as the `$REPLICANT_HOME` direc
 
     ```toml
     wal_level = logical
-    max_replication_slots = 1 #Can be increased if more slots need to be created
+    max_replication_slots = 1 #Single slot supported
     ```
 
 3. To perform log consumption for CDC replication from the PostgreSQL server, you must choose between these logical decoding output plugins:
@@ -117,12 +117,10 @@ socket-timeout-s: 60
 max-retries: 10
 retry-wait-duration-ms: 1000
 
-#List your replication slots (slots which hold the real-time changes of the source database) as follows
+#List your replication slot (slot which hold the real-time changes of the source database) as follows
   replication-slots:
     io_replicate: #Replace "io-replicate" with your replication slot name
       - wal2json #plugin used to create replication slot (wal2json | test_decoding)
-    io_replicate1: #Replace "io-replicate1" with your replication slot name
-      - wal2json
 
 log-reader-type: {STREAM|SQL}
 ```
@@ -151,7 +149,7 @@ The value of `log-reader-type` defaults to `STREAM`. If you choose `STREAM`, Rep
 {{< /hint >}}
 
 ### Replication slots
-The replication slots hold the real-time changes of the source database. The preceding sample specifies two replicaiton slots in the following format:
+The replication slot hold the real-time changes of the source database. The preceding sample specifies a replication slot in the following format:
 
 ```YAML
 replication-slots:
@@ -163,7 +161,7 @@ Replace the following:
 - *`SLOT_NAME`*: the replication slot name
 - *`PLUGIN_NAME`*: the plugin you've used to create the replication slot—`wal2json` or `test_decoding`.
 
-You can specify as many slots as you want in this format.
+You can only specify a single slot in this format.
 
 ### Log reader type
 {{< hint "warning" >}}
