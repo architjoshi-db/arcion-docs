@@ -117,7 +117,7 @@ socket-timeout-s: 60
 max-retries: 10
 retry-wait-duration-ms: 1000
 
-#List your replication slot (slot which hold the real-time changes of the source database) as follows
+#Add your replication slot (slot which holds the real-time changes of the source database) as follows:
   replication-slots:
     io_replicate: #Replace "io-replicate" with your replication slot name
       - wal2json #plugin used to create replication slot (wal2json | test_decoding)
@@ -148,8 +148,8 @@ The value of `log-reader-type` defaults to `STREAM`. If you choose `STREAM`, Rep
 - From versions 23.03.01.12 and later, 23.03.31 and later, `log-reader-type` is deprecated. Avoid specifying this parameter.
 {{< /hint >}}
 
-### Replication slots
-The replication slot hold the real-time changes of the source database. The preceding sample specifies a replication slot in the following format:
+### Replication slot
+The replication slot holds the real-time changes of the source database. The preceding sample specifies a replication slot in the following format:
 
 ```YAML
 replication-slots:
@@ -161,7 +161,7 @@ Replace the following:
 - *`SLOT_NAME`*: the replication slot name
 - *`PLUGIN_NAME`*: the plugin you've used to create the replication slot—`wal2json` or `test_decoding`.
 
-You can only specify a single slot in this format.
+Currently only one slot can be specified.
 
 ### Log reader type
 {{< hint "warning" >}}
