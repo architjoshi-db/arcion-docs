@@ -134,7 +134,15 @@ In this step, you need to provide the Databricks connection details to Arcion. T
     host: "HOSTNAME"
     port: "PORT_NUMBER"
     max-connections: 30
+
+    supports-timestamp-ntz: false #If disabled, uses timestamp data type instead of timestamp_ntz
+    date-format: <date format> #default is yyyy-MM-dd, specify the date format if source provides dates in a format other than default
+    timestamp-format: <timestamp format> #default 'yyyy-MM-dd HH:mm:ss', specify the format if source provides timestamps in a format other than default 
     ```
+    - **`supports-timestamp-ntz`**: Specifies which datatype to use for timestamp data. `timestamp_ntz` stores timestamp without timezone. 
+    - **`date-format`**: Specify the data format of the source database.
+    - **`timestamp-format`**: Specify the timestamp format of the source database.
+
     Replace the following:
     - *`JDBC_URL`*: the JDBC URL that you retrieve [from the connection details for a cluster](#get-connection-details-for-a-cluster)
     - *`HOSTNAME`*: the hostname of your Databricks host that you retrieved [from the connection details for a cluster](#get-connection-details-for-a-cluster)

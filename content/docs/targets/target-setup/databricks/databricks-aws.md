@@ -64,7 +64,14 @@ Replicant requires the Databricks JDBC Driver as a dependency. To obtain the app
       max-connections: 30 #Maximum number of connections Replicant can open in Databricks
       max-retries: 100 #Number of times any operation on the source system will be re-attempted on failures.
       retry-wait-duration-ms: 1000 #Duration in milliseconds replicant should wait before performing then next retry of a failed operation
+      
+      supports-timestamp-ntz: false #If disabled, uses timestamp data type instead of timestamp_ntz
+      date-format: <date format> #default is yyyy-MM-dd, specify the date format if source provides dates in a format other than default
+      timestamp-format: <timestamp format> #default 'yyyy-MM-dd HH:mm:ss', specify the format if source provides timestamps in a format other than default 
       ```
+      - **`supports-timestamp-ntz`**: Specifies which datatype to use for timestamp data. `timestamp_ntz` stores timestamp without timezone. 
+      - **`date-format`**: Specify the data format of the source database.
+      - **`timestamp-format`**: Specify the timestamp format of the source database.
 
       Replace the following:
       - *`HOSTNAME`*: the hostname of your Databricks host
