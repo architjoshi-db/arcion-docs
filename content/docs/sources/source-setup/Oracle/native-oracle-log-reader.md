@@ -136,3 +136,18 @@ alt-archive-log-path: REPLICANT_PATH_TO_ARCHIVE_REDO_LOG_FILES
 Replace the following:
 - *`REPLICANT_PATH_TO_ONLINE_REDO_LOG_FILES`*: path to the online redo logs relative to Replicant
 - *`REPLICANT_PATH_TO_ARCHIVE_REDO_LOG_FILES`*: path to the archived redo logs relative to Replicant
+
+### Oracle RAC
+The native log reader supports Oracle RAC active-passive and active-active CDB/PDB environments with automatic failover, while manually handling new instance additions. Follow below steps for setup:
+
+- The **`SCAN`** name must be specified as a host name.
+  ```YAML
+  host: SCAN_NAME
+  ```
+
+- In the `active-passive` case, ensure that either only one instance is running, or the service associated with the PDB or CDB is running on only one instance.
+
+- In the `active-active` case, set the value of **`rac-configuration`** tag to `ACTIVE_ACTIVE`. The default value is `ACTIVE_PASSIVE`.
+  ```YAML
+  rac-configuration: ACTIVE_ACTIVE
+  ```
