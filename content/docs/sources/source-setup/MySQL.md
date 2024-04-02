@@ -236,7 +236,28 @@ Replace the following:
 - *`PATH_TO_PEM_BUNDLE`*: full path to the PEM certificate bundle—for example, `/home/arcion/us-east-1-bundle.pem`
 
 `hostname-verification` enables hostname verification against the server identity according to the specification in the server's certificate. It defaults to `true`.
-  
+
+### MYSQL native parquet export to S3
+Arcion now provides a way to snapshot data from Amazon hosted MYSQL instance in parquet format to S3 buckets.
+Add below additional fields in the connection configuration file:
+```YAML
+# Below entries are valid if extraction method is MYSQL_AWS_RDS
+aws-db-instance-id: <db-instance-id>
+stage-conn-config:
+  key-id: <access-key>
+  secret-key: <secret-key>
+  region: "us-west-2"
+  type: MYSQL_S3
+  root-dir: "replicate-stage/test"    #specify a directory in S3 which can be used to stage bulk-load files.
+  conn-url: <bucket_name>             # specify bucket name e.g. arcion-replicate-bucket
+  assume-role:
+    enable: true
+    role-arn: <role-arn>
+  encryption:
+    type: NONE
+    key:  <kms-key-id>
+```
+{{< hint "info" >}}**Note:** You need to set `extraction-method: MYSQL_AWS_RDS` parameter in the [extractor file](#configure-snapshot-replication).{{< /hint >}}
 ## II. Set up filter configuration (optional)
 If you want to define filter rules for source MySQL, specify the them in the filter configuration file. You can find a sample filter configuration file in the `filter/` directory of your [Arcion self-hosted CLI download]({{< ref "docs/quickstart/arcion-self-hosted#download-replicant-and-create-replicant_home" >}}). 
 
