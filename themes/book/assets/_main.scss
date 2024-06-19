@@ -441,3 +441,15 @@ kbd {
     top: 1px;
   }
 }
+
+.banner {
+  position: fixed; 
+  z-index: 3;
+  width: 100%; 
+  text-align: center;
+  background-color:	#9370DB;
+}
+
+.banner-content { 
+  padding: 10px; 
+}
