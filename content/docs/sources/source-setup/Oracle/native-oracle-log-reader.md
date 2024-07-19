@@ -94,7 +94,7 @@ Replicant supports using Oracle Automatic Storage Management (ASM) for logs. To 
     ...
 
     asm-connection:
-      host: //ASM_HOSTNAME
+      host: ASM_HOSTNAME
       port: 1521
       service-name: +ASM
       username: 'ASM_USERNAME'
@@ -104,7 +104,7 @@ Replicant supports using Oracle Automatic Storage Management (ASM) for logs. To 
 
     Replace the following:
 
-    - *`ASM_HOSTNAME`*: the hostname of the ASM instance. Make sure to prefix the hostname with `//`.
+    - *`ASM_HOSTNAME`*: the hostname of the ASM instance.
     - *`ASM_USERNAME`*: the username to connect to the ASM instance.
     - *`ASM_PASSWORD`*: the password associated with *`ASM_USERNAME`*.
 
